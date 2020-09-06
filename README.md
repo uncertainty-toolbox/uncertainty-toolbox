@@ -15,11 +15,11 @@ such as distributions or confidence intervals. This begs the questions: How do w
 determine which predictive uncertanties are best? What does it mean to produce a _best_
 or _ideal_ uncertainty? Are our uncertainties accurate and _well-calibrated_?
 
-Uncertainty Toolbox provides standard metrics to quantify the quality of predictive
-uncertainties, describes the intuition behind these metrics, produces visualizations of
-these metrics/uncertainties, and implements simple post-processing procedures to improve
-these uncertainties (i.e.  "re-calibration").  This toolbox currently focuses on
-regression tasks.  We also aim to provide and maintain a reference list of [relevant
+Uncertainty Toolbox provides standard metrics to quantify and compare predictive
+uncertainty estimates, gives intuition for these metrics, produces visualizations of
+these metrics/uncertainties, and implements simple "re-calibration" procedures to
+improve these uncertainties.  This toolbox currently focuses on regression tasks.  It
+also aims to provide and maintain a reference list of [relevant
 papers](docs/paper_list.md) in this area.
 
 
@@ -59,7 +59,7 @@ Uncertainty Toolbox contains:
 * Relevant [publications and references](docs/paper_list.md).
 
 
-## Visualize Uncertainties and Metrics
+## Metrics and Visualizations
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
