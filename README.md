@@ -33,13 +33,13 @@ $ pip install -r requirements/requirements.txt
 
 ## Quick Start
 ```python
-import uncertainty_toolbox as ut
+import uncertainty_toolbox as uct
 
 # Load an example dataset of 100 predictions, uncertainties, and observations
-predictions, predictions_std, y, x = ut.data.synthetic_sine_heteroscedastic(100)
+predictions, predictions_std, y, x = uct.data.synthetic_sine_heteroscedastic(100)
 
 # Compute all uncertainty metrics
-metrics = ut.metrics.get_all_metrics(predictions, predictions_std, y)
+metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 ```
 This example computes metrics for a vector of predicted values (`predictions`) and
 associated uncertainties (`predictions_std`, given here as a vector of standard
