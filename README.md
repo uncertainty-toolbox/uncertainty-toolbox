@@ -43,21 +43,21 @@ aspects of the contents via some descriptions/images near the top of this page.]
 
 ## Visualize Uncertainties and Metrics
 
-**Overconfident**
+**Overconfident** (_too certain_)
 <p align="center">
 <img src="docs/images/xy_over.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_over.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_over.png" alt="" width="32%" align="top">
 </p>
 
-**Underconfident**
+**Underconfident** (_too uncertain_)
 <p align="center">
 <img src="docs/images/xy_under.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_under.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_under.png" alt="" width="32%" align="top">
 </p>
 
-**Just right** (perfectly calibrated)
+**Just right** (_well-calibrated_)
 <p align="center">
 <img src="docs/images/xy_correct.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_correct.png" alt="" width="32%" align="top">
