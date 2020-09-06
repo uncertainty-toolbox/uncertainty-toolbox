@@ -1,0 +1,277 @@
+"""
+Visualizations for predictive uncertainties and metrics.
+"""
+
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import (mean_absolute_error,
+                             mean_squared_error,
+                             r2_score,
+                             median_absolute_error)
+from shapely.geometry import Polygon, LineString
+from shapely.ops import polygonize, unary_union
+
+
+def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
+    """
+    Plot predicted values (y_pred) and intervals (y_std) vs true values
+    (y_true) 
+    """
+    intervals = 2 * y_std   # TODO set with argument
+
+    # Plot
+    fig = plt.figure()
+    fig.set_size_inches(6., 6.)
+    _ = plt.errorbar(
+        y_true,
+        y_pred,
+        intervals,
+        fmt='o',
+        ls='none',
+        linewidth=1.5,
+        c='#1f77b4',
+        alpha=0.4,
+    )
+    plt.plot(y_true, y_pred, 'o', c='#1f77b4')
+    ax = plt.gca()
+
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [int(np.floor(np.min(intervals_lower_upper[0]))),
+                    int(np.ceil(np.max(intervals_lower_upper[1])))]
+        lims_ext_range = list(range(lims_ext[0], lims_ext[1]))
+    else:
+        lims_ext = ylims
+
+    # plot 45-degree parity line
+    _ = ax.plot(lims_ext, lims_ext, '--', linewidth=1.5, c='#ff7f0e')
+
+    # Format
+    _ = ax.set_xlim(lims_ext)
+    _ = ax.set_ylim(lims_ext)
+    _ = ax.set_xlabel('Observed Values')
+    _ = ax.set_ylabel('Predicted Values and Intervals')
+    _ = ax.set_aspect('equal', 'box')
+
+    if show:
+        plt.show()
+
+
+def plot_parity(y_pred, y_true, lims=None, axlabels=None, hexbins=False, show=False):
+    """
+    Make parity plot using predicted values (y_pred) and observed values (y_true).
+    """
+    
+    # Set lims
+    if lims is None:
+      print('Lims is None. Setting lims now:')
+      min_max_true = (y_true.min(), y_true.max())
+      min_max_pred = (y_pred.min(), y_pred.max())
+      lims = (np.min((min_max_true[0], min_max_pred[0])),
+                  np.max((min_max_true[1], min_max_pred[1])))
+      lims_diff = lims[1] - lims[0]
+      lims_ext = (lims[0] - .1*lims_diff, lims[1] + .1*lims_diff)
+
+      print('min_max_true: {}'.format(min_max_true))
+      print('min_max_pred: {}'.format(min_max_pred))
+      print('lims: {}'.format(lims))
+      print('lims_ext: {}'.format(lims_ext))
+
+    # Set axlabels
+    if axlabels is None:
+      axlabels = ('Observed Values', 'Predicted Values')
+
+    # Set residuals
+    residuals = y_pred - y_true
+
+    # Plotting
+    if hexbins:
+        grid = sns.jointplot(y_true,
+                             y_pred,
+                             kind='hex',
+                             bins='log',
+                             gridsize=25,
+                             extent=lims*2)
+    else:
+        grid = sns.jointplot(y_true,
+                             y_pred,
+                             kind='scatter',
+                             space=0,
+                             #marginal_kws=dict(kde=True, shade=True))
+                             marginal_kws=dict(kde=True))
+
+    ax = grid.ax_joint
+    _ = ax.set_xlim(lims_ext)
+    _ = ax.set_ylim(lims_ext)
+    _ = ax.plot(lims_ext, lims_ext, '--')
+    _ = ax.set_xlabel(axlabels[0])
+    _ = ax.set_ylabel(axlabels[1])
+
+    # Calculate the error metrics
+    mae = mean_absolute_error(y_true, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    mdae = median_absolute_error(y_true, y_pred)
+    marpd = np.abs(2 * residuals / (np.abs(y_pred)
+                   + np.abs(y_true))
+                  ).mean() * 100
+    r2 = r2_score(y_true, y_pred)
+    corr = np.corrcoef(y_true, y_pred)[0, 1]
+
+    # Report
+    fontsize = 12
+    text = ('  MDAE = %.2f\n' % mdae + 
+            '  MAE = %.2f\n' % mae + 
+            '  RMSE = %.2f\n' % rmse + 
+            '  MARPD = %i%%\n' % marpd +
+            '  R2 = %.2f\n' % r2 + 
+            '  PPMCC = %i%%\n' % corr)
+    #print('\nPredictive accuracy metrics:')
+    #print('MDAE = %.2f' % mdae)
+    #print('MAE = %.2f' % mae)
+    #print('RMSE = %.2f' % rmse)
+    #print('MARPD = %.2f' % marpd)
+    #print('R2 = %.2f' % r2)
+    #print('PPMCC = %.2f' % corr)
+    _ = ax.text(x=lims[0], y=lims[1], s=text, horizontalalignment='left',
+                verticalalignment='top', fontsize=fontsize)
+    fig = plt.gcf()
+    fig.set_size_inches(7.0, 7.0)
+
+    if show:
+        plt.show()
+
+
+def get_proportion_lists(y_pred, y_std, y_true, num_bins=100):
+
+    # Set residuals
+    residuals = y_pred - y_true
+
+    # Compute proportions
+    exp_proportions = np.linspace(0, 1, num_bins)
+    obs_proportions = [get_proportion_in_interval(quantile, residuals, y_std)
+                       for quantile in exp_proportions]
+    return exp_proportions, obs_proportions
+
+
+def get_proportion_in_interval(quantile, residuals, stds):
+    norm = stats.norm(loc=0, scale=1)
+    lower_bound = norm.ppf(0.5-quantile/2)
+    upper_bound = norm.ppf(0.5+quantile/2)
+    normalized_residuals = residuals.reshape(-1) / stds.reshape(-1)
+    num_within_quantile = 0
+    for resid in normalized_residuals:
+        if lower_bound <= resid <= upper_bound:
+            num_within_quantile += 1.
+    proportion = num_within_quantile / len(residuals)
+    return proportion
+
+
+def plot_calibration(y_pred, y_std, y_true, curve_label=None, show=False):
+    """
+    Make calibration plot using predicted mean values (y_pred), predicted std
+    values (y_std), and observed values (y_true).
+    """
+
+    # Compute exp_proportions and obs_proportions
+    (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true)
+
+    # Set figure defaults
+    width = 5
+    fontsize = 12
+
+    # Set label 
+    if curve_label is None:
+        curve_label = 'Predictor'
+    # Plot
+    plt.figure()
+    plt.plot([0, 1], [0, 1], '--', label='Ideal', c='#ff7f0e')
+    plt.plot(exp_proportions, obs_proportions, label=curve_label, c='#1f77b4')
+    plt.fill_between(exp_proportions, exp_proportions, obs_proportions,
+                     alpha=0.2)
+    plt.xlabel('Predicted proportion in interval')
+    plt.ylabel('Observed proportion in interval')
+    plt.axis('square')
+    buff = 0.01
+    plt.xlim([0-buff, 1+buff])
+    plt.ylim([0-buff, 1+buff])
+
+    # Compute miscalibration area
+    polygon_points = []
+    for point in zip(exp_proportions, obs_proportions):
+        polygon_points.append(point)
+    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
+        polygon_points.append(point)
+    polygon_points.append((exp_proportions[0], obs_proportions[0]))
+    polygon = Polygon(polygon_points)
+    x, y = polygon.exterior.xy # original data
+    ls = LineString(np.c_[x, y]) # closed, non-simple
+    lr = LineString(ls.coords[:] + ls.coords[0:1])
+    mls = unary_union(lr)
+    polygon_area_list =[poly.area for poly in polygonize(mls)]
+    miscalibration_area = np.asarray(polygon_area_list).sum()
+
+    # Annotate plot with the miscalibration area
+    plt.text(x=0.95, y=0.05,
+             s='Miscalibration area = %.2f' % miscalibration_area,
+             verticalalignment='bottom',
+             horizontalalignment='right',
+             fontsize=fontsize)
+
+    fig = plt.gcf()
+    fig.set_size_inches(6., 6.)
+
+    if show:
+        plt.show()
+
+
+def plot_sharpness(y_std):
+    """
+    Make sharpness plot using predicted std values (y_std).
+    """
+
+    # Plot sharpness curve
+    figsize = (5, 5)
+    fontsize = 12
+    xlim = (y_std.min(), y_std.max())
+    fig_sharp = plt.figure(figsize=figsize)
+    ax_sharp = sns.distplot(y_std, kde=False, norm_hist=True)
+    ax_sharp.set_xlim(xlim)
+    ax_sharp.set_xlabel('Predicted standard deviation')
+    ax_sharp.set_ylabel('Normalized frequency')
+    ax_sharp.set_yticklabels([])
+    ax_sharp.set_yticks([])
+
+    # Calculate and report sharpness
+    sharpness = np.sqrt(np.mean(y_std**2))
+    _ = ax_sharp.axvline(x=sharpness, label='sharpness')
+    if sharpness < (xlim[0] + xlim[1]) / 2:
+        text = '\n  Sharpness = %.2f' % sharpness
+        h_align = 'left'
+    else:
+        text = '\nSharpness = %.2f ' % sharpness
+        h_align = 'right'
+    _ = ax_sharp.text(x=sharpness, y=ax_sharp.get_ylim()[1],
+                      s=text,
+                      verticalalignment='top',
+                      horizontalalignment=h_align,
+                      fontsize=fontsize)
+
+
+def plot_residuals_vs_stds(residuals, stds):
+    # Put stds on same scale as residuals
+    res_sum = np.sum(np.abs(residuals))
+    stds_scaled = (stds / np.sum(stds)) * res_sum 
+    # Plot
+    plt.figure()
+    plt.plot(stds, np.abs(residuals),'x')
+    lims = [np.min([plt.xlim()[0], plt.ylim()[0]]),
+            np.max([plt.xlim()[1], plt.ylim()[1]])]
+    plt.plot(lims, lims, '--', label='Ideal')
+    plt.xlabel('Standard deviations (scaled)')
+    plt.ylabel('Residuals (absolute value)')
+    plt.axis('square')
+    plt.xlim(lims)
+    plt.ylim(lims)
