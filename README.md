@@ -25,7 +25,7 @@ papers](docs/paper_list.md) in this area.
 
 ## Installation
 
-Tuun requires Python 3.6+. To install, clone and `cd` into this repo, and run:
+Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this repo, and run:
 ```
 $ pip install -r requirements/requirements.txt
 ```
@@ -41,9 +41,9 @@ predictions, predictions_std, y, x = ut.data.synthetic_sine_heteroscedastic(100)
 # Compute all uncertainty metrics
 metrics = ut.metrics.get_all_metrics(predictions, predictions_std, y)
 ```
-This returns a list of uncertainty quantification metrics for a vector of predictions
-(`predictions`) and respective uncertainties (`predictions_std`, given here as a vector
-of standard deviations), computed with respect to a set of observations `y`.
+This example computes metrics for a vector of predictions (`predictions`) and respective
+uncertainties (`predictions_std`, given here as a vector of standard deviations), taken
+with respect to a set of observations `y`.
 
 
 ## Toolbox Contents
@@ -54,7 +54,6 @@ Uncertainty Toolbox contains:
   uncertainty estimates.
 * [Visualizations](uncertainty_toolbox/viz.py) for predictive uncertainty estimates and
   metrics.
-<!--* [Dataset](uncertainty_toolbox/viz.py) examples.-->
 * [Recalibration](uncertainty_toolbox/viz.py) methods for improving the calibration of a
   predictor.
 * Relevant [publications and references](docs/paper_list.md).
