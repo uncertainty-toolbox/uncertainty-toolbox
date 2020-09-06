@@ -32,25 +32,44 @@ $ pip install -r requirements/requirements.txt
 
 
 ## Quick Start
-[**TODO**: show some minimal examples of usage here.]
+```python
+import uncertainty_toolbox as ut
+
+# Load example dataset of n=100 predictions, uncertainties, and observations
+predictions, predictions_std, y, x = ut.data.synthetic_sine_heteroscedastic(100)
+
+# Compute all uncertainty metrics
+metrics = ut.metrics.get_all_metrics(predictions, predictions_std, y)
+```
+This returns a list of uncertainty quantification metrics for a vector of predictions
+(`predictions`) and respective uncertainties (`predictions_std`, given here as a vector
+of standard deviations), computed with respect to a set of observations `y`.
 
 
-## Full Contents
-[**TODO**: somewhere need to give full contents of the toolbox. Should I include it
-here, or make a full readthedocs page? I also have a plan to link to various
-aspects of the contents via some descriptions/images near the top of this page.]
+## Toolbox Contents
+Uncertainty Toolbox contains:
+* [Glossary](docs/glossary.md) of terms related to predictive uncertainty
+  quantification.
+* [Metrics](uncertainty_toolbox/metrics.py) for assessing quality of predictive
+  uncertainty estimates.
+* [Visualizations](uncertainty_toolbox/viz.py) for predictive uncertainty estimates and
+  metrics.
+<!--* [Dataset](uncertainty_toolbox/viz.py) examples.-->
+* [Recalibration](uncertainty_toolbox/viz.py) methods for improving the calibration of a
+  predictor.
+* Relevant [publications and references](docs/paper_list.md).
 
 
 ## Visualize Uncertainties and Metrics
 
-**Overconfident** (_too certain_)
+**Overconfident** (_too little uncertainty_)
 <p align="center">
 <img src="docs/images/xy_over.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_over.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_over.png" alt="" width="32%" align="top">
 </p>
 
-**Underconfident** (_too uncertain_)
+**Underconfident** (_too much uncertainty_)
 <p align="center">
 <img src="docs/images/xy_under.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_under.png" alt="" width="32%" align="top">
@@ -63,6 +82,24 @@ aspects of the contents via some descriptions/images near the top of this page.]
 <img src="docs/images/intervals_correct.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_correct.png" alt="" width="32%" align="top">
 </p>
+
+
+## Citation
+
+If you use this toolbox, please consider citing one of the papers that lead to
+its development:
+```
+@article{tran2020methods,
+  title={Methods for comparing uncertainty quantifications for material property predictions},
+  author={Tran, Kevin and Neiswanger, Willie and Yoon, Junwoong and Zhang, Qingyang and Xing, Eric and Ulissi, Zachary W},
+  journal={Machine Learning: Science and Technology},
+  volume={1},
+  number={2},
+  pages={025006},
+  year={2020},
+  publisher={IOP Publishing}
+}
+```
 
 
 ## TODOs
