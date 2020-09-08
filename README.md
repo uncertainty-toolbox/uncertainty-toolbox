@@ -32,6 +32,7 @@ $ pip install -r requirements/requirements.txt
 
 
 ## Quick Start
+
 ```python
 import uncertainty_toolbox as uct
 
@@ -47,6 +48,7 @@ deviations), taken with respect to a corresponding set of observed values `y`.
 
 
 ## Toolbox Contents
+
 Uncertainty Toolbox contains:
 * [Glossary](docs/glossary.md) of terms related to predictive uncertainty
   quantification.
@@ -102,6 +104,7 @@ development:
 
 
 ## TODOs
+
 * contents: metrics, visualizations, list of papers (+ descriptions?), example code
 * unit tests
 * documentation (readthedocs?) and examples of code/usage

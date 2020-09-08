@@ -33,8 +33,8 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     h1 = plt.plot(x, pred_mean, '.', c='#ff7f0e')
     h3 = plt.fill_between(
         x,
-        pred_mean - 1.96 * pred_std,
-        pred_mean + 1.96 * pred_std,
+        pred_mean - 2. * pred_std,
+        pred_mean + 2. * pred_std,
         color='lightsteelblue',
         alpha=0.4,
     )
