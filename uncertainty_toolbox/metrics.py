@@ -99,7 +99,8 @@ def miscalibration_area(y_pred, y_std, y_true, num_bins=100):
     """Return miscalibration area."""
 
     # Get lists of expected and observed proportions for a range of quantiles
-    (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
+    # (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
+    (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins)
 
     # Compute approximation to area between curves
     polygon_points = []
@@ -117,6 +118,29 @@ def miscalibration_area(y_pred, y_std, y_true, num_bins=100):
     miscalibration_area = np.asarray(polygon_area_list).sum()
 
     return miscalibration_area
+
+
+def get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins=100):
+    """
+    Return lists of expected and observed proportions of points falling into
+    intervals corresponding to a range of quantiles.
+    """
+
+    # Compute proportions
+    exp_proportions = np.linspace(0, 1, num_bins)
+
+    norm = stats.norm(loc=0, scale=1)
+    gaussian_lower_bound = norm.ppf(0.5 - exp_proportions/2.0)
+    gaussian_upper_bound = norm.ppf(0.5 + exp_proportions/2.0)
+    residuals = y_pred - y_true
+    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1,1)
+    above_lower = normalized_residuals >= gaussian_lower_bound
+    below_upper = normalized_residuals <= gaussian_upper_bound
+
+    within_quantile = above_lower * below_upper
+    obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(residuals)
+
+    return exp_proportions, obs_proportions
 
 
 def get_proportion_lists(y_pred, y_std, y_true, num_bins=100):
