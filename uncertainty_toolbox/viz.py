@@ -60,6 +60,52 @@ def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
         plt.show()
 
 
+def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
+    """
+    Plot predicted values (y_pred) and intervals (y_std) vs true values
+    (y_true) 
+    """
+    order = np.argsort(y_true.flatten())
+    y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
+    xs = np.arange(len(order))
+    
+    intervals = 2 * y_std   # TODO set with argument
+
+    # Plot
+    fig = plt.figure()
+    fig.set_size_inches(6., 6.)
+    _ = plt.errorbar(
+        xs,
+        y_pred,
+        intervals,
+        fmt='o',
+        ls='none',
+        linewidth=1.5,
+        c='#1f77b4',
+        alpha=0.4,
+    )
+    plt.plot(xs, y_pred, 'o', c='#1f77b4')
+    plt.plot(xs, y_true, '--', c='#4f77b4')
+    ax = plt.gca()
+
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [int(np.floor(np.min(intervals_lower_upper[0]))),
+                    int(np.ceil(np.max(intervals_lower_upper[1])))]
+        lims_ext_range = list(range(lims_ext[0], lims_ext[1]))
+    else:
+        lims_ext = ylims
+
+    # Format
+    _ = ax.set_ylim(lims_ext)
+    _ = ax.set_xlabel('True Values Order')
+    _ = ax.set_ylabel('Predicted Values and Intervals')
+    _ = ax.set_aspect('auto', 'box')
+
+    if show:
+        plt.show()
+
 def plot_parity(y_pred, y_true, lims=None, axlabels=None, hexbins=False, show=False):
     """
     Make parity plot using predicted values (y_pred) and observed values (y_true).
