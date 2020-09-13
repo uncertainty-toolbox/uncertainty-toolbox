@@ -23,14 +23,14 @@ def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
 
     # Plot
     fig = plt.figure()
-    fig.set_size_inches(6., 6.)
+    fig.set_size_inches(5.0, 5.0)
     _ = plt.errorbar(
         y_true,
         y_pred,
         intervals,
         fmt='o',
         ls='none',
-        linewidth=1.5,
+        linewidth=2.0,
         c='#1f77b4',
         alpha=0.4,
     )
@@ -73,7 +73,7 @@ def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
 
     # Plot
     fig = plt.figure()
-    fig.set_size_inches(6., 6.)
+    fig.set_size_inches(5.0, 5.0)
     _ = plt.errorbar(
         xs,
         y_pred,
@@ -85,7 +85,7 @@ def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
         alpha=0.4,
     )
     plt.plot(xs, y_pred, 'o', c='#1f77b4')
-    plt.plot(xs, y_true, '--', c='#4f77b4')
+    plt.plot(xs, y_true, '--', linewidth=2.0, c='#ff7f0e')
     ax = plt.gca()
 
     # Determine lims
