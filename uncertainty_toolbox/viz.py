@@ -128,8 +128,9 @@ def plot_xy(
 
     fig = plt.figure()
     fig.set_size_inches(5.0, 5.0)
-    h1 = plt.plot(x, y_true, 'o', c='#ff7f0e', markersize=5)
-    h2 = plt.plot(x, y_pred, '-', c='#1f77b4')
+    #h1 = plt.plot(x, y_true, 'o', c='#ff7f0e', markersize=4)
+    h1 = plt.plot(x, y_true, '.', c='#ff7f0e')
+    h2 = plt.plot(x, y_pred, '-', c='#1f77b4', linewidth=2)
     h3 = plt.fill_between(
         x,
         y_pred - intervals,
