@@ -16,7 +16,7 @@ import uncertainty_toolbox.viz as uviz
 np.random.seed(11)
 
 # Generate synthetic predictive uncertainty results
-n_obs = 250
+n_obs = 650
 f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
 
 
@@ -24,35 +24,18 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     """Make set of plots."""
 
     update_rc_params()
+    ylims = [-3, 3]
+    n_subset = 50
 
-    # Make xy plot 
-    print('-----')
-    fig = plt.figure()
-    fig.set_size_inches(6., 6.)
-    h2 = plt.plot(x, y, 'o', c='#1f77b4')
-    h1 = plt.plot(x, pred_mean, '.', c='#ff7f0e')
-    h3 = plt.fill_between(
-        x,
-        pred_mean - 2. * pred_std,
-        pred_mean + 2. * pred_std,
-        color='lightsteelblue',
-        alpha=0.4,
+    # Make xy plot
+    uviz.plot_xy(
+        pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15]
     )
-    plt.legend(
-        [h2[0], h1[0], h3],
-        ['Observations', 'Predictions', 'Predictive Uncertainties'],
-        loc=3,
-    )
-    plt.xlim([0, 15])
-    plt.ylim([-3, 3])
-    plt.xlabel('x')
-    plt.ylabel('y')
     save_plot(idx1, idx2, 'xy')
     plt.show()
 
     # Make intervals plot
-    ylims = [-2.5, 2.5]
-    uviz.plot_intervals(pred_mean, pred_std, y, ylims=ylims)
+    uviz.plot_intervals(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
     save_plot(idx1, idx2, 'intervals')
     plt.show()
 
@@ -64,6 +47,11 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     # Make calibration plot
     uviz.plot_calibration(pred_mean, pred_std, y)
     save_plot(idx1, idx2, 'calibration')
+    plt.show()
+
+    # Make ordered intervals plot
+    uviz.plot_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
+    save_plot(idx1, idx2, 'intervals_ordered')
     plt.show()
 
 
