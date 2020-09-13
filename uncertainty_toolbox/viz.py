@@ -14,11 +14,13 @@ from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 
 
-def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
+def plot_intervals(y_pred, y_std, y_true, n_subset=None, ylims=None, show=False):
     """
-    Plot predicted values (y_pred) and intervals (y_std) vs true values
-    (y_true) 
+    Plot predicted values (y_pred) and intervals (y_std) vs observed values (y_true).
     """
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
     intervals = 2 * y_std   # TODO set with argument
 
     # Plot
@@ -32,7 +34,7 @@ def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
         ls='none',
         linewidth=2.0,
         c='#1f77b4',
-        alpha=0.4,
+        alpha=0.5,
     )
     plt.plot(y_true, y_pred, 'o', c='#1f77b4')
     ax = plt.gca()
@@ -60,11 +62,15 @@ def plot_intervals(y_pred, y_std, y_true, ylims=None, show=False):
         plt.show()
 
 
-def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
+def plot_intervals_ordered(
+    y_pred, y_std, y_true, n_subset=None, ylims=None, show=False
+):
     """
-    Plot predicted values (y_pred) and intervals (y_std) vs true values
-    (y_true) 
+    Plot predicted values (y_pred) and intervals (y_std) vs observed values (y_true).
     """
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
     xs = np.arange(len(order))
@@ -82,11 +88,14 @@ def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
         ls='none',
         linewidth=1.5,
         c='#1f77b4',
-        alpha=0.4,
+        alpha=0.5,
     )
-    plt.plot(xs, y_pred, 'o', c='#1f77b4')
-    plt.plot(xs, y_true, '--', linewidth=2.0, c='#ff7f0e')
+    h1 = plt.plot(xs, y_pred, 'o', c='#1f77b4')
+    h2 = plt.plot(xs, y_true, '--', linewidth=2.0, c='#ff7f0e')
     ax = plt.gca()
+
+    # Legend
+    plt.legend([h1[0], h2[0]], ['Predicted Values', 'Observed Values'], loc=4)
 
     # Determine lims
     if ylims is None:
@@ -99,17 +108,62 @@ def plot_intervals_ordered(y_pred, y_std, y_true, ylims=None, show=False):
 
     # Format
     _ = ax.set_ylim(lims_ext)
-    _ = ax.set_xlabel('True Values Order')
-    _ = ax.set_ylabel('Predicted Values and Intervals')
+    #_ = ax.set_xlabel('Observed Values Order')
+    _ = ax.set_xlabel('Index (Ordered by Observed Value)')
+    _ = ax.set_ylabel('Values and Intervals')
     _ = ax.set_aspect('auto', 'box')
 
     if show:
         plt.show()
 
-def plot_parity(y_pred, y_true, lims=None, axlabels=None, hexbins=False, show=False):
+
+def plot_xy(
+    y_pred, y_std, y_true, x, n_subset=None, ylims=None, xlims=None, show=False
+):
+    """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
+    if n_subset is not None:
+        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
+
+    intervals = 2 * y_std   # TODO set with argument
+
+    fig = plt.figure()
+    fig.set_size_inches(5.0, 5.0)
+    h1 = plt.plot(x, y_true, 'o', c='#ff7f0e', markersize=5)
+    h2 = plt.plot(x, y_pred, '-', c='#1f77b4')
+    h3 = plt.fill_between(
+        x,
+        y_pred - intervals,
+        y_pred + intervals,
+        color='lightsteelblue',
+        alpha=0.4,
+    )
+    plt.legend(
+        [h1[0], h2[0], h3],
+        ['Observations', 'Predictions', '95% Interval'],
+        loc=3,
+    )
+
+    if ylims is not None:
+        plt.ylim(ylims)
+
+    if xlims is not None:
+        plt.xlim(xlims)
+
+    plt.xlabel('x')
+    plt.ylabel('y')
+
+    if show:
+        plt.show()
+
+
+def plot_parity(
+    y_pred, y_true, n_subset=None, lims=None, axlabels=None, hexbins=False, show=False
+):
     """
     Make parity plot using predicted values (y_pred) and observed values (y_true).
     """
+    if n_subset is not None:
+        [y_pred, y_true] = filter_subset([y_pred, y_true], n_subset)
     
     # Set lims
     if lims is None:
@@ -184,7 +238,7 @@ def plot_parity(y_pred, y_true, lims=None, axlabels=None, hexbins=False, show=Fa
     _ = ax.text(x=lims[0], y=lims[1], s=text, horizontalalignment='left',
                 verticalalignment='top', fontsize=fontsize)
     fig = plt.gcf()
-    fig.set_size_inches(7.0, 7.0)
+    fig.set_size_inches(5.0, 5.0)
 
     if show:
         plt.show()
@@ -215,11 +269,15 @@ def get_proportion_in_interval(quantile, residuals, stds):
     return proportion
 
 
-def plot_calibration(y_pred, y_std, y_true, curve_label=None, show=False):
+def plot_calibration(
+    y_pred, y_std, y_true, n_subset=None, curve_label=None, show=False
+):
     """
     Make calibration plot using predicted mean values (y_pred), predicted std
     values (y_std), and observed values (y_true).
     """
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute exp_proportions and obs_proportions
     (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true)
@@ -267,16 +325,18 @@ def plot_calibration(y_pred, y_std, y_true, curve_label=None, show=False):
              fontsize=fontsize)
 
     fig = plt.gcf()
-    fig.set_size_inches(6., 6.)
+    fig.set_size_inches(5.0, 5.0)
 
     if show:
         plt.show()
 
 
-def plot_sharpness(y_std):
+def plot_sharpness(y_std, n_subset=None):
     """
     Make sharpness plot using predicted std values (y_std).
     """
+    if n_subset is not None:
+        [y_std] = filter_subset([y_std], n_subset)
 
     # Plot sharpness curve
     figsize = (5, 5)
@@ -321,3 +381,16 @@ def plot_residuals_vs_stds(residuals, stds):
     plt.axis('square')
     plt.xlim(lims)
     plt.ylim(lims)
+
+
+def filter_subset(input_list, n_subset):
+    """Keep only n_subset random indices from everything in input_list."""
+    assert type(n_subset) is int
+    n_total = len(input_list[0])
+    idx = np.random.choice(range(n_total), n_subset, replace=False)
+    idx = np.sort(idx)
+    output_list = []
+    for inp in input_list:
+        outp = inp[idx]
+        output_list.append(outp)
+    return output_list
