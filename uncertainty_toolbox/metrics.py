@@ -11,7 +11,7 @@ from sklearn.metrics import (mean_absolute_error,
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 
-
+""" Proper Scoring Rules """
 def nll_gaussian(y_pred, y_std, y_true, scaled=True):
     """
     Return negative log likelihood for held out data (y_true) given predictive
@@ -21,10 +21,13 @@ def nll_gaussian(y_pred, y_std, y_true, scaled=True):
     # Set residuals
     residuals = y_pred - y_true
 
+    # Flatten
+    num_pts = y_true.shape[0]
+    residuals = residuals.reshape(num_pts,)
+    y_std = y_std.reshape(num_pts,)
+
     # Compute nll
-    nll_list = []
-    for (res, std) in zip(residuals, y_std):
-          nll_list.append(stats.norm.logpdf(res, scale=std))
+    nll_list = stats.norm.logpdf(residuals, scale=y_std)
     nll = -1 * np.sum(nll_list)
 
     # Potentially scale so that sum becomes mean
@@ -33,6 +36,36 @@ def nll_gaussian(y_pred, y_std, y_true, scaled=True):
 
     return nll
 
+
+def crps_gaussian(y_pred, y_std, y_true, scaled=True):
+    """
+    Return the negatively oriented continuous ranked probability score for
+    held out data (y_true) given predictive uncertainty with mean (y_pred)
+    and standard-deviation (y_std).
+    """
+
+    # Flatten
+    num_pts = y_true.shape[0]
+    y_pred = y_pred.reshape(num_pts,)
+    y_std = y_std.reshape(num_pts,)
+    y_true = y_true.reshape(num_pts,)
+
+    # Compute crps
+    y_standardized = (y_true - y_pred) / y_std
+    term_1 = 1/np.std(np.pi)
+    term_2 = 2 * stats.norm.pdf(y_standardized)
+    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized) - 1)
+    crps_list = y_std * (term_1 - term_2 - term_3)
+    crps = -1 * np.sum(crps_list)
+
+    # Potentially scale so that sum becomes mean
+    if scaled:
+        crps = crps / len(crps_list)
+
+    return crps
+
+
+""" Error, Calibration, Sharpness Metrics """
 
 def prediction_error_metrics(y_pred, y_true):
     """
@@ -84,7 +117,7 @@ def root_mean_squared_calibration_error(y_pred, y_std, y_true, num_bins=100):
 
 
 def mean_absolute_calibration_error(y_pred, y_std, y_true, num_bins=100):
-    """Return mean absolute calibration error."""
+    """Return mean absolute calibration error; identical to ECE."""
 
     # Get lists of expected and observed proportions for a range of quantiles
     (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
