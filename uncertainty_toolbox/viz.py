@@ -58,6 +58,8 @@ def plot_intervals(y_pred, y_std, y_true, n_subset=None, ylims=None, show=False)
     _ = ax.set_ylabel('Predicted Values and Intervals')
     _ = ax.set_aspect('equal', 'box')
 
+    plt.title('Prediction Intervals')
+
     if show:
         plt.show()
 
@@ -110,8 +112,10 @@ def plot_intervals_ordered(
     _ = ax.set_ylim(lims_ext)
     #_ = ax.set_xlabel('Observed Values Order')
     _ = ax.set_xlabel('Index (Ordered by Observed Value)')
-    _ = ax.set_ylabel('Values and Intervals')
+    _ = ax.set_ylabel('Predicted Values and Intervals')
     _ = ax.set_aspect('auto', 'box')
+
+    plt.title('Ordered Prediction Intervals')
 
     if show:
         plt.show()
@@ -128,8 +132,7 @@ def plot_xy(
 
     fig = plt.figure()
     fig.set_size_inches(5.0, 5.0)
-    #h1 = plt.plot(x, y_true, 'o', c='#ff7f0e', markersize=4)
-    h1 = plt.plot(x, y_true, '.', c='#ff7f0e')
+    h1 = plt.plot(x, y_true, '.', mec='#ff7f0e', mfc='None')
     h2 = plt.plot(x, y_pred, '-', c='#1f77b4', linewidth=2)
     h3 = plt.fill_between(
         x,
@@ -140,7 +143,7 @@ def plot_xy(
     )
     plt.legend(
         [h1[0], h2[0], h3],
-        ['Observations', 'Predictions', '95% Interval'],
+        ['Observations', 'Predictions', '95\% Interval'],
         loc=3,
     )
 
@@ -150,8 +153,10 @@ def plot_xy(
     if xlims is not None:
         plt.xlim(xlims)
 
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel('$x$')
+    plt.ylabel('$y$')
+
+    plt.title('Confidence Band')
 
     if show:
         plt.show()
@@ -210,6 +215,8 @@ def plot_parity(
     _ = ax.plot(lims_ext, lims_ext, '--')
     _ = ax.set_xlabel(axlabels[0])
     _ = ax.set_ylabel(axlabels[1])
+
+    plt.title('Prediction Metrics')
 
     # Calculate the error metrics
     mae = mean_absolute_error(y_true, y_pred)
@@ -327,6 +334,8 @@ def plot_calibration(
 
     fig = plt.gcf()
     fig.set_size_inches(5.0, 5.0)
+
+    plt.title('Average Calibration')
 
     if show:
         plt.show()
