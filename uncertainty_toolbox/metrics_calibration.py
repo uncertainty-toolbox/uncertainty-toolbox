@@ -4,94 +4,8 @@ Metrics for assessing the quality of predictive uncertainty quantification.
 
 import numpy as np
 from scipy import stats
-from sklearn.metrics import (mean_absolute_error,
-                             mean_squared_error,
-                             r2_score,
-                             median_absolute_error)
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
-
-""" Proper Scoring Rules """
-def nll_gaussian(y_pred, y_std, y_true, scaled=True):
-    """
-    Return negative log likelihood for held out data (y_true) given predictive
-    uncertainty with mean (y_pred) and standard-deviation (y_std).
-    """
-
-    # Set residuals
-    residuals = y_pred - y_true
-
-    # Flatten
-    num_pts = y_true.shape[0]
-    residuals = residuals.reshape(num_pts,)
-    y_std = y_std.reshape(num_pts,)
-
-    # Compute nll
-    nll_list = stats.norm.logpdf(residuals, scale=y_std)
-    nll = -1 * np.sum(nll_list)
-
-    # Potentially scale so that sum becomes mean
-    if scaled:
-      nll = nll / len(nll_list)
-
-    return nll
-
-
-def crps_gaussian(y_pred, y_std, y_true, scaled=True):
-    """
-    Return the negatively oriented continuous ranked probability score for
-    held out data (y_true) given predictive uncertainty with mean (y_pred)
-    and standard-deviation (y_std).
-    """
-
-    # Flatten
-    num_pts = y_true.shape[0]
-    y_pred = y_pred.reshape(num_pts,)
-    y_std = y_std.reshape(num_pts,)
-    y_true = y_true.reshape(num_pts,)
-
-    # Compute crps
-    y_standardized = (y_true - y_pred) / y_std
-    term_1 = 1/np.std(np.pi)
-    term_2 = 2 * stats.norm.pdf(y_standardized)
-    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized) - 1)
-    crps_list = y_std * (term_1 - term_2 - term_3)
-    crps = -1 * np.sum(crps_list)
-
-    # Potentially scale so that sum becomes mean
-    if scaled:
-        crps = crps / len(crps_list)
-
-    return crps
-
-
-""" Error, Calibration, Sharpness Metrics """
-
-def prediction_error_metrics(y_pred, y_true):
-    """
-    Return prediction error metrics as a dict with keys:
-    - Mean average error ('mae')
-    - Root mean squared error ('rmse')
-    - Median absolute error ('mdae')
-    - Mean absolute relative percent difference ('marpd')
-    - r^2 ('r2')
-    - Pearson's correlation coefficient ('corr')
-    """
-
-    # Compute metrics
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mdae = median_absolute_error(y_true, y_pred)
-    residuals = y_true - y_pred
-    marpd = np.abs(2 * residuals / (np.abs(y_pred)
-                   + np.abs(y_true))
-                   ).mean() * 100
-    r2 = r2_score(y_true, y_pred)
-    corr = np.corrcoef(y_true, y_pred)[0, 1]
-    prediction_metrics = {'mae':mae, 'rmse':rmse, 'mdae':mdae, 'marpd':marpd,
-                          'r2':r2, 'corr':corr}
-
-    return prediction_metrics
 
 
 def sharpness(y_std):
@@ -127,6 +41,41 @@ def mean_absolute_calibration_error(y_pred, y_std, y_true, num_bins=100):
     mace = np.mean(abs_diff_proportions)
 
     return mace
+
+
+def adversarial_group_calibration(y_pred, y_std, y_true, cali_type,
+                                  num_bins=100, num_group_bins=10,
+                                  draw_with_replacement=True,
+                                  num_trials=20, num_group_draws=20):
+
+    if cali_type == 'mean_abs':
+        cali_fn = mean_absolute_calibration_error
+    elif cali_type == 'root_mean_sq':
+        cali_fn = root_mean_squared_calibration_error
+
+    num_pts = y_std.shape[0]
+    ratio_arr = np.linspace(0.01, 1, num_group_bins)
+    score_per_ratio = []
+    for r in ratio_arr:
+        group_size = max([int(round(num_pts * r)), 2])
+        score_per_trial = []
+        for _ in range(num_trials):
+            group_miscal_scores = []
+            for g_idx in range(num_group_draws):
+                rand_idx = np.random.choice(num_pts, group_size,
+                                            replace=draw_with_replacement)
+                group_y_pred = y_pred[rand_idx]
+                group_y_true = y_true[rand_idx]
+                group_y_std = y_std[rand_idx]
+                group_miscal = cali_fn(group_y_pred, group_y_std, group_y_true,
+                                       num_bins=num_bins)
+                group_miscal_scores.append(group_miscal)
+            max_miscal_score = np.max(group_miscal_scores)
+            score_per_trial.append(max_miscal_score)
+        mean_score_across_trials = np.mean(score_per_trial)
+        score_per_ratio.append(mean_score_across_trials)
+
+    return ratio_arr, np.array(score_per_ratio)
 
 
 def miscalibration_area(y_pred, y_std, y_true, num_bins=100):
