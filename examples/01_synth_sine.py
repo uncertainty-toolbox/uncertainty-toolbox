@@ -10,6 +10,7 @@ import uncertainty_toolbox.data as udata
 import uncertainty_toolbox.metrics as umetrics
 import uncertainty_toolbox.viz as uviz
 
+import neatplot
 
 
 # Set random seed
@@ -31,45 +32,35 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     uviz.plot_xy(
         pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15]
     )
-    save_plot(idx1, idx2, 'xy')
+    neatplot.save_figure(f'xy_{idx1}_{idx2}', 'png')
     plt.show()
 
     # Make intervals plot
     uviz.plot_intervals(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_plot(idx1, idx2, 'intervals')
+    neatplot.save_figure(f'intervals_{idx1}_{idx2}', 'png')
     plt.show()
 
-    # Make parity plot
-    uviz.plot_parity(pred_mean, y, hexbins=True)
-    save_plot(idx1, idx2, 'parity')
-    plt.show()
+    ## Make parity plot
+    #uviz.plot_parity(pred_mean, y, hexbins=True)
+    #neatplot.save_figure(f'parity_{idx1}_{idx2}', 'png')
+    #plt.show()
 
     # Make calibration plot
     uviz.plot_calibration(pred_mean, pred_std, y)
-    save_plot(idx1, idx2, 'calibration')
+    neatplot.save_figure(f'calibration_{idx1}_{idx2}', 'png')
     plt.show()
 
     # Make ordered intervals plot
     uviz.plot_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_plot(idx1, idx2, 'intervals_ordered')
+    neatplot.save_figure(f'intervals_ordered_{idx1}_{idx2}', 'png')
     plt.show()
 
 
 def update_rc_params():
     """Update matplotlib rc params."""
-    #plt.rcParams['font.family'] = 'serif'
     plt.rcParams.update({'font.size': 14})
     plt.rcParams.update({'xtick.labelsize': 14})
     plt.rcParams.update({'ytick.labelsize': 14})
-
-
-def save_plot(idx1, idx2, plot_str, file_ext='pdf'):
-    """Save a plot."""
-    file_name = plot_str + '_' + str(idx1) + '_' + str(idx2) + '.' + file_ext
-    plt.savefig(file_name, bbox_inches='tight')
-
-    # Print save message
-    print('Saved figure: {}'.format(file_name))
 
 
 # List of predictive means and standard deviations
