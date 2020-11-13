@@ -66,21 +66,21 @@ Uncertainty Toolbox contains:
 **Overconfident** (_too little uncertainty_)
 <p align="center">
 <img src="docs/images/xy_over.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_over.png" alt="" width="32%" align="top">
+<img src="docs/images/intervals_ordered_over.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_over.png" alt="" width="32%" align="top">
 </p>
 
 **Underconfident** (_too much uncertainty_)
 <p align="center">
 <img src="docs/images/xy_under.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_under.png" alt="" width="32%" align="top">
+<img src="docs/images/intervals_ordered_under.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_under.png" alt="" width="32%" align="top">
 </p>
 
 **Just right** (_well-calibrated_)
 <p align="center">
 <img src="docs/images/xy_correct.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_correct.png" alt="" width="32%" align="top">
+<img src="docs/images/intervals_ordered_correct.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_correct.png" alt="" width="32%" align="top">
 </p>
 
