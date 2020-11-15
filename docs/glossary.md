@@ -13,9 +13,7 @@ From [Wikipedia:](https://en.wikipedia.org/wiki/Uncertainty_quantification#:~:te
 In other words, this is the noise that is inherent to the system because of information that cannot be measured. When this noise is present, aleatoric uncertainty cannot be eliminated even as the number of samples collected tends towards infinity. 
 
 ## Calibration
-**TODO**: define.
 
-## Confidence
 > Confidence calibration is "the problem of predicting probability estimates representative of the true correctness likelihood." [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
 
 Let <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{Y}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{Y}" title="\hat{Y}" /></a> and <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{P}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{P}" title="\hat{P}" /></a> be the predicted class and its associated confidence (probability of correctness). We would like the confidence estimates <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{P}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{P}" title="\hat{P}" /></a> to be calibrated, which intuitively means that we want <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{P}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{P}" title="\hat{P}" /></a> to represent true probabilities (Guo et al., 2017).
@@ -26,6 +24,8 @@ Let <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&
 
 Suppose a classification model is given <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;N" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;N" title="N" /></a> input examples, and made predictions <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{y}_1,&space;...,&space;\hat{y}_N" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{y}_1,&space;...,&space;\hat{y}_N" title="\hat{y}_1, ..., \hat{y}_N" /></a> , each with <a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;\dpi{300}&space;\hat{p}" target="_blank"><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\hat{p}" title="\hat{p}" /></a> = `0.35`. We would expect `35%` of the predictions would be correct.
 
+## Confidence
+**TODO**: define.
 
 ## Epistemic Uncertainty
 From [Wikipedia:](https://en.wikipedia.org/wiki/Uncertainty_quantification#:~:text=Aleatoric%20and%20epistemic%20uncertainty,-Uncertainty%20is%20sometimes&text=Aleatoric%20uncertainty%20is%20also%20known,we%20run%20the%20same%20experiment.&text=Epistemic%20uncertainty%20is%20also%20known,but%20do%20not%20in%20practice.)
