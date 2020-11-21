@@ -71,29 +71,41 @@ def get_all_metrics(y_pred, y_std, y_true):
     """ Adversarial Group Calibration """
     print("Calculating adversarial group calibration metrics...")
     print("...for mean absolute calibration error")
-    ma_adv_group_size, ma_adv_group_cali = adversarial_group_calibration(
+    ma_adv_group_cali = adversarial_group_calibration(
         y_pred,
         y_std,
         y_true,
         cali_type="mean_abs",
         num_bins=options.cali_bins,
     )
+
+    ma_adv_group_size = ma_adv_group_cali.group_size
+    ma_adv_group_cali_score_mean = ma_adv_group_cali.score_mean
+    ma_adv_group_cali_score_stderr = ma_adv_group_cali.score_stderr
+
     cali_metrics["ma_adv_group_cali"] = {
         "group_sizes": ma_adv_group_size,
-        "adv_group_cali": ma_adv_group_cali,
+        "adv_group_cali_mean": ma_adv_group_cali_score_mean,
+        "adv_group_cali_stderr": ma_adv_group_cali_score_stderr,
     }
 
     print("...for root mean squared calibration error")
-    rms_adv_group_size, rms_adv_group_cali = adversarial_group_calibration(
+    rms_adv_group_cali = adversarial_group_calibration(
         y_pred,
         y_std,
         y_true,
-        cali_type="mean_abs",
+        cali_type="root_mean_sq",
         num_bins=options.cali_bins,
     )
+
+    rms_adv_group_size = rms_adv_group_cali.group_size
+    rms_adv_group_cali_score_mean = rms_adv_group_cali.score_mean
+    rms_adv_group_cali_score_stderr = rms_adv_group_cali.score_stderr
+
     cali_metrics["rms_adv_group_cali"] = {
         "group_sizes": rms_adv_group_size,
-        "adv_group_cali": rms_adv_group_cali,
+        "adv_group_cali_mean": rms_adv_group_cali_score_mean,
+        "adv_group_cali_stderr": rms_adv_group_cali_score_stderr,
     }
 
     """ Sharpness """

@@ -2,8 +2,10 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
+
 import numpy as np
 import tqdm
+from argparse import Namespace
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
@@ -69,7 +71,7 @@ def adversarial_group_calibration(
     cali_type,
     num_bins=100,
     num_group_bins=10,
-    draw_with_replacement=True,
+    draw_with_replacement=False,
     num_trials=10,
     num_group_draws=10,
 ):
@@ -92,7 +94,8 @@ def adversarial_group_calibration(
 
     num_pts = y_std.shape[0]
     ratio_arr = np.linspace(0, 1, num_group_bins)
-    score_per_ratio = []
+    score_mean_per_ratio = []
+    score_stderr_per_ratio = []
     print(
         "Measuring adversarial group calibration by spanning group size between {} and {}, in {} intervals".format(
             np.min(ratio_arr), np.max(ratio_arr), num_group_bins
@@ -120,10 +123,17 @@ def adversarial_group_calibration(
                 group_miscal_scores.append(group_miscal)
             max_miscal_score = np.max(group_miscal_scores)
             score_per_trial.append(max_miscal_score)
-        mean_score_across_trials = np.mean(score_per_trial)
-        score_per_ratio.append(mean_score_across_trials)
+        score_mean_across_trials = np.mean(score_per_trial)
+        score_stderr_across_trials = np.std(score_per_trial, ddof=1)
+        score_mean_per_ratio.append(score_mean_across_trials)
+        score_stderr_per_ratio.append(score_stderr_across_trials)
 
-    return ratio_arr, np.array(score_per_ratio)
+    out = Namespace(
+        group_size=ratio_arr,
+        score_mean=np.array(score_mean_per_ratio),
+        score_stderr=np.array(score_stderr_per_ratio),
+    )
+    return out
 
 
 def miscalibration_area(y_pred, y_std, y_true, num_bins=100, vectorized=False):
