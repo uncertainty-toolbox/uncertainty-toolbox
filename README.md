@@ -90,6 +90,13 @@ Uncertainty Toolbox contains:
 If you use this toolbox, please consider citing one of the papers that led to its
 development:
 ```
+@article{chung2020beyond,
+  title={Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification},
+  author={Chung, Youngseog and Neiswanger, Willie and Char, Ian and Schneider, Jeff},
+  journal={arXiv preprint arXiv:2011.09588},
+  year={2020}
+}
+
 @article{tran2020methods,
   title={Methods for comparing uncertainty quantifications for material property predictions},
   author={Tran, Kevin and Neiswanger, Willie and Yoon, Junwoong and Zhang, Qingyang and Xing, Eric and Ulissi, Zachary W},
