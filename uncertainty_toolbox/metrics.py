@@ -2,212 +2,152 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
+import os, sys
 import numpy as np
-from scipy import stats
-from sklearn.metrics import (mean_absolute_error,
-                             mean_squared_error,
-                             r2_score,
-                             median_absolute_error)
-from shapely.geometry import Polygon, LineString
-from shapely.ops import polygonize, unary_union
+import argparse
 
-""" Proper Scoring Rules """
-def nll_gaussian(y_pred, y_std, y_true, scaled=True):
-    """
-    Return negative log likelihood for held out data (y_true) given predictive
-    uncertainty with mean (y_pred) and standard-deviation (y_std).
-    """
-
-    # Set residuals
-    residuals = y_pred - y_true
-
-    # Flatten
-    num_pts = y_true.shape[0]
-    residuals = residuals.reshape(num_pts,)
-    y_std = y_std.reshape(num_pts,)
-
-    # Compute nll
-    nll_list = stats.norm.logpdf(residuals, scale=y_std)
-    nll = -1 * np.sum(nll_list)
-
-    # Potentially scale so that sum becomes mean
-    if scaled:
-      nll = nll / len(nll_list)
-
-    return nll
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+from metrics_accuracy import prediction_error_metrics
+from metrics_calibration import (
+    root_mean_squared_calibration_error,
+    mean_absolute_calibration_error,
+    miscalibration_area,
+    adversarial_group_calibration,
+    sharpness,
+)
+from metrics_scoring_rule import (
+    nll_gaussian,
+    crps_gaussian,
+    check_score,
+    interval_score,
+)
 
 
-def crps_gaussian(y_pred, y_std, y_true, scaled=True):
-    """
-    Return the negatively oriented continuous ranked probability score for
-    held out data (y_true) given predictive uncertainty with mean (y_pred)
-    and standard-deviation (y_std).
-    """
+def parse_run_options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--cali_bins",
+        type=int,
+        default=100,
+        help="number of bins to discretize probabilities for calibration",
+    )
+    parser.add_argument(
+        "--sr_bins",
+        type=int,
+        default=99,
+        help="number of bins to discretize probabilities for scoring rules",
+    )
+    parser.add_argument(
+        "--sr_scale", type=int, default=1, help="1 to scale scoring rules outputs"
+    )
+    # parser.add_argument('--', type=, default=, help='')
 
-    # Flatten
-    num_pts = y_true.shape[0]
-    y_pred = y_pred.reshape(num_pts,)
-    y_std = y_std.reshape(num_pts,)
-    y_true = y_true.reshape(num_pts,)
+    options = parser.parse_args()
+    options.sr_scale = bool(options.sr_scale)
 
-    # Compute crps
-    y_standardized = (y_true - y_pred) / y_std
-    term_1 = 1/np.std(np.pi)
-    term_2 = 2 * stats.norm.pdf(y_standardized)
-    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized) - 1)
-    crps_list = y_std * (term_1 - term_2 - term_3)
-    crps = -1 * np.sum(crps_list)
-
-    # Potentially scale so that sum becomes mean
-    if scaled:
-        crps = crps / len(crps_list)
-
-    return crps
+    return options
 
 
-""" Error, Calibration, Sharpness Metrics """
+def get_all_metrics(y_pred, y_std, y_true):
+    options = parse_run_options()
 
-def prediction_error_metrics(y_pred, y_true):
-    """
-    Return prediction error metrics as a dict with keys:
-    - Mean average error ('mae')
-    - Root mean squared error ('rmse')
-    - Median absolute error ('mdae')
-    - Mean absolute relative percent difference ('marpd')
-    - r^2 ('r2')
-    - Pearson's correlation coefficient ('corr')
-    """
+    """ Accuracy """
+    print("Calculating accuracy metrics...")
+    acc_metrics = prediction_error_metrics(y_pred, y_true)
 
-    # Compute metrics
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mdae = median_absolute_error(y_true, y_pred)
-    marpd = np.abs(2 * residuals / (np.abs(y_pred)
-                   + np.abs(y_true))
-                  ).mean() * 100
-    r2 = r2_score(y_true, y_pred)
-    corr = np.corrcoef(y_true, y_pred)[0, 1]
-    prediction_metrics = {'mae':mae, 'rmse':rmse, 'mdae':mdae, 'marpd':marpd,
-                          'r2':r2, 'corr':corr}
+    """ Calibration """
+    print("Calculating average calibration metrics...")
+    cali_metrics = {}
+    cali_metrics["rms_cali"] = root_mean_squared_calibration_error(
+        y_pred, y_std, y_true, num_bins=options.cali_bins
+    )
+    cali_metrics["ma_cali"] = mean_absolute_calibration_error(
+        y_pred, y_std, y_true, num_bins=options.cali_bins
+    )
+    cali_metrics["miscal_area"] = miscalibration_area(
+        y_pred, y_std, y_true, num_bins=options.cali_bins
+    )
 
-    return prediction_metrics
+    """ Adversarial Group Calibration """
+    print("Calculating adversarial group calibration metrics...")
+    print("...for mean absolute calibration error")
+    ma_adv_group_cali = adversarial_group_calibration(
+        y_pred,
+        y_std,
+        y_true,
+        cali_type="mean_abs",
+        num_bins=options.cali_bins,
+    )
 
+    ma_adv_group_size = ma_adv_group_cali.group_size
+    ma_adv_group_cali_score_mean = ma_adv_group_cali.score_mean
+    ma_adv_group_cali_score_stderr = ma_adv_group_cali.score_stderr
 
-def sharpness(y_std):
-    """
-    Return sharpness (a single measure of the overall confidence).
-    """
+    cali_metrics["ma_adv_group_cali"] = {
+        "group_sizes": ma_adv_group_size,
+        "adv_group_cali_mean": ma_adv_group_cali_score_mean,
+        "adv_group_cali_stderr": ma_adv_group_cali_score_stderr,
+    }
 
-    # Compute sharpness
-    sharpness = np.sqrt(np.mean(y_std**2))
+    print("...for root mean squared calibration error")
+    rms_adv_group_cali = adversarial_group_calibration(
+        y_pred,
+        y_std,
+        y_true,
+        cali_type="root_mean_sq",
+        num_bins=options.cali_bins,
+    )
 
-    return sharpness
+    rms_adv_group_size = rms_adv_group_cali.group_size
+    rms_adv_group_cali_score_mean = rms_adv_group_cali.score_mean
+    rms_adv_group_cali_score_stderr = rms_adv_group_cali.score_stderr
 
+    cali_metrics["rms_adv_group_cali"] = {
+        "group_sizes": rms_adv_group_size,
+        "adv_group_cali_mean": rms_adv_group_cali_score_mean,
+        "adv_group_cali_stderr": rms_adv_group_cali_score_stderr,
+    }
 
-def root_mean_squared_calibration_error(y_pred, y_std, y_true, num_bins=100):
-    """Return root mean squared calibration error."""
+    """ Sharpness """
+    print("Calculating sharpness metrics...")
+    cali_metrics["sharp"] = sharpness(y_std)
 
-    # Get lists of expected and observed proportions for a range of quantiles
-    (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
+    """ Proper Scoring Rules """
+    print("Calculating proper scoring rule metrics...")
+    sr_metrics = {}
+    sr_metrics["nll"] = nll_gaussian(y_pred, y_std, y_true, scaled=options.sr_scale)
+    sr_metrics["crps"] = crps_gaussian(y_pred, y_std, y_true, scaled=options.sr_scale)
+    sr_metrics["check"] = check_score(
+        y_pred, y_std, y_true, scaled=options.sr_scale, resolution=options.sr_bins
+    )
+    sr_metrics["interval"] = interval_score(
+        y_pred, y_std, y_true, scaled=options.sr_scale, resolution=options.sr_bins
+    )
 
-    squared_diff_proportions = np.square(exp_proportions - obs_proportions)
-    rmsce = np.sqrt(np.mean(squared_diff_proportions))
+    # Print all outputs
+    for acc_metric, acc_val in acc_metrics.items():
+        print("{:}: {:.3f}".format(acc_metric, acc_val))
+    for cali_metric, cali_val in cali_metrics.items():
+        if "adv_group_cali" not in cali_metric:
+            print("{:}: {:.3f}".format(cali_metric, cali_val))
+        else:
+            print("{:}:".format(cali_metric))
+            for subitem, subval in cali_val.items():
+                print("{:>15}: {:}".format(subitem, np.around(subval, decimals=3)))
+    for sr_metric, sr_val in sr_metrics.items():
+        print("{:}: {:.3f}".format(sr_metric, sr_val))
 
-    return rmsce
+    all_scores = {
+        "accuracy": acc_metrics,
+        "cali_sharp": cali_metrics,
+        "scoring_rule": sr_metrics,
+    }
 
-
-def mean_absolute_calibration_error(y_pred, y_std, y_true, num_bins=100):
-    """Return mean absolute calibration error; identical to ECE."""
-
-    # Get lists of expected and observed proportions for a range of quantiles
-    (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
-
-    abs_diff_proportions = np.abs(exp_proportions - obs_proportions)
-    mace = np.mean(abs_diff_proportions)
-
-    return mace
-
-
-def miscalibration_area(y_pred, y_std, y_true, num_bins=100):
-    """Return miscalibration area."""
-
-    # Get lists of expected and observed proportions for a range of quantiles
-    # (exp_proportions, obs_proportions) = get_proportion_lists(y_pred, y_std, y_true, num_bins)
-    (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins)
-
-    # Compute approximation to area between curves
-    polygon_points = []
-    for point in zip(exp_proportions, obs_proportions):
-        polygon_points.append(point)
-    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
-        polygon_points.append(point)
-    polygon_points.append((exp_proportions[0], obs_proportions[0]))
-    polygon = Polygon(polygon_points)
-    x, y = polygon.exterior.xy
-    ls = LineString(np.c_[x, y])
-    lr = LineString(ls.coords[:] + ls.coords[0:1])
-    mls = unary_union(lr)
-    polygon_area_list =[poly.area for poly in polygonize(mls)]
-    miscalibration_area = np.asarray(polygon_area_list).sum()
-
-    return miscalibration_area
-
-
-def get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins=100):
-    """
-    Return lists of expected and observed proportions of points falling into
-    intervals corresponding to a range of quantiles.
-    """
-
-    # Compute proportions
-    exp_proportions = np.linspace(0, 1, num_bins)
-
-    norm = stats.norm(loc=0, scale=1)
-    gaussian_lower_bound = norm.ppf(0.5 - exp_proportions/2.0)
-    gaussian_upper_bound = norm.ppf(0.5 + exp_proportions/2.0)
-    residuals = y_pred - y_true
-    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1,1)
-    above_lower = normalized_residuals >= gaussian_lower_bound
-    below_upper = normalized_residuals <= gaussian_upper_bound
-
-    within_quantile = above_lower * below_upper
-    obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(residuals)
-
-    return exp_proportions, obs_proportions
+    return all_scores
 
 
-def get_proportion_lists(y_pred, y_std, y_true, num_bins=100):
-    """
-    Return lists of expected and observed proportions of points falling into
-    intervals corresponding to a range of quantiles.
-    """
-
-    # Compute proportions
-    exp_proportions = np.linspace(0, 1, num_bins)
-    obs_proportions = [get_proportion_in_interval(y_pred, y_std, y_true, quantile)
-                       for quantile in exp_proportions]
-
-    return exp_proportions, obs_proportions
-
-
-def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
-    """
-    For a specified quantile, return the proportion of points falling into
-    an interval corresponding to that quantile.
-    """
-
-    # Computer lower and upper bound for quantile
-    norm = stats.norm(loc=0, scale=1)
-    lower_bound = norm.ppf(0.5 - quantile/2)
-    upper_bound = norm.ppf(0.5 + quantile/2)
-
-    # Compute proportion of normalized residuals within lower to upper bound
-    residuals = y_pred - y_true
-    normalized_residuals = residuals.reshape(-1) / y_std.reshape(-1)
-    num_within_quantile = 0
-    for resid in normalized_residuals:
-        if lower_bound <= resid <= upper_bound:
-            num_within_quantile += 1.
-    proportion = num_within_quantile / len(residuals)
-
-    return proportion
+if __name__ == "__main__":
+    y_pred = np.array([1, 2, 3, 4])
+    y_std = np.array([1, 2, 3, 4])
+    y_true = np.array([1.3, 2.3, 3.3, 4])
+    get_all_metrics(y_pred, y_std, y_true)
