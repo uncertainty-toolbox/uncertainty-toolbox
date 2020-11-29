@@ -5,7 +5,8 @@
 **Uncertainty Toolbox**
 > A python toolbox for predictive uncertainty quantification, calibration, metrics, and
 > visualization.\
-> And a collection of [relevant papers and references](docs/paper_list.md).
+> Also: a [glossary of useful terms](docs/glossary.md) and a collection
+> of [relevant papers and references](docs/paper_list.md).
 
 <!--**A python toolbox for predictive uncertainty quantification, calibration, metrics, and visualization.**-->
 
@@ -19,8 +20,8 @@ Uncertainty Toolbox provides standard metrics to quantify and compare predictive
 uncertainty estimates, gives intuition for these metrics, produces visualizations of
 these metrics/uncertainties, and implements simple "re-calibration" procedures to
 improve these uncertainties.  This toolbox currently focuses on regression tasks.  It
-also aims to provide and maintain a reference list of [relevant
-papers](docs/paper_list.md) in this area.
+also aims to provide a [glossary of terms](docs/glossary.md) and to maintain a reference
+list of [relevant papers](docs/paper_list.md) in this area.
 
 
 ## Installation
@@ -43,8 +44,16 @@ predictions, predictions_std, y, x = uct.data.synthetic_sine_heteroscedastic(100
 metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 ```
 This example computes metrics for a vector of predicted values (`predictions`) and
-associated uncertainties (`predictions_std`, given here as a vector of standard
-deviations), taken with respect to a corresponding set of observed values `y`.
+associated uncertainties (`predictions_std`, a vector of standard deviations), taken
+with respect to a corresponding set of observed values `y`.
+
+The `get_all_metrics` function will return metrics for calibration (__root mean squared
+calibration error__, __mean absolute calibration error__, __miscalibration area__),
+adversarial group calibration (__RMS and MA adversarial group calibration error__),
+sharpness (__expected standard deviation__), proper scoring rules (__negative
+log-likelihood__, __continuous ranked probability score__, __check score__, __interval
+score__), and accuracy (__root mean squared error__, __mean absolute error__, __median
+absolute error__, __coefficient of determination__, __correlation__).
 
 
 ## Toolbox Contents
