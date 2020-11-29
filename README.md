@@ -8,8 +8,6 @@
 > Also: a [glossary of useful terms](docs/glossary.md) and a collection
 > of [relevant papers and references](docs/paper_list.md).
 
-<!--**A python toolbox for predictive uncertainty quantification, calibration, metrics, and visualization.**-->
-
 &nbsp;\
 Many machine learning methods return predictions along with uncertainties of some form,
 such as distributions or confidence intervals. This begs the questions: How do we
@@ -19,9 +17,21 @@ or _ideal_ uncertainty? Are our uncertainties accurate and _well-calibrated_?
 Uncertainty Toolbox provides standard metrics to quantify and compare predictive
 uncertainty estimates, gives intuition for these metrics, produces visualizations of
 these metrics/uncertainties, and implements simple "re-calibration" procedures to
-improve these uncertainties.  This toolbox currently focuses on regression tasks.  It
-also aims to provide a [glossary of terms](docs/glossary.md) and to maintain a reference
-list of [relevant papers](docs/paper_list.md) in this area.
+improve these uncertainties.  This toolbox currently focuses on regression tasks.
+
+
+## Toolbox Contents
+
+Uncertainty Toolbox contains:
+* [Glossary](docs/glossary.md) of terms related to predictive uncertainty
+  quantification.
+* [Metrics](uncertainty_toolbox/metrics.py) for assessing quality of predictive
+  uncertainty estimates.
+* [Visualizations](uncertainty_toolbox/viz.py) for predictive uncertainty estimates and
+  metrics.
+* [Recalibration](uncertainty_toolbox/recalibration.py) methods for improving the calibration of a
+  predictor.
+* Relevant [publications and references](docs/paper_list.md) on metrics and methods.
 
 
 ## Installation
@@ -61,20 +71,6 @@ The `get_all_metrics` function will return metrics for:
 * __accuracy__
     - root mean squared error, mean absolute error, median absolute error,
       coefficient of determination, correlation
-
-
-## Toolbox Contents
-
-Uncertainty Toolbox contains:
-* [Glossary](docs/glossary.md) of terms related to predictive uncertainty
-  quantification.
-* [Metrics](uncertainty_toolbox/metrics.py) for assessing quality of predictive
-  uncertainty estimates.
-* [Visualizations](uncertainty_toolbox/viz.py) for predictive uncertainty estimates and
-  metrics.
-* [Recalibration](uncertainty_toolbox/recalibration.py) methods for improving the calibration of a
-  predictor.
-* Relevant [publications and references](docs/paper_list.md) on metrics and methods.
 
 
 ## Metrics and Visualizations
