@@ -3,6 +3,9 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open('requirements/requirements.txt', 'r') as f:
+    requirements = f.read().splitlines()
+
 setuptools.setup(
     name="uncertainty_toolbox", # Replace with your own username
     version="1.0.0",
@@ -14,6 +17,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/uncertainty-toolbox/uncertainty-toolbox",
     packages=setuptools.find_packages(),
+    install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

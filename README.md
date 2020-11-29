@@ -28,7 +28,6 @@ list of [relevant papers](docs/paper_list.md) in this area.
 
 Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this repo, and run:
 ```
-$ pip install -r requirements/requirements.txt
 $ pip install -e .
 ```
 
