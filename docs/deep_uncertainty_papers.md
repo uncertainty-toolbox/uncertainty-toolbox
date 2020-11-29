@@ -140,6 +140,46 @@
   - [NeurIPS Workshop paper](http://bayesiandeeplearning.org/2018/papers/128.pdf)
 
 
+## Meta-Network Strategies
+### (Training a neural network or other model to directly predict confidence/uncertainty.)
+
+* Note: see what is used for each element of ensemble in "Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles".
+
+<!---
+* Predictive Uncertainty Estimation via Prior Networks
+  - By Andrey Malinin, Mark Gales
+  - [NeurIPS site](http://papers.nips.cc/paper/7936-predictive-uncertainty-estimation-via-prior-networks)
+--->
+
+* Learning Confidence for Out-of-Distribution Detection in Neural Networks
+  - By Terrance DeVries, Graham W. Taylor
+  - [Arxiv paper](https://arxiv.org/abs/1802.04865)
+
+* Learning for Single-Shot Confidence Calibration in Deep Neural Networks through Stochastic Inferences
+  - By Seonguk Seo, Paul Hongsuck Seo, Bohyung Han
+  - [Arix paper](https://arxiv.org/abs/1809.10877)
+
+* Detecting Adversarial Examples and Other Misclassifications in Neural Networks by Introspection
+  - By Jonathan Aigrain, Marcin Detyniecki
+  - [Arxiv paper](https://arxiv.org/abs/1905.09186)
+
+* Towards Better Confidence Estimation for Neural Models
+  - By Vishal Thanvantri Vasudevan, Abhinav Sethy, Alireza Roshan Ghias
+  - [Paper pdf](https://d39w7f4ix9f5s9.cloudfront.net/ae/5d/24a9ac264d34bb73f313f2713f89/scipub-133.pdf)
+
+* Density estimation in representation space to predict model uncertainty
+  - By Tiago Ramalho, Miguel Miranda
+  - [Arxiv paper](https://arxiv.org/abs/1908.07235)
+
+* Training Confidence-calibrated Classifiers for Detecting Out-of-Distribution Samples
+  - By Kimin Lee, Honglak Lee, Kibok Lee, Jinwoo Shin
+  - [Arxiv paper](https://arxiv.org/abs/1711.09325)
+
+* Uncertainty Estimation Using a Single Deep Deterministic Neural Network
+  - By Joost van Amersfoort, Lewis Smith, Yee Whye Teh, Yarin Gal
+  - [Arxiv paper](https://arxiv.org/pdf/2003.02037.pdf)
+
+
 ## Holistic Review of UQ Methods
 * Methods for Comparing Uncertainty Quantifications for Material Property Predictions
   - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, Zachary W Ulissi
@@ -196,45 +236,6 @@
   - By Andrey Malinin, Anton Ragni, Kate M. Knill, Mark J. F. Gales
   - [Paper pdf](https://www.aclweb.org/anthology/P17-2008.pdf)
 
-
-## Meta-Network Strategies
-### (Training a neural network or other model to directly predict confidence/uncertainty.)
-
-* Note: see what is used for each element of ensemble in "Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles".
-
-<!---
-* Predictive Uncertainty Estimation via Prior Networks
-  - By Andrey Malinin, Mark Gales
-  - [NeurIPS site](http://papers.nips.cc/paper/7936-predictive-uncertainty-estimation-via-prior-networks)
---->
-
-* Learning Confidence for Out-of-Distribution Detection in Neural Networks
-  - By Terrance DeVries, Graham W. Taylor
-  - [Arxiv paper](https://arxiv.org/abs/1802.04865)
-
-* Learning for Single-Shot Confidence Calibration in Deep Neural Networks through Stochastic Inferences
-  - By Seonguk Seo, Paul Hongsuck Seo, Bohyung Han
-  - [Arix paper](https://arxiv.org/abs/1809.10877)
-
-* Detecting Adversarial Examples and Other Misclassifications in Neural Networks by Introspection
-  - By Jonathan Aigrain, Marcin Detyniecki
-  - [Arxiv paper](https://arxiv.org/abs/1905.09186)
-
-* Towards Better Confidence Estimation for Neural Models
-  - By Vishal Thanvantri Vasudevan, Abhinav Sethy, Alireza Roshan Ghias
-  - [Paper pdf](https://d39w7f4ix9f5s9.cloudfront.net/ae/5d/24a9ac264d34bb73f313f2713f89/scipub-133.pdf)
-
-* Density estimation in representation space to predict model uncertainty
-  - By Tiago Ramalho, Miguel Miranda
-  - [Arxiv paper](https://arxiv.org/abs/1908.07235)
-
-* Training Confidence-calibrated Classifiers for Detecting Out-of-Distribution Samples
-  - By Kimin Lee, Honglak Lee, Kibok Lee, Jinwoo Shin
-  - [Arxiv paper](https://arxiv.org/abs/1711.09325)
-
-* Uncertainty Estimation Using a Single Deep Deterministic Neural Network
-  - By Joost van Amersfoort, Lewis Smith, Yee Whye Teh, Yarin Gal
-  - [Arxiv paper](https://arxiv.org/pdf/2003.02037.pdf)
 
 <!---
 ## Deep (classic) approximate Bayesian inference
