@@ -1,199 +1,260 @@
-# List of Papers Focusing on Metrics for Predictive Uncertainty Quantification and Probabilistic Forecasting
+# Paper List: Methods and Metrics for Predictive Uncertainty Quantification and Probabilistic Forecasting
 
-### Seminal works by Tilmann Gneiting and Co
+This is a partial list (and a work in progress), which covers only a small subset of the
+many papers in this area.
+
+
+## Seminal Works on Probabilistic Forecasting and UQ Metrics
 * Probabilistic forecasts, calibration and sharpness
     - By Tilmann Gneiting, Fadoua Balabdaoui, and Adrian E. Raftery
     - 2007
-    - [[Link 1]](https://hal.archives-ouvertes.fr/hal-00363242/document), [[Link 2]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
+    - [[PDF]](https://hal.archives-ouvertes.fr/hal-00363242/document), [[PDF]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
     - Definitions of calibration and sharpness, and corresponding metrics
 
 * Strictly Proper Scoring Rules, Prediction, and Estimation
     - By Tilmann Gneiting, and Adrian E. Raftery
     - 2007
-    - [[Link 1]](https://www.tandfonline.com/doi/pdf/10.1198/016214506000001437), [[Link 2]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf)
+    - [[PDF]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf), [[Link]](https://www.tandfonline.com/doi/pdf/10.1198/016214506000001437)
     - Definition of proper scoring rules and various scoring rules
 
 * Using Bayesian Model Averaging to Calibrate Forecast Ensembles
     - By Adrian E. Raftery, Tilmann Gneiting, Fadoua Balabdaoui, and Michael Polakowski
     - 2005
-    - [[Link 1]](https://journals.ametsoc.org/doi/pdf/10.1175/MWR2906.1), [[Link 2]](https://journals.ametsoc.org/doi/full/10.1175/MWR2906.1)
+    - [[PDF]](https://journals.ametsoc.org/doi/pdf/10.1175/MWR2906.1), [[Link]](https://journals.ametsoc.org/doi/full/10.1175/MWR2906.1)
 
-* Using Proper Divergence Functions to Evaluate Climate Models
-    - By Thordis L. Thorarinsdottir, Tilmann Gneiting, and Nadine Gissibl
-    - 2013
-    - [[Link 1]](https://arxiv.org/pdf/1301.5927.pdf), [[Link 2]](https://epubs.siam.org/doi/abs/10.1137/130907550) 
+* Calibrated Probabilistic Forecasting Using Ensemble Model Output Statistics and Minimum CRPS Estimation
+    - By Tilmann Gneiting, Adrian E. Raftery, Anton H. Westveld III, and Tom Goldman
+    - 2005
+    - [[PDF]](https://journals.ametsoc.org/doi/pdf/10.1175/MWR2904.1)
+
+* Making and Evaluating Point Forecasts
+    - By Tilmann Gneiting
+    - 2011
+    - [[Link]](https://www.tandfonline.com/doi/pdf/10.1198/jasa.2011.r10138), [[Link]](https://www.jstor.org/stable/pdf/41416407.pdf)
 
 * Probabilistic Forecasting
     - By Tilmann Gneiting and Matthias Katzfuss
     - 2014
-    - [[Link 1]](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-062713-085831), [[Link 2]](https://www.annualreviews.org/doi/full/10.1146/annurev-statistics-062713-085831)
+    - [[Link]](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-062713-085831)
 
-### In Machine Learning Literature
+
+## Calibration, Sharpness, and Recalibration in Deep Learning
 
 * Accurate Uncertainties for Deep Learning Using Calibrated Regression
-    - By Volodymyr Kuleshov, Nathan Fenner, and Stefano Ermon
-    - 2018
-    - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
-    - Calibration and Recalibration; Regression
+  - By Volodymyr Kuleshov, Nathan Fenner, Stefano Ermon
+  - [[ArXiv]](https://arxiv.org/abs/1807.00263)
 
 * On Calibration of Modern Neural Networks
-    - By Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger
-    - 2017
-    - [[Link 1]](http://proceedings.mlr.press/v70/guo17a/guo17a.pdf) [[Link 2]](https://arxiv.org/abs/1706.04599)
-    - Calibration and Recalibration; Classification
+  - By Chuan Guo, Geoff Pleiss, Yu Sun, Kilian Q. Weinberger
+  - [[ArXiv]](https://arxiv.org/abs/1706.04599)
 
-* Individual Calibration with Randomized Forecasting
-    - By Shengjia Zhao, Tengyu Ma and Stefano Ermon
-    - 2020
-    - [[Link 1]](), [[Link 2]](https://arxiv.org/pdf/2006.10288.pdf)
-    - Calibration; Regression 
+* Verified Uncertainty Calibration
+  - By Ananya Kumar, Percy Liang, Tengyu Ma
+  - [[ArXiv]](https://arxiv.org/abs/1909.10155)
 
 * Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
-    - By Youngseog Chung, Willie Neiswanger, Ian Char, and Jeff Schneider
-    - 2020
-    - [[Link 1]](https://arxiv.org/pdf/2011.09588.pdf), [[Link 2]]()
-    - Calibration, Sharpness, Proper Scoring Rules; Regression
-    
-* Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
-    - By Eyke Hüllermeier and Willem Waegeman
-    - 2020
-    - [[Link 1]](https://arxiv.org/pdf/1910.09457.pdf)
-    - Overview of Concepts, Methods, and Metrics in UQ
-
-
-<!---
-#### Probabilistc Neural Networks
-* Estimating the Mean and Variance of the Target Probability Distribution
-    - By David A. Nix and Andreas S. Weigend
-    - 1994
-    - [[Link 1]](https://ieeexplore.ieee.org/abstract/document/374138), [[Link 2]]()
-    - Seminal work on optimizing a likelihood-based loss with neural networks; Regression 
-    
-* Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles
-    - By Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell
-    - 2017
-    - [[Link 1]](https://arxiv.org/abs/1612.01474), [[Link 2]](https://papers.nips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html)
-    - Classification & Regression
+    - By Youngseog Chung, Willie Neiswanger, Ian Char, Jeff Schneider
+    - [[ArXiv]](https://arxiv.org/pdf/2011.09588.pdf)
 
 * Individual Calibration with Randomized Forecasting
-    - By Shengjia Zhao, Tengyu Ma and Stefano Ermon
-    - 2020
-    - [[Link 1]](), [[Link 2]](https://arxiv.org/pdf/2006.10288.pdf)
-    - Regression 
-
-* Reliable Training and Estimation of Variance Networks
-    - By Nicki S. Detlefsen, Martin Jørgensen, and Søren Hauberg
-    - 2019
-    - [[Link 1]](https://arxiv.org/pdf/1906.03260.pdf), [[Link 2]](https://papers.nips.cc/paper/2019/file/07211688a0869d995947a8fb11b215d6-Paper.pdf)
-    - Regression
-
-#### Bayesian Methods
-##### Bayesian Neural Networks (BNN)
-* Hands-on Bayesian Neural Networks - a Tutorial for Deep Learning Users
-    - By Laurent Valentin Jospin, Wray Buntine, Farid Boussaid, Hamid Laga, and Mohammed Bennamoun
-    - 2020
-    - [[Link 1]](https://arxiv.org/pdf/2007.06823.pdf), [[Link 2]]()
-    - Comprehensive tutorial on various methods for BNN
-    
-* How Good is the Bayes Posterior in Deep Neural Networks Really?
-    - By Florian Wenzel, Kevin Roth, Bastiaan S. Veeling, Jakub Świątkowski, Linh Tran, Stephan Mandt, Jasper Snoek, Tim Salimans, Rodolphe Jenatton, and Sebastian Nowozin
-    - 2020
-    - [[Link 1]](https://proceedings.icml.cc/static/paper_files/icml/2020/3581-Paper.pdf), [[Link 2]](https://arxiv.org/pdf/2002.02405.pdf)
-    - Empirical study on the performance of posterior of BNN
-
-* Stochastic Gradient Hamiltonian Monte Carlo
-    - By Tianqi Chen, Emily B. Fox, and Carlos Guestrin
-    - 2014
-    - [[Link 1]](http://proceedings.mlr.press/v32/cheni14.pdf), [[Link 2]](https://arxiv.org/pdf/1402.4102.pdf)
-    - Markov Chain Monte Carlo (MCMC) based; Classification & Regression
-
-* Weight Uncertainty in Neural Networks
-    - By Charles Blundell, Julien Cornebise, Koray Kavukcuoglu and Daan Wierstra
-    - 2015
-    - [[Link 1]](http://proceedings.mlr.press/v37/blundell15.pdf), [[Link 2]](https://arxiv.org/pdf/1505.05424.pdf)
-    - Variational Inference (VI) based; Classification & Regression
-
-##### Bayesian Modeling
-* Predictive Uncertainty Estimation via Prior Networks
-    - By Andrey Malinin and Mark Gales
-    - 2018
-    - [[Link 1]](https://proceedings.neurips.cc/paper/2018/file/3ea2db50e62ceefceaf70a9d9a56a6f4-Paper.pdf), [[Link 2]](https://arxiv.org/pdf/1802.10501.pdf)
-    - Classification
-
-##### Bayesian Inference
-* A Simple Baseline for Bayesian Uncertainty in Deep Learning
-    - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov and Andrew Gordon Wilson
-    - 2019
-    - [[Link 1]](https://papers.nips.cc/paper/2019/file/118921efba23fc329e6560b27861f0c2-Paper.pdf), [[Link 2]](https://arxiv.org/pdf/1902.02476.pdf)
-    - Classification & Regression
-
-* Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
-    - By Yarin Gal and Zoubin Ghahramani
-    - 2016
-    - [[Link 1]](http://proceedings.mlr.press/v48/gal16.pdf), [[Link 2]](https://arxiv.org/pdf/1506.02142.pdf)
-    - Classification & Regression
-
-#### Quantile Based Methods
-* Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
-    - By Youngseog Chung, Willie Neiswanger, Ian Char, and Jeff Schneider
-    - 2020
-    - [[Link 1]](https://arxiv.org/pdf/2011.09588.pdf), [[Link 2]]()
-    - Regression
+  - By Shengjia Zhao, Tengyu Ma, Stefano Ermon
+  - [[ArXiv]](https://arxiv.org/pdf/2006.10288.pdf)
 
 * Single-Model Uncertainties for Deep Learning
-    - By Natasa Tagasovska and David Lopez-Paz
-    - 2019
-    - [[Link 1]](https://papers.nips.cc/paper/2019/file/73c03186765e199c116224b68adc5fa0-Paper.pdf), [[Link 2]](https://arxiv.org/pdf/1811.00908.pdf)
-    - Classification & Regression
+    - By Natasa Tagasovska, David Lopez-Paz
+    - [[ArXiv]](https://arxiv.org/pdf/1811.00908.pdf)
     
 * High-Quality Prediction Intervals for Deep Learning: A Distribution-Free, Ensembled Approach
     - By Tim Pearce, Mohamed Zaki, Alexandra Brintrup and Andy Neely
-    - 2018
-    - [[Link 1]](http://proceedings.mlr.press/v80/pearce18a/pearce18a.pdf), [[Link 2]](https://arxiv.org/pdf/1802.07167.pdf)
-    - Regression
-   
-#### Holistic Review of Methods
+    - [[ArXiv]](https://arxiv.org/pdf/1802.07167.pdf)
+
+
+## Holistic Review of UQ Methods
 * Methods for Comparing Uncertainty Quantifications for Material Property Predictions
-    - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, and Zachary W Ulissi
-    - 2020
-    - [[Link 1]](https://iopscience.iop.org/article/10.1088/2632-2153/ab7e1a/pdf), [[Link 2]]()
-    - Empirical Comparison of UQ Methods; Regression
-   
+  - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, Zachary W Ulissi
+  - Empirical comparison of UQ methods for regression
+  - [[ArXiv]](https://arxiv.org/pdf/1912.10066.pdf),
+
 * Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
-    - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek
-    - 2019
-    - [[Link 1]](https://proceedings.neurips.cc/paper/2019/file/8558cb408c1d76621371888657d2eb1d-Paper.pdf), [[Link 2]](https://arxiv.org/pdf/1906.02530.pdf)
-    - Empirical Comparison of UQ Methods; Classification
+  - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek
+  - Empirical comparison of UQ methods under dataset shift, for classification
+  - [[ArXiv]](https://arxiv.org/pdf/1906.02530.pdf)
+
+* How Good is the Bayes Posterior in Deep Neural Networks Really?
+  - Florian Wenzel, Kevin Roth, Bastiaan S. Veeling, Jakub Świątkowski, Linh Tran, Stephan Mandt, Jasper Snoek, Tim Salimans, Rodolphe Jenatton, Sebastian Nowozin
+  - Empirical study on performance of posterior of Bayesian neural networks
+  - [[ArXiv]](https://arxiv.org/pdf/2002.02405.pdf)
 
 * Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
-    - By Eyke Hüllermeier and Willem Waegeman
-    - 2020
-    - [[Link 1]](https://arxiv.org/pdf/1910.09457.pdf)
-    - Overview of Concepts and Methods in UQ
-   
-#### Recalibration 
-* On Calibration of Modern Neural Networks
-    - By Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger
-    - 2017
-    - [[Link 1]](http://proceedings.mlr.press/v70/guo17a/guo17a.pdf) [[Link 2]](https://arxiv.org/abs/1706.04599)
-    - Classification
-
-* Accurate Uncertainties for Deep Learning Using Calibrated Regression
-    - By Volodymyr Kuleshov, Nathan Fenner, and Stefano Ermon
-    - 2018
-    - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
-    - Regression
+  - By Eyke Hüllermeier and Willem Waegeman
+  - Overview of concepts and methods in UQ
+  - [[ArXiv]](https://arxiv.org/pdf/1910.09457.pdf)
 
 
-As a primer to get familiar with the concepts and objectives of uncertainty quantification, we recommend starting off with the following reading list:
+## Ensembles
 
-* Proper scoring rules
-    - Gneiting's paper defining proper scoring rules
-* Calibration and sharpness metrics
-    - Gneiting's 
-    - Preliminaries of Beyond Pinball Loss
-    - Preliminaries of Individual Calibration
-*  Overview of Current Methods
-    - Hüllermeier's Introductory Paper
-    
---->
+* Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles
+  - By Balaji Lakshminarayanan, Alexander Pritzel, Charles Blundell
+  - [[ArXiv]](https://arxiv.org/abs/1612.01474)
+
+* Uncertainty in Neural Networks: Bayesian Ensembling
+  - By Tim Pearce, Mohamed Zaki, Alexandra Brintrup, Nicolas Anastassacos, Andy Neely
+  - [[ArXiv]](https://arxiv.org/abs/1810.05546)
+
+* Ensemble methods in Machine Learning
+  - By Thomas G. Dietterich
+  - [[PDF]](http://web.engr.oregonstate.edu/~tgd/publications/mcs-ensembles.pdf)
+
+* Representation of Uncertainty in Deep Neural Networks through Sampling
+  - By Patrick McClure, Nikolaus Kriegeskorte
+  - [[PDF]](https://openreview.net/references/pdf?id=HJ1JBJ5gl)
+
+* Ensemble Sampling
+  - By Xiuyuan Lu, Benjamin Van Roy
+  - [[ArXiv]](https://arxiv.org/pdf/1705.07347.pdf)
+
+* Maximizing Overall Diversity for Improved Uncertainty Estimates in Deep Ensembles
+  - By Siddhartha Jain, Ge Liu, Jonas Mueller, David Gifford
+  - [[ArXiv]](https://arxiv.org/pdf/1906.07380.pdf)
+
+
+## Bayesian Methods in Deep Learning
+### Bayesian Neural Networks (BNN)
+* Hands-on Bayesian Neural Networks - a Tutorial for Deep Learning Users
+  - By Laurent Valentin Jospin, Wray Buntine, Farid Boussaid, Hamid Laga, Mohammed Bennamoun
+  - Comprehensive tutorial on various methods for BNN
+  - [[ArXiv]](https://arxiv.org/pdf/2007.06823.pdf)
+
+* Bayesian Learning for Neural Networks
+  - By Radford M. Neal
+  - Seminal work on Markov Chain Monte Carlo (MCMC) based learning for neural networks
+  - [[PDF]](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf)
+
+* Stochastic Gradient Hamiltonian Monte Carlo
+  - By Tianqi Chen, Emily B. Fox, Carlos Guestrin
+  - MCMC based
+  - [[ArXiv]](https://arxiv.org/pdf/1402.4102.pdf)
+
+* Bayesian Learning via Stochastic Gradient Langevin Dynamics
+  - By Max Welling, Yee Whye Teh
+  - MCMC based
+  - [[PDF]](https://www.ics.uci.edu/~welling/publications/papers/stoclangevin_v6.pdf)
+
+* Weight Uncertainty in Neural Networks
+  - By Charles Blundell, Julien Cornebise, Koray Kavukcuoglu, Daan Wierstra
+  - Variational Inference (VI) based
+  - [[ArXiv]](https://arxiv.org/pdf/1505.05424.pdf)
+
+* Deterministic Variational Inference for Robust Bayesian Neural Networks
+  - By Anqi Wu, Sebastian Nowozin, Edward Meeds, Richard E. Turner, José Miguel Hernández-Lobato, Alexander L. Gaunt
+  - VI based
+  - [[ArXiv]](https://arxiv.org/pdf/1810.03958.pdf)
+
+* Noisy Natural Gradient as Variational Inference
+  - Guodong Zhang, Shengyang Sun, David Duvenaud, Roger Grosse
+  - VI based
+  - [[ArXiv]](https://arxiv.org/pdf/1712.02390.pdf)
+
+* Fast and Scalable Bayesian Deep Learning by Weight-Perturbation in Adam
+  - Mohammad Emtiyaz Khan, Didrik Nielsen, Voot Tangkaratt, Wu Lin, Yarin Gal, Akash Srivastava
+  - VI based
+  - [[ArXiv]](https://arxiv.org/pdf/1806.04854.pdf)
+
+* Noise Contrastive Priors for Functional Uncertainty
+  - By Danijar Hafner, Dustin Tran, Timothy Lillicrap, Alex Irpan, James Davidson
+  - [[ArXiv]](https://arxiv.org/abs/1807.09289)
+
+* Bayesian Layers: A Module for Neural Network Uncertainty
+  - By Dustin Tran, Michael W. Dusenberry, Mark van der Wilk, Danijar Hafner
+  - [[ArXiv]](https://arxiv.org/abs/1812.03973)
+
+### Other Approximations to Bayesian Inference
+* A Simple Baseline for Bayesian Uncertainty in Deep Learning
+  - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
+  - [[ArXiv]](https://arxiv.org/pdf/1902.02476.pdf)
+
+* Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
+  - By Yarin Gal, Zoubin Ghahramani
+  - [[ArXiv]](https://arxiv.org/pdf/1506.02142.pdf)
+
+## Deep GPs, Deep Kernels, and Neural Processes
+
+* Deep Kernel Learning
+  - By Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, Eric P. Xing
+  - [[ArXiv]](https://arxiv.org/abs/1511.02222)
+
+* Neural Processes
+  - By Marta Garnelo, Jonathan Schwarz, Dan Rosenbaum, Fabio Viola, Danilo J. Rezende, S.M. Ali Eslami, Yee Whye Teh
+  - [[ArXiv]](https://arxiv.org/abs/1807.01622)
+
+* On the Connection between Neural Processes and Gaussian Processes with Deep Kernels
+  - By Tim GJ Rudner, Vincent Fortuin, Yee Whye Teh, Yarin Gal
+  - [[PDF]](http://bayesiandeeplearning.org/2018/papers/128.pdf)
+
+
+## Meta-Network Strategies
+
+* Predictive Uncertainty Estimation via Prior Networks
+  - By Andrey Malinin, Mark Gales
+  - [[ArXiv]](https://arxiv.org/abs/1802.10501)
+
+* Learning Confidence for Out-of-Distribution Detection in Neural Networks
+  - By Terrance DeVries, Graham W. Taylor
+  - [[ArXiv]](https://arxiv.org/abs/1802.04865)
+
+* Learning for Single-Shot Confidence Calibration in Deep Neural Networks through Stochastic Inferences
+  - By Seonguk Seo, Paul Hongsuck Seo, Bohyung Han
+  - [[ArXiv]](https://arxiv.org/abs/1809.10877)
+
+* Detecting Adversarial Examples and Other Misclassifications in Neural Networks by Introspection
+  - By Jonathan Aigrain, Marcin Detyniecki
+  - [[ArXiv]](https://arxiv.org/abs/1905.09186)
+
+* Towards Better Confidence Estimation for Neural Models
+  - By Vishal Thanvantri Vasudevan, Abhinav Sethy, Alireza Roshan Ghias
+  - [[PDF]](https://d39w7f4ix9f5s9.cloudfront.net/ae/5d/24a9ac264d34bb73f313f2713f89/scipub-133.pdf)
+
+* Density estimation in representation space to predict model uncertainty
+  - By Tiago Ramalho, Miguel Miranda
+  - [[ArXiv]](https://arxiv.org/abs/1908.07235)
+
+* Training Confidence-calibrated Classifiers for Detecting Out-of-Distribution Samples
+  - By Kimin Lee, Honglak Lee, Kibok Lee, Jinwoo Shin
+  - [[ArXiv]](https://arxiv.org/abs/1711.09325)
+
+* Uncertainty Estimation Using a Single Deep Deterministic Neural Network
+  - By Joost van Amersfoort, Lewis Smith, Yee Whye Teh, Yarin Gal
+  - [[ArXiv]](https://arxiv.org/pdf/2003.02037.pdf)
+
+
+## Downstream applications
+### Computer Vision
+* Deep Bayesian Active Learning with Image Data
+  - By Yarin Gal, Riashat Islam, Zoubin Ghahramani
+  - [[ArXiv]](https://arxiv.org/abs/1703.02910)
+
+* What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?
+  - By Alex Kendall, Yarin Gal
+  - [[ArXiv]](https://arxiv.org/abs/1703.04977)
+
+### Reinforcement Learning
+* Deep Reinforcement Learning in a Handful of Trials using Probabilistic Dynamics Models
+  - Kurtland Chua, Roberto Calandra, Rowan McAllister, Sergey Levine
+  - [[ArXiv]](https://arxiv.org/pdf/1805.12114.pdf)
+
+* MOPO: Model-based Offline Policy Optimization
+  - By Tianhe Yu, Garrett Thomas, Lantao Yu, Stefano Ermon, James Zou, Sergey Levine, Chelsea Finn, Tengyu Ma
+  - [[ArXiv]](https://arxiv.org/pdf/2005.13239.pdf)
+
+* When to Trust Your Model: Model-Based Policy Optimization
+  - By Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine
+  - [[ArXiv]](https://arxiv.org/pdf/1906.08253.pdf)
+
+* Calibrated Model-Based Deep Reinforcement Learning
+  - By Ali Malik, Volodymyr Kuleshov, Jiaming Song, Danny Nemer, Harlan Seymour, Stefano Ermon
+  - [[ArXiv]](https://arxiv.org/abs/1906.08312)
+
+### Language
+* Incorporating Uncertainty into Deep Learning for Spoken Language Assessment
+  - By Andrey Malinin, Anton Ragni, Kate M. Knill, Mark J. F. Gales
+  - [[PDF]](https://www.aclweb.org/anthology/P17-2008.pdf)
