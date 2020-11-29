@@ -60,7 +60,7 @@
     - Overview of Concepts, Methods, and Metrics in UQ
 
 
-
+<!---
 #### Probabilistc Neural Networks
 * Estimating the Mean and Variance of the Target Probability Distribution
     - By David A. Nix and Andreas S. Weigend
@@ -194,10 +194,12 @@
 As a primer to get familiar with the concepts and objectives of uncertainty quantification, we recommend starting off with the following reading list:
 
 * Proper scoring rules
-    - Gneiting's Proper Scoring Rules paper
+    - Gneiting's paper defining proper scoring rules
 * Calibration and sharpness metrics
-    - Gneiting's overview paper
+    - Gneiting's 
     - Preliminaries of Beyond Pinball Loss
     - Preliminaries of Individual Calibration
 *  Overview of Current Methods
     - Hüllermeier's Introductory Paper
+    
+--->
