@@ -113,17 +113,17 @@
   
 ### Bayesian Modeling
 * Predictive Uncertainty Estimation via Prior Networks
-    - By Andrey Malinin, Mark Gales
-    - [Arxiv paper](https://arxiv.org/pdf/1802.10501.pdf)
-
+  - By Andrey Malinin, Mark Gales
+  - [Arxiv paper](https://arxiv.org/pdf/1802.10501.pdf)
+    
 ### Bayesian Inference
 * A Simple Baseline for Bayesian Uncertainty in Deep Learning
-    - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
-    - [Arxiv paper](https://arxiv.org/pdf/1902.02476.pdf)
+  - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
+  - [Arxiv paper](https://arxiv.org/pdf/1902.02476.pdf)
 
 * Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
-    - By Yarin Gal, Zoubin Ghahramani
-    - [Arxiv paper](https://arxiv.org/pdf/1506.02142.pdf)
+  - By Yarin Gal, Zoubin Ghahramani
+  - [Arxiv paper](https://arxiv.org/pdf/1506.02142.pdf)
 
 ## Deep GPs, Deep Kernels, and Neural Processes
 
@@ -140,7 +140,7 @@
   - [NeurIPS Workshop paper](http://bayesiandeeplearning.org/2018/papers/128.pdf)
 
 
-## Holistic Review of Methods
+## Holistic Review of UQ Methods
 * Methods for Comparing Uncertainty Quantifications for Material Property Predictions
   - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, Zachary W Ulissi
   - Empirical comparison of UQ methods for regression
@@ -168,10 +168,8 @@
 --->
 
 
-
-
-## Computer Vision Specific
-
+## Downstream applications
+### Computer Vision
 * Deep Bayesian Active Learning with Image Data
   - By Yarin Gal, Riashat Islam, Zoubin Ghahramani
   - [Arxiv paper](https://arxiv.org/abs/1703.02910)
@@ -180,16 +178,23 @@
   - By Alex Kendall, Yarin Gal
   - [Arxiv paper](https://arxiv.org/abs/1703.04977)
 
-
-## Downstream applications
-
+### Reinforcement Learning
+* MOPO: Model-based Offline Policy Optimization
+  - By Tianhe Yu, Garrett Thomas, Lantao Yu, Stefano Ermon, James Zou, Sergey Levine, Chelsea Finn, Tengyu Ma
+  - [Arxiv paper](https://arxiv.org/pdf/2005.13239.pdf)
+  
+* When to Trust Your Model: Model-Based Policy Optimization
+  - By Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine
+  - [Arxiv paper](https://arxiv.org/pdf/1906.08253.pdf)
+  
 * Calibrated Model-Based Deep Reinforcement Learning
   - By Ali Malik, Volodymyr Kuleshov, Jiaming Song, Danny Nemer, Harlan Seymour, Stefano Ermon
   - [Arxiv paper](https://arxiv.org/abs/1906.08312)
 
+### Language
 * Incorporating Uncertainty into Deep Learning for Spoken Language Assessment
   - By Andrey Malinin, Anton Ragni, Kate M. Knill, Mark J. F. Gales
-  - [Paper pdf](http://mi.eng.cam.ac.uk/~am969/incorporating.pdf)
+  - [Paper pdf](https://www.aclweb.org/anthology/P17-2008.pdf)
 
 
 ## Meta-Network Strategies
@@ -227,11 +232,9 @@
   - By Kimin Lee, Honglak Lee, Kibok Lee, Jinwoo Shin
   - [Arxiv paper](https://arxiv.org/abs/1711.09325)
 
-<!---
 * Uncertainty Estimation Using a Single Deep Deterministic Neural Network
   - By Joost van Amersfoort, Lewis Smith, Yee Whye Teh, Yarin Gal
   - [Arxiv paper](https://arxiv.org/pdf/2003.02037.pdf)
---->
 
 <!---
 ## Deep (classic) approximate Bayesian inference
