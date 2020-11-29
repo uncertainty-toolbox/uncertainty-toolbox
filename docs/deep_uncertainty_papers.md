@@ -37,7 +37,7 @@
   - By Siddhartha Jain, Ge Liu, Jonas Mueller, David Gifford
   - [Arxiv paper](https://arxiv.org/pdf/1906.07380.pdf)
 
-## Calibration and Recalibration
+## Calibration, Sharpness, and Recalibration
 
 * Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
     - By Youngseog Chung, Willie Neiswanger, Ian Char, Jeff Schneider
@@ -193,6 +193,12 @@
   - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek
   - Empirical comparison of UQ methods under dataset shift, for classification
   - [Arxiv paper](https://arxiv.org/pdf/1906.02530.pdf)
+
+* How Good is the Bayes Posterior in Deep Neural Networks Really?
+  - Florian Wenzel, Kevin Roth, Bastiaan S. Veeling, Jakub Świątkowski, Linh Tran, Stephan Mandt, Jasper Snoek, Tim Salimans, Rodolphe Jenatton, Sebastian Nowozin
+  - Empirical study on performance of posterior of Bayesian neural networks
+  - [Arxiv paper](https://arxiv.org/pdf/2002.02405.pdf)
+  
   
 * Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
   - By Eyke Hüllermeier and Willem Waegeman
