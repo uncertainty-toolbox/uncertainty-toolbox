@@ -34,7 +34,6 @@
   - [Arxiv paper](https://arxiv.org/pdf/1705.07347.pdf)
 
 
-
 ## Calibration and Recalibration
 
 * Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
@@ -54,7 +53,7 @@
   - [Arxiv paper](https://arxiv.org/abs/1807.00263)
 
 * Single-Model Uncertainties for Deep Learning
-    - By Natasa Tagasovska and David Lopez-Paz
+    - By Natasa Tagasovska, David Lopez-Paz
     - [Arxiv paper](https://arxiv.org/pdf/1811.00908.pdf)
     
 * High-Quality Prediction Intervals for Deep Learning: A Distribution-Free, Ensembled Approach
@@ -65,44 +64,66 @@
 ## Bayesian Methods
 ### Bayesian Neural Networks (BNN)
 * Hands-on Bayesian Neural Networks - a Tutorial for Deep Learning Users
-    - By Laurent Valentin Jospin, Wray Buntine, Farid Boussaid, Hamid Laga, Mohammed Bennamoun
-    - [Arxiv paper](https://arxiv.org/pdf/2007.06823.pdf), [[Link 2]]()
-    - Comprehensive tutorial on various methods for BNN
+  - By Laurent Valentin Jospin, Wray Buntine, Farid Boussaid, Hamid Laga, Mohammed Bennamoun
+  - Comprehensive tutorial on various methods for BNN
+  - [Arxiv paper](https://arxiv.org/pdf/2007.06823.pdf)
+
+* Bayesian Learning for Neural Networks 
+  - By Radford M. Neal
+  - Seminal work on Markov Chain Monte Carlo (MCMC) based learning for neural networks
+  - [Paper pdf](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.446.9306&rep=rep1&type=pdf)
 
 * Stochastic Gradient Hamiltonian Monte Carlo
-    - By Tianqi Chen, Emily B. Fox, Carlos Guestrin
-    - [Arxiv paper](https://arxiv.org/pdf/1402.4102.pdf)
-    - Markov Chain Monte Carlo (MCMC) based; Classification & Regression
+  - By Tianqi Chen, Emily B. Fox, Carlos Guestrin
+  - MCMC based
+  - [Arxiv paper](https://arxiv.org/pdf/1402.4102.pdf)
+
+* Bayesian Learning via Stochastic Gradient Langevin Dynamics
+  - By Max Welling, Yee Whye Teh
+  - MCMC based
+  - [Paper pdf](https://www.ics.uci.edu/~welling/publications/papers/stoclangevin_v6.pdf)
+
+* Weight Uncertainty in Neural Networks
+  - By Charles Blundell, Julien Cornebise, Koray Kavukcuoglu, Daan Wierstra
+  - Variational Inference (VI) based
+  - [Arxiv paper](https://arxiv.org/pdf/1505.05424.pdf)
+
+* Deterministic Variational Inference for Robust Bayesian Neural Networks
+  - By Anqi Wu, Sebastian Nowozin, Edward Meeds, Richard E. Turner, José Miguel Hernández-Lobato, Alexander L. Gaunt
+  - VI based
+  - [Arxiv paper](https://arxiv.org/pdf/1810.03958.pdf)
+
+* Noisy Natural Gradient as Variational Inference
+  - Guodong Zhang, Shengyang Sun, David Duvenaud, Roger Grosse
+  - VI based
+  - [Arxiv paper](https://arxiv.org/pdf/1712.02390.pdf)
+
+* Fast and Scalable Bayesian Deep Learning by Weight-Perturbation in Adam
+  - Mohammad Emtiyaz Khan, Didrik Nielsen, Voot Tangkaratt, Wu Lin, Yarin Gal, Akash Srivastava
+  - VI based
+  - [Arxiv paper](https://arxiv.org/pdf/1806.04854.pdf)
 
 * Noise Contrastive Priors for Functional Uncertainty
   - By Danijar Hafner, Dustin Tran, Timothy Lillicrap, Alex Irpan, James Davidson
   - [Arxiv paper](https://arxiv.org/abs/1807.09289)
   
-* Weight Uncertainty in Neural Networks
-    - By Charles Blundell, Julien Cornebise, Koray Kavukcuoglu, Daan Wierstra
-    - [Arxiv paper](https://arxiv.org/pdf/1505.05424.pdf)
-    - Variational Inference (VI) based; Classification & Regression
-
 * Bayesian Layers: A Module for Neural Network Uncertainty
   - By Dustin Tran, Michael W. Dusenberry, Mark van der Wilk, Danijar Hafner
   - [Arxiv paper](https://arxiv.org/abs/1812.03973)
   
 ### Bayesian Modeling
 * Predictive Uncertainty Estimation via Prior Networks
-    - By Andrey Malinin and Mark Gales
+    - By Andrey Malinin, Mark Gales
     - [Arxiv paper](https://arxiv.org/pdf/1802.10501.pdf)
-    - Classification
 
 ### Bayesian Inference
 * A Simple Baseline for Bayesian Uncertainty in Deep Learning
     - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
     - [Arxiv paper](https://arxiv.org/pdf/1902.02476.pdf)
-    - Classification & Regression
 
 * Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
     - By Yarin Gal, Zoubin Ghahramani
     - [Arxiv paper](https://arxiv.org/pdf/1506.02142.pdf)
-    - Classification & Regression
 
 ## Deep GPs, Deep Kernels, and Neural Processes
 
@@ -121,20 +142,20 @@
 
 ## Holistic Review of Methods
 * Methods for Comparing Uncertainty Quantifications for Material Property Predictions
-  - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, and Zachary W Ulissi
-  - [Arxiv paper](https://arxiv.org/pdf/1912.10066.pdf),
+  - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, Zachary W Ulissi
   - Empirical comparison of UQ methods for regression
+  - [Arxiv paper](https://arxiv.org/pdf/1912.10066.pdf),
    
 * Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
   - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek
-  - [Arxiv paper](https://arxiv.org/pdf/1906.02530.pdf)
   - Empirical comparison of UQ methods under dataset shift, for classification
-
+  - [Arxiv paper](https://arxiv.org/pdf/1906.02530.pdf)
+  
 * Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
   - By Eyke Hüllermeier and Willem Waegeman
-  - [Arxiv paper](https://arxiv.org/pdf/1910.09457.pdf)
   - Overview of concepts and methods in UQ
-   
+  - [Arxiv paper](https://arxiv.org/pdf/1910.09457.pdf)
+  
 
 <!---
 ## Other Papers
