@@ -75,7 +75,7 @@ Uncertainty Toolbox contains:
   metrics.
 * [Recalibration](uncertainty_toolbox/recalibration.py) methods for improving the calibration of a
   predictor.
-* Relevant [publications and references](docs/paper_list.md).
+* Relevant publications and references on [metrics](docs/paper_list.md) and [methods](docs/deep_uncertainty_papers.md)
 
 
 ## Metrics and Visualizations
