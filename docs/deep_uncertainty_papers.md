@@ -33,6 +33,9 @@
   - By Xiuyuan Lu, Benjamin Van Roy
   - [Arxiv paper](https://arxiv.org/pdf/1705.07347.pdf)
 
+* Maximizing Overall Diversity for Improved Uncertainty Estimates in Deep Ensembles
+  - By Siddhartha Jain, Ge Liu, Jonas Mueller, David Gifford
+  - [Arxiv paper](https://arxiv.org/pdf/1906.07380.pdf)
 
 ## Calibration and Recalibration
 
