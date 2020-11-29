@@ -113,12 +113,14 @@
 * Bayesian Layers: A Module for Neural Network Uncertainty
   - By Dustin Tran, Michael W. Dusenberry, Mark van der Wilk, Danijar Hafner
   - [Arxiv paper](https://arxiv.org/abs/1812.03973)
-  
+
+<!---  
 ### Bayesian Modeling
 * Predictive Uncertainty Estimation via Prior Networks
   - By Andrey Malinin, Mark Gales
   - [Arxiv paper](https://arxiv.org/pdf/1802.10501.pdf)
-    
+--->
+
 ### Bayesian Inference
 * A Simple Baseline for Bayesian Uncertainty in Deep Learning
   - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
@@ -148,11 +150,9 @@
 
 * Note: see what is used for each element of ensemble in "Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles".
 
-<!---
 * Predictive Uncertainty Estimation via Prior Networks
   - By Andrey Malinin, Mark Gales
   - [NeurIPS site](http://papers.nips.cc/paper/7936-predictive-uncertainty-estimation-via-prior-networks)
---->
 
 * Learning Confidence for Out-of-Distribution Detection in Neural Networks
   - By Terrance DeVries, Graham W. Taylor
@@ -222,6 +222,10 @@
   - [Arxiv paper](https://arxiv.org/abs/1703.04977)
 
 ### Reinforcement Learning
+* Deep Reinforcement Learning in a Handful of Trials using Probabilistic Dynamics Models
+  - Kurtland Chua, Roberto Calandra, Rowan McAllister, Sergey Levine
+  - [Arxiv paper](https://arxiv.org/pdf/1805.12114.pdf)
+
 * MOPO: Model-based Offline Policy Optimization
   - By Tianhe Yu, Garrett Thomas, Lantao Yu, Stefano Ermon, James Zou, Sergey Levine, Chelsea Finn, Tengyu Ma
   - [Arxiv paper](https://arxiv.org/pdf/2005.13239.pdf)
