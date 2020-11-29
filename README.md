@@ -3,8 +3,8 @@
 <br/>
 
 **Uncertainty Toolbox**
-> A python toolbox for predictive uncertainty quantification, calibration, metrics, and
-> visualization.\
+> A python toolbox for predictive uncertainty quantification, calibration,
+> [metrics, and visualization](#quick-start).\
 > Also: a [glossary of useful terms](docs/glossary.md) and a collection
 > of [relevant papers and references](docs/paper_list.md).
 
@@ -47,14 +47,21 @@ metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 This example computes metrics for a vector of predicted values (`predictions`) and
 associated uncertainties (`predictions_std`, a vector of standard deviations), taken
 with respect to a corresponding set of observed values `y`.
-
-The `get_all_metrics` function will return metrics for calibration (__root mean squared
-calibration error__, __mean absolute calibration error__, __miscalibration area__),
-adversarial group calibration (__RMS and MA adversarial group calibration error__),
-sharpness (__expected standard deviation__), proper scoring rules (__negative
-log-likelihood__, __continuous ranked probability score__, __check score__, __interval
-score__), and accuracy (__root mean squared error__, __mean absolute error__, __median
-absolute error__, __coefficient of determination__, __correlation__).
+The `get_all_metrics` function will return metrics for:
+* __average calibration__
+    - root mean squared calibration error, mean absolute calibration error,
+      miscalibration area
+* __adversarial group calibration__
+    - root mean squared adversarial group calibration error, mean absolute adversarial
+      group calibration error
+* __sharpness__
+    - expected standard deviation
+* __proper scoring rules__
+    - negative log-likelihood, continuous ranked probability score, check score,
+      interval score
+* __accuracy__
+    - root mean squared error, mean absolute error, median absolute error,
+      coefficient of determination, correlation
 
 
 ## Toolbox Contents

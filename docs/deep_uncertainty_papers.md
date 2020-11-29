@@ -3,9 +3,11 @@
 
 ## Ensembles 
 
+<!---
 * Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
   - By Yarin Gal, Zoubin Ghahramani
   - [Arxiv paper](https://arxiv.org/abs/1506.02142)
+---> 
 
 * Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles
   - By Balaji Lakshminarayanan, Alexander Pritzel, Charles Blundell
@@ -33,7 +35,15 @@
 
 
 
-## Calibration
+## Calibration and Recalibration
+
+* Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
+    - By Youngseog Chung, Willie Neiswanger, Ian Char, Jeff Schneider
+    - [Arxiv paper](https://arxiv.org/pdf/2011.09588.pdf)
+
+* Individual Calibration with Randomized Forecasting
+  - By Shengjia Zhao, Tengyu Ma, Stefano Ermon
+  - [Arxiv paper](https://arxiv.org/pdf/2006.10288.pdf) 
 
 * On Calibration of Modern Neural Networks
   - By Chuan Guo, Geoff Pleiss, Yu Sun, Kilian Q. Weinberger
@@ -42,6 +52,101 @@
 * Accurate Uncertainties for Deep Learning Using Calibrated Regression
   - By Volodymyr Kuleshov, Nathan Fenner, Stefano Ermon
   - [Arxiv paper](https://arxiv.org/abs/1807.00263)
+
+* Single-Model Uncertainties for Deep Learning
+    - By Natasa Tagasovska and David Lopez-Paz
+    - [Arxiv paper](https://arxiv.org/pdf/1811.00908.pdf)
+    
+* High-Quality Prediction Intervals for Deep Learning: A Distribution-Free, Ensembled Approach
+    - By Tim Pearce, Mohamed Zaki, Alexandra Brintrup and Andy Neely
+    - [Arxiv paper](https://arxiv.org/pdf/1802.07167.pdf)
+
+
+## Bayesian Methods
+### Bayesian Neural Networks (BNN)
+* Hands-on Bayesian Neural Networks - a Tutorial for Deep Learning Users
+    - By Laurent Valentin Jospin, Wray Buntine, Farid Boussaid, Hamid Laga, Mohammed Bennamoun
+    - [Arxiv paper](https://arxiv.org/pdf/2007.06823.pdf), [[Link 2]]()
+    - Comprehensive tutorial on various methods for BNN
+
+* Stochastic Gradient Hamiltonian Monte Carlo
+    - By Tianqi Chen, Emily B. Fox, Carlos Guestrin
+    - [Arxiv paper](https://arxiv.org/pdf/1402.4102.pdf)
+    - Markov Chain Monte Carlo (MCMC) based; Classification & Regression
+
+* Noise Contrastive Priors for Functional Uncertainty
+  - By Danijar Hafner, Dustin Tran, Timothy Lillicrap, Alex Irpan, James Davidson
+  - [Arxiv paper](https://arxiv.org/abs/1807.09289)
+  
+* Weight Uncertainty in Neural Networks
+    - By Charles Blundell, Julien Cornebise, Koray Kavukcuoglu, Daan Wierstra
+    - [Arxiv paper](https://arxiv.org/pdf/1505.05424.pdf)
+    - Variational Inference (VI) based; Classification & Regression
+
+* Bayesian Layers: A Module for Neural Network Uncertainty
+  - By Dustin Tran, Michael W. Dusenberry, Mark van der Wilk, Danijar Hafner
+  - [Arxiv paper](https://arxiv.org/abs/1812.03973)
+  
+### Bayesian Modeling
+* Predictive Uncertainty Estimation via Prior Networks
+    - By Andrey Malinin and Mark Gales
+    - [Arxiv paper](https://arxiv.org/pdf/1802.10501.pdf)
+    - Classification
+
+### Bayesian Inference
+* A Simple Baseline for Bayesian Uncertainty in Deep Learning
+    - By Wesley Maddox, Timur Garipov, Pavel Izmailov, Dmitry Vetrov, Andrew Gordon Wilson
+    - [Arxiv paper](https://arxiv.org/pdf/1902.02476.pdf)
+    - Classification & Regression
+
+* Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
+    - By Yarin Gal, Zoubin Ghahramani
+    - [Arxiv paper](https://arxiv.org/pdf/1506.02142.pdf)
+    - Classification & Regression
+
+## Deep GPs, Deep Kernels, and Neural Processes
+
+* Deep Kernel Learning
+  - By Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, Eric P. Xing
+  - [Arxiv paper](https://arxiv.org/abs/1511.02222)
+
+* Neural Processes
+  - By Marta Garnelo, Jonathan Schwarz, Dan Rosenbaum, Fabio Viola, Danilo J. Rezende, S.M. Ali Eslami, Yee Whye Teh
+  - [Arxiv paper](https://arxiv.org/abs/1807.01622)
+
+* On the Connection between Neural Processes and Gaussian Processes with Deep Kernels
+  - By Tim GJ Rudner, Vincent Fortuin, Yee Whye Teh, Yarin Gal
+  - [NeurIPS Workshop paper](http://bayesiandeeplearning.org/2018/papers/128.pdf)
+
+
+## Holistic Review of Methods
+* Methods for Comparing Uncertainty Quantifications for Material Property Predictions
+  - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, and Zachary W Ulissi
+  - [Arxiv paper](https://arxiv.org/pdf/1912.10066.pdf),
+  - Empirical comparison of UQ methods for regression
+   
+* Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
+  - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek
+  - [Arxiv paper](https://arxiv.org/pdf/1906.02530.pdf)
+  - Empirical comparison of UQ methods under dataset shift, for classification
+
+* Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
+  - By Eyke Hüllermeier and Willem Waegeman
+  - [Arxiv paper](https://arxiv.org/pdf/1910.09457.pdf)
+  - Overview of concepts and methods in UQ
+   
+
+<!---
+## Other Papers
+### (Some of these should potentially be sorted into other categories.)
+
+
+* Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
+  - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D Sculley, Sebastian Nowozin, Joshua V. Dillon, Balaji Lakshminarayanan, Jasper Snoek
+  - [Arxiv paper](https://arxiv.org/abs/1906.02530)
+--->
+
+
 
 
 ## Computer Vision Specific
@@ -55,46 +160,15 @@
   - [Arxiv paper](https://arxiv.org/abs/1703.04977)
 
 
-## Deep GPs, deep kernels, neural processes
-
-* Deep Kernel Learning
-  - By Andrew Gordon Wilson, Zhiting Hu, Ruslan Salakhutdinov, Eric P. Xing
-  - [Arxiv paper](https://arxiv.org/abs/1511.02222)
-
-* Neural Processes
-  - By Marta Garnelo, Jonathan Schwarz, Dan Rosenbaum, Fabio Viola, Danilo J. Rezende, S.M. Ali Eslami, Yee Whye Teh
-  - [Arxiv paper](https://arxiv.org/abs/1807.01622)
-
-* On the Connection between Neural Processes and Gaussian Processes with Deep Kernels
-  - By Tim GJ Rudner, Vincent Fortuin, Yee Whye Teh, and Yarin Gal
-  - [NeurIPS Workshop paper](http://bayesiandeeplearning.org/2018/papers/128.pdf)
-
-
-## Other Papers
-### (Some of these should potentially be sorted into other categories.)
-
-* Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
-  - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D Sculley, Sebastian Nowozin, Joshua V. Dillon, Balaji Lakshminarayanan, Jasper Snoek
-  - [Arxiv paper](https://arxiv.org/abs/1906.02530)
-
-* Noise Contrastive Priors for Functional Uncertainty
-  - By Danijar Hafner, Dustin Tran, Timothy Lillicrap, Alex Irpan, James Davidson
-  - [Arxiv paper](https://arxiv.org/abs/1807.09289)
-
-* Bayesian Layers: A Module for Neural Network Uncertainty
-  - By Dustin Tran, Michael W. Dusenberry, Mark van der Wilk, Danijar Hafner
-  - [Arxiv paper](https://arxiv.org/abs/1812.03973)
-
-
-## Deep (classic) approximate Bayesian inference
-* TODO: recent work on SG-MCMC or VI applied successfully to large deep models.
-
-
 ## Downstream applications
 
 * Calibrated Model-Based Deep Reinforcement Learning
   - By Ali Malik, Volodymyr Kuleshov, Jiaming Song, Danny Nemer, Harlan Seymour, Stefano Ermon
   - [Arxiv paper](https://arxiv.org/abs/1906.08312)
+
+* Incorporating Uncertainty into Deep Learning for Spoken Language Assessment
+  - By Andrey Malinin, Anton Ragni, Kate M. Knill, Mark J. F. Gales
+  - [Paper pdf](http://mi.eng.cam.ac.uk/~am969/incorporating.pdf)
 
 
 ## Meta-Network Strategies
@@ -102,13 +176,11 @@
 
 * Note: see what is used for each element of ensemble in "Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles".
 
-* Incorporating Uncertainty into Deep Learning for Spoken Language Assessment
-  - By Andrey Malinin, Anton Ragni, Kate M. Knill, Mark J. F. Gales
-  - [Paper pdf](http://mi.eng.cam.ac.uk/~am969/incorporating.pdf)
-
+<!---
 * Predictive Uncertainty Estimation via Prior Networks
   - By Andrey Malinin, Mark Gales
   - [NeurIPS site](http://papers.nips.cc/paper/7936-predictive-uncertainty-estimation-via-prior-networks)
+--->
 
 * Learning Confidence for Out-of-Distribution Detection in Neural Networks
   - By Terrance DeVries, Graham W. Taylor
@@ -133,3 +205,14 @@
 * Training Confidence-calibrated Classifiers for Detecting Out-of-Distribution Samples
   - By Kimin Lee, Honglak Lee, Kibok Lee, Jinwoo Shin
   - [Arxiv paper](https://arxiv.org/abs/1711.09325)
+
+<!---
+* Uncertainty Estimation Using a Single Deep Deterministic Neural Network
+  - By Joost van Amersfoort, Lewis Smith, Yee Whye Teh, Yarin Gal
+  - [Arxiv paper](https://arxiv.org/pdf/2003.02037.pdf)
+--->
+
+<!---
+## Deep (classic) approximate Bayesian inference
+* TODO: recent work on SG-MCMC or VI applied successfully to large deep models.
+--->

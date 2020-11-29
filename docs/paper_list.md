@@ -1,17 +1,17 @@
 # List of Papers Focusing on Metrics for Predictive Uncertainty Quantification and Probabilistic Forecasting
 
-### Tilmann Gneiting and Co Papers 
+### Seminary works by Tilmann Gneiting and Co
 * Probabilistic forecasts, calibration and sharpness
     - By Tilmann Gneiting, Fadoua Balabdaoui, and Adrian E. Raftery
     - 2007
     - [[Link 1]](https://hal.archives-ouvertes.fr/hal-00363242/document), [[Link 2]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
-    - Note: Definitions of calibration and sharpness, and corresponding metrics
+    - Definitions of calibration and sharpness, and corresponding metrics
 
 * Strictly Proper Scoring Rules, Prediction, and Estimation
     - By Tilmann Gneiting, and Adrian E. Raftery
     - 2007
     - [[Link 1]](https://www.tandfonline.com/doi/pdf/10.1198/016214506000001437), [[Link 2]](https://www.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf)
-    - Note: 
+    - Definition of proper scoring rules and various scoring rules
 
 * Using Bayesian Model Averaging to Calibrate Forecast Ensembles
     - By Adrian E. Raftery, Tilmann Gneiting, Fadoua Balabdaoui, and Michael Polakowski
@@ -28,8 +28,39 @@
     - 2014
     - [[Link 1]](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-062713-085831), [[Link 2]](https://www.annualreviews.org/doi/full/10.1146/annurev-statistics-062713-085831)
 
-### ML-Focused Papers
+### In Machine Learning Literature
+* Individual Calibration with Randomized Forecasting
+    - By Shengjia Zhao, Tengyu Ma and Stefano Ermon
+    - 2020
+    - [[Link 1]](), [[Link 2]](https://arxiv.org/pdf/2006.10288.pdf)
+    - Calibration; Regression 
 
+* Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification
+    - By Youngseog Chung, Willie Neiswanger, Ian Char, and Jeff Schneider
+    - 2020
+    - [[Link 1]](https://arxiv.org/pdf/2011.09588.pdf), [[Link 2]]()
+    - Calibration, Sharpness, Proper Scoring Rules; Regression
+   
+* On Calibration of Modern Neural Networks
+    - By Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger
+    - 2017
+    - [[Link 1]](http://proceedings.mlr.press/v70/guo17a/guo17a.pdf) [[Link 2]](https://arxiv.org/abs/1706.04599)
+    - Calibration and Recalibration; Classification
+
+* Accurate Uncertainties for Deep Learning Using Calibrated Regression
+    - By Volodymyr Kuleshov, Nathan Fenner, and Stefano Ermon
+    - 2018
+    - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
+    - Calibration and Recalibration; Regression
+    
+* Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
+    - By Eyke Hüllermeier and Willem Waegeman
+    - 2020
+    - [[Link 1]](https://arxiv.org/pdf/1910.09457.pdf)
+    - Overview of Concepts, Methods, and Metrics in UQ
+
+
+<!---
 #### Probabilistc Neural Networks
 * Estimating the Mean and Variance of the Target Probability Distribution
     - By David A. Nix and Andreas S. Weigend
@@ -152,21 +183,23 @@
     - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
     - Regression
 
-<!---
+
 * 
     - By 
     - 
     - [[Link 1]](), [[Link 2]]()
     - 
---->
+
 
 As a primer to get familiar with the concepts and objectives of uncertainty quantification, we recommend starting off with the following reading list:
 
 * Proper scoring rules
-    - Gneiting's Proper Scoring Rules paper
+    - Gneiting's paper defining proper scoring rules
 * Calibration and sharpness metrics
-    - Gneiting's overview paper
+    - Gneiting's 
     - Preliminaries of Beyond Pinball Loss
     - Preliminaries of Individual Calibration
 *  Overview of Current Methods
     - Hüllermeier's Introductory Paper
+    
+--->
