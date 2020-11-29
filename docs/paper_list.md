@@ -1,6 +1,6 @@
 # List of Papers Focusing on Metrics for Predictive Uncertainty Quantification and Probabilistic Forecasting
 
-### Seminary works by Tilmann Gneiting and Co
+### Seminal works by Tilmann Gneiting and Co
 * Probabilistic forecasts, calibration and sharpness
     - By Tilmann Gneiting, Fadoua Balabdaoui, and Adrian E. Raftery
     - 2007
@@ -29,6 +29,19 @@
     - [[Link 1]](https://www.annualreviews.org/doi/pdf/10.1146/annurev-statistics-062713-085831), [[Link 2]](https://www.annualreviews.org/doi/full/10.1146/annurev-statistics-062713-085831)
 
 ### In Machine Learning Literature
+
+* Accurate Uncertainties for Deep Learning Using Calibrated Regression
+    - By Volodymyr Kuleshov, Nathan Fenner, and Stefano Ermon
+    - 2018
+    - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
+    - Calibration and Recalibration; Regression
+
+* On Calibration of Modern Neural Networks
+    - By Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger
+    - 2017
+    - [[Link 1]](http://proceedings.mlr.press/v70/guo17a/guo17a.pdf) [[Link 2]](https://arxiv.org/abs/1706.04599)
+    - Calibration and Recalibration; Classification
+
 * Individual Calibration with Randomized Forecasting
     - By Shengjia Zhao, Tengyu Ma and Stefano Ermon
     - 2020
@@ -40,18 +53,6 @@
     - 2020
     - [[Link 1]](https://arxiv.org/pdf/2011.09588.pdf), [[Link 2]]()
     - Calibration, Sharpness, Proper Scoring Rules; Regression
-   
-* On Calibration of Modern Neural Networks
-    - By Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger
-    - 2017
-    - [[Link 1]](http://proceedings.mlr.press/v70/guo17a/guo17a.pdf) [[Link 2]](https://arxiv.org/abs/1706.04599)
-    - Calibration and Recalibration; Classification
-
-* Accurate Uncertainties for Deep Learning Using Calibrated Regression
-    - By Volodymyr Kuleshov, Nathan Fenner, and Stefano Ermon
-    - 2018
-    - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
-    - Calibration and Recalibration; Regression
     
 * Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods
     - By Eyke Hüllermeier and Willem Waegeman
@@ -182,13 +183,6 @@
     - 2018
     - [[Link 1]](http://proceedings.mlr.press/v80/kuleshov18a/kuleshov18a.pdf) [[Link 2]](https://arxiv.org/abs/1807.00263)
     - Regression
-
-
-* 
-    - By 
-    - 
-    - [[Link 1]](), [[Link 2]]()
-    - 
 
 
 As a primer to get familiar with the concepts and objectives of uncertainty quantification, we recommend starting off with the following reading list:
