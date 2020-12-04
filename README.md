@@ -53,27 +53,23 @@ predictions, predictions_std, y, x = uct.data.synthetic_sine_heteroscedastic(100
 # Compute all uncertainty metrics
 metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 ```
-This example computes metrics for a vector of predicted values (`predictions`) and
-associated uncertainties (`predictions_std`, a vector of standard deviations), taken
-with respect to a corresponding set of observed values `y`.
-The `get_all_metrics` function will return metrics for:
-* __average calibration__
-    - root mean squared calibration error, mean absolute calibration error,
-      miscalibration area
-* __adversarial group calibration__
-    - root mean squared adversarial group calibration error, mean absolute adversarial
-      group calibration error
-* __sharpness__
-    - expected standard deviation
-* __proper scoring rules__
-    - negative log-likelihood, continuous ranked probability score, check score,
-      interval score
-* __accuracy__
-    - root mean squared error, mean absolute error, median absolute error,
-      coefficient of determination, correlation
+This example computes [metrics](#metrics) for a vector of predicted values
+(`predictions`) and associated uncertainties (`predictions_std`, a vector of standard
+deviations), taken with respect to a corresponding set of observed values `y`.
 
 
-## Metrics and Visualizations
+## Metrics
+
+The [`get_all_metrics`](uncertainty_toolbox/metrics.py#L51) function will return metrics
+for:
+1. __average calibration__: _root mean squared calibration error, mean absolute calibration error, miscalibration area_
+2. __adversarial group calibration__: _root mean squared adversarial group calibration error, mean absolute adversarial group calibration error_
+3. __sharpness__: _expected standard deviation_
+4. __proper scoring rules__: _negative log-likelihood, continuous ranked probability score, check score, interval score_
+5. __accuracy__: _root mean squared error, mean absolute error, median absolute error, coefficient of determination, correlation_
+
+
+## Visualizations
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
