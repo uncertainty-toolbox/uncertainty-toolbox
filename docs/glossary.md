@@ -8,13 +8,15 @@ A small glossary of key terms for predictive uncertainty quantification.
 > "The lack of certainty, a state of limited knowledge where it is impossible to exactly describe the existing state,
 > a future outcome, or more than one possible outcome."
 
-In the context of machine learning, this broad class of uncertainty is usually broken down into two categories: aleatoric
-uncertainty (inherent uncertainty of the system) and epistemic uncertainty (uncertainty about the choice of model). These
-two classes of uncertainty are described more below.
+In the context of machine learning, uncertainty refers to the lack of confidence in one's estimates.
+It is common to separate uncertainty into two categories: [aleatoric uncertainty](## Aleatoric Uncertainty)
+(inherent uncertainty of the system) and [epistemic uncertainty](## Epistemic Uncertainty) (uncertainty about the choice
+of model). These two classes of uncertainty are described more below.
 
-For many machine learning applications, it may be crucial to quantify the amount of uncertainty for any given prediction.
+Uncertainty is an important consideration in many machine learning applications, and in particular, it may be
+crucial to quantify the amount of uncertainty for any given prediction (i.e. the [predictive uncertainty](## Predictive Uncertainty)).
 When high stakes decisions are being made based on predictions of machine learning models, e.g. in health care, it is 
-vital to know how much confidence to have in the prediction. Alternateively, for some sequentail decision making tasks
+vital to know how much confidence to have in the prediction. Alternatively, for some sequential decision making tasks
 high uncertainty may correspond with potentially valuable decisions that should be tested.
 
 ## Predictive Uncertainty
@@ -40,9 +42,6 @@ and standard deviation of 0.05 inches.
 
 Assuming a distributional prediction, the predicted probability attributed to a target quantity is 
 often referred to as the [confidence](#Confidence).
-Also, predictive uncertainty is commonly further decomposed into the [aleatoric](#Aleatoric-Uncertainty) and the 
-[epistemic](#Epistemic-Uncertainty) components.
-
 Various metrics can be used to evaluate predictive uncertainty, based measures such as
 [calibration](#Calibration), [sharpness](#Sharpness), and [proper scoring
 rules](#Proper-Scoring-Rules), and [accuracy](#Accuracy).
@@ -140,4 +139,4 @@ each of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).
 The accuracy of a prediction is how close it is to the true value. Even if a model achieves good performance with some uncertainty metrics,
 it may be useless if it is not accurate. For example, consider a weather model that predicts the temperature for the upcoming day.
 This model happens to be perfectly calibrated but unfortunately always predicts the same temperature. If the temperature varies greatly from
-day to day, this model will be highly innacurate and useless to those who want to plan their day out depending on the weather.
+day to day, this model will be highly inaccurate and useless to those who want to plan their day out depending on the weather.
