@@ -77,16 +77,13 @@ pred_std_list = [
     std,                # correct
 ]
 
-# Loop through
-miscal_area_list = []
+# Loop through, make plots, and compute metrics
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
-        miscal_area = umetrics.miscalibration_area(pred_mean, pred_std, y)
         mace = umetrics.mean_absolute_calibration_error(pred_mean, pred_std, y)
         rmsce = umetrics.root_mean_squared_calibration_error(pred_mean, pred_std, y)
-        miscal_list = [i, j, miscal_area, mace, rmsce]
-        miscal_area_list.append(miscal_list)
+        ma = umetrics.miscalibration_area(pred_mean, pred_std, y)
 
         make_plots(pred_mean, pred_std, i, j)
 
-        print('Completed: {}'.format(miscal_list))
+        print(f'MACE: {mace}, RMSCE: {rmsce}, MA: {ma}')
