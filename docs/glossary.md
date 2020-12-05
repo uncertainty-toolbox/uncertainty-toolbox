@@ -3,7 +3,19 @@
 A small glossary of key terms for predictive uncertainty quantification.
 
 ## Uncertainty
-**TODO**: define.
+[Wikipedia](https://en.wikipedia.org/wiki/Uncertainty) describes uncertainty as
+
+> "The lack of certainty, a state of limited knowledge where it is impossible to exactly describe the existing state,
+> a future outcome, or more than one possible outcome."
+
+In the context of machine learning, this broad class of uncertainty is usually broken down into two categories: aleatoric
+uncertainty (inherent uncertainty of the system) and epistemic uncertainty (uncertainty about the choice of model). These
+two classes of uncertainty are described more below.
+
+For many machine learning applications, it may be crucial to quantify the amount of uncertainty for any given prediction.
+When high stakes decisions are being made based on predictions of machine learning models, e.g. in health care, it is 
+vital to know how much confidence to have in the prediction. Alternateively, for some sequentail decision making tasks
+high uncertainty may correspond with potentially valuable decisions that should be tested.
 
 ## Predictive Uncertainty
 Predictive uncertainty refers to the uncertainty in a prediction made about some target
@@ -124,6 +136,8 @@ a proper scoring rule for centered prediction intervals. Uncertainty Toolbox inc
 each of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).
 
 
-
 ## Accuracy
-**TODO**: define.
+The accuracy of a prediction is how close it is to the true value. Even if a model achieves good performance with some uncertainty metrics,
+it may be useless if it is not accurate. For example, consider a weather model that predicts the temperature for the upcoming day.
+This model happens to be perfectly calibrated but unfortunately always predicts the same temperature. If the temperature varies greatly from
+day to day, this model will be highly innacurate and useless to those who want to plan their day out depending on the weather.
