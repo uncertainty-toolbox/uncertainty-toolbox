@@ -42,7 +42,7 @@ Following the definition of [predictive uncertainty](#Predictive-Uncertainty),
 assuming we make distributional predictions, the confidence of a prediction is the 
 probability attributed to that prediction according to the predicted distribution [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
 
-For example, suppose our task is to predict the outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A?t=6), 
+For example, suppose our task is to predict the match outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A?t=6), 
 and we're interested in predicting the binary outcome, win or lose.
 We make an accurate prediction with a Bernoulli distribution that attributes 85% probability of loss (and 15% probability of a win).
 Then our *confidence* in predicting a loss is 85%.
