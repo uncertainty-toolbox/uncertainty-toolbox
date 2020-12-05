@@ -28,14 +28,21 @@ according to a Gaussian distribution, with mean of 0.5 inches and standard devia
 Assuming a distributional prediction, the predicted probability attributed to a target quantity is 
 often referred to as the [confidence](#Confidence).
 Also, predictive uncertainty is commonly further decomposed into the [aleatoric](#Aleatoric-Uncertainty) and the 
-[epistemic](#Epistemic-Uncertainty) components
+[epistemic](#Epistemic-Uncertainty) components.
+
+Various metrics can be used to evaluate predidtive uncertainty. 
+We can measure the [accuracy](#Accuracy) of the mean of the predicted distribution against the data
+for a simple evaluation of the mean predictions (a point prediction).
+For a more comprehensive evaluation of the whole predictive distribution, we can utilize
+[calibration](#Calibration), [sharpness](#Sharpness), and [proper scoring rules](#Proper-Scoring-Rules).
+
 
 ## Confidence
 Following the definition of [predictive uncertainty](#Predictive-Uncertainty), 
 assuming we make distributional predictions, the confidence of a prediction is the 
-probability attributed to that prediction according to the predicted distribution ([(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf)).
+probability attributed to that prediction according to the predicted distribution [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
 
-For example, suppose our task is to predict the outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A), 
+For example, suppose our task is to predict the outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A?t=6), 
 and we're interested in predicting the binary outcome, win or lose.
 We make an accurate prediction with a Bernoulli distribution that attributes 85% probability of loss (and 15% probability of a win).
 Then our *confidence* in predicting a loss is 85%.
@@ -64,7 +71,6 @@ From [Wikipedia:](https://en.wikipedia.org/wiki/Uncertainty_quantification#:~:te
 
 Put another way, epistemic uncertainty is the uncertainty that comes from being unsure about one's model choice. For example, if one is doing modelling with a neural network and is given a finite number of samples to train on, the uncertainty of what the weights in the network should be is epistemic uncertainty. However, as the number of samples being trained on tends to infinity, the epistemic uncertainty tends towards zero as the correct model is able to be identified.
 
-
 ## Calibration
 
 > Confidence calibration is "the problem of predicting probability estimates representative of the true correctness likelihood." [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
@@ -83,9 +89,40 @@ predictive statement, _"the amount of rainfall today will not be more than x inc
 with 50% chance"_, and if your prediction was correct for roughly 15 out of 30 days
 (50% of the days), then your predictions are said to be calibrated.
 
-
 ## Sharpness
 
+> Sharpness refers to the concentration of the predictive distributions and is a property of the forecasts only [(Gneiting et al.)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
+
+As quoted above by Gneiting in his seminal work, sharpness is a measure of how narrow/concentrated/peaked the
+predicted distribtion is.
+Sharpness is evaluated *solely* based on the predicted distribution, 
+and neither the datapoint nor the ground truth distribution are considered when measuring sharpness. 
+As an example, a Gaussian distributional prediction with mean 1 and variance 0.5 is 
+sharper than a prediction with mean 1 and variance 3. 
+
+Sharpness is a valuable property because when the predicted distribution has correct 
+calibration, a sharper distributional prediction is tighter around the observed datapoints 
+and thus signifies more confidence in its predictions. 
+
+## Proper Scoring Rules
+
+Proper scoring rules are a scalar summary measure of the performance of a distributional prediction.
+According to the [seminal work by Gneiting](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf),
+a proper scoring rule is any function (with mild conditions) that assigns a score to a predicted probability distribution,
+where the maximum score of the function is attained when the predicted distribution exactly matches the ground truth distribution 
+(i.e. the distribution of the data).
+
+Given this lenient definition, there are many different examples of proper scoring rules,
+and different scoring rules for a different representation of the predicted distribution. 
+
+If the predicted distribution is expressed with a predicted density, a common scoring rule we can use 
+is the log-likelihood. 
+The continuous ranked probability score (CRPS) is another general score for continuous distribution predictions. 
+For quantile outputs, the check score is an applicable proper scoring rule. 
+The check score is also known as the "pinall loss" and optimized in standard quantile regression. 
+The interval score is a proper scoring rule for centered prediction intervals.
+
+This toolkit includes all of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).s 
 
 
 
