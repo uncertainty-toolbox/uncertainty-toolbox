@@ -6,35 +6,34 @@ A small glossary of key terms for predictive uncertainty quantification.
 **TODO**: define.
 
 ## Predictive Uncertainty
-Just as the term suggest, predictive uncertainty refers to the uncertainty in
-making a prediction about some target variable of interest.
+Predictive uncertainty refers to the uncertainty in a prediction made about some target
+variable of interest.
 
 As [early review on predictive uncertainty](http://mlg.eng.cam.ac.uk/pub/pdf/QuiRasSinetal06.pdf) outlined the concept by motivating the *task of expressing* predictive uncertainty:
 > "One particular approach to expressing uncertainty is to treat the unknown quantity of 
 > interest as a random variable, and to make predictions in the form 
 > of probability distributions, also known as *predictive distributions*"
 
-To summarize, predictive uncertainty exists whenever you have uncertainty in making
-any predictions, and to express this uncertainty, you can make *distributional predictions*,
-instead of *point predictions*.
+To summarize, predictive uncertainty exists whenever one has uncertainty in making a
+given prediction, and to express this uncertainty, one can make *distributional
+predictions*, instead of *point predictions*.
 
-For example, weather forecasters are tasked with making predictions about incoming weather conditions.
-While various models and analysis can aid in making an educated prediction, it will be almost
-impossible to consistently predict the exact amount of rainfall.
-Therefore, instead of predicting that there will be 0.5 inches of rain tomorrow (a point prediction),
-the forecaster can predict that the amount of rain tomorrow is approximately distributed
-according to a Gaussian distribution, with mean of 0.5 inches and standard deviation of 0.05 inches.
+For example, weather forecasters are tasked with making predictions about incoming
+weather conditions.  While various models and analysis can aid in making an educated
+prediction, it may be impossible to predict the amount of rainfall exactly. Therefore,
+instead of predicting that there will be 0.5 inches of rain tomorrow (a point
+prediction), the forecaster can predict that the amount of rain tomorrow is
+approximately distributed according to a Gaussian distribution, with mean of 0.5 inches
+and standard deviation of 0.05 inches.
 
 Assuming a distributional prediction, the predicted probability attributed to a target quantity is 
 often referred to as the [confidence](#Confidence).
 Also, predictive uncertainty is commonly further decomposed into the [aleatoric](#Aleatoric-Uncertainty) and the 
 [epistemic](#Epistemic-Uncertainty) components.
 
-Various metrics can be used to evaluate predidtive uncertainty. 
-We can measure the [accuracy](#Accuracy) of the mean of the predicted distribution against the data
-for a simple evaluation of the mean predictions (a point prediction).
-For a more comprehensive evaluation of the whole predictive distribution, we can utilize
-[calibration](#Calibration), [sharpness](#Sharpness), and [proper scoring rules](#Proper-Scoring-Rules).
+Various metrics can be used to evaluate predictive uncertainty, based measures such as
+[calibration](#Calibration), [sharpness](#Sharpness), and [proper scoring
+rules](#Proper-Scoring-Rules), and [accuracy](#Accuracy).
 
 
 ## Confidence
@@ -91,38 +90,38 @@ with 50% chance"_, and if your prediction was correct for roughly 15 out of 30 d
 
 ## Sharpness
 
-> Sharpness refers to the concentration of the predictive distributions and is a property of the forecasts only [(Gneiting et al.)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
+> Sharpness refers to the concentration of the predictive distributions and is a
+> property of the forecasts only [(Gneiting et al.)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
 
-As quoted above by Gneiting in his seminal work, sharpness is a measure of how narrow/concentrated/peaked the
-predicted distribtion is.
-Sharpness is evaluated *solely* based on the predicted distribution, 
-and neither the datapoint nor the ground truth distribution are considered when measuring sharpness. 
-As an example, a Gaussian distributional prediction with mean 1 and variance 0.5 is 
+Sharpness is a measure of how narrow, concentrated, or peaked the predictive distribtion
+is.  Sharpness is evaluated *solely* based on the predictive distribution, and neither
+the datapoint nor the ground truth distribution are considered when measuring sharpness.
+As an example, a Gaussian distributional prediction with mean 1 and variance 0.5 is
 sharper than a prediction with mean 1 and variance 3. 
 
-Sharpness is a valuable property because when the predicted distribution has correct 
-calibration, a sharper distributional prediction is tighter around the observed datapoints 
-and thus signifies more confidence in its predictions. 
+Sharpness is a valuable property because when the predictive distribution has correct
+calibration, a sharper distributional prediction is tighter around the observed
+datapoints and thus signifies more confidence in its predictions.
 
 ## Proper Scoring Rules
 
 Proper scoring rules are a scalar summary measure of the performance of a distributional prediction.
-According to the [seminal work by Gneiting](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf),
-a proper scoring rule is any function (with mild conditions) that assigns a score to a predicted probability distribution,
-where the maximum score of the function is attained when the predicted distribution exactly matches the ground truth distribution 
-(i.e. the distribution of the data).
+According to [this seminal work (Gneiting and Raftery)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf),
+a proper scoring rule is any function (with mild conditions) that assigns a score to a
+predictive probability distribution, where the maximum score of the function is attained
+when the predictive distribution exactly matches the ground truth distribution (i.e. the
+distribution of the data).
 
-Given this lenient definition, there are many different examples of proper scoring rules,
-and different scoring rules for a different representation of the predicted distribution. 
+Given this definition, there are many different examples of proper scoring rules, and
+different scoring rules for different representations of the predictive distribution.
 
-If the predicted distribution is expressed with a predicted density, a common scoring rule we can use 
-is the log-likelihood. 
-The continuous ranked probability score (CRPS) is another general score for continuous distribution predictions. 
-For quantile outputs, the check score is an applicable proper scoring rule. 
-The check score is also known as the "pinall loss" and optimized in standard quantile regression. 
-The interval score is a proper scoring rule for centered prediction intervals.
-
-This toolkit includes all of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).s 
+If the predictive distribution is expressed via a density function, a common scoring
+rule we can use is the log-likelihood.  The continuous ranked probability score (CRPS)
+is another general score for continuous distribution predictions.  For quantile outputs,
+the check score is an applicable proper scoring rule.  The check score is also known as
+the "pinall loss" and optimized in standard quantile regression.  The interval score is
+a proper scoring rule for centered prediction intervals. Uncertainty Toolbox includes
+each of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).
 
 
 
