@@ -9,12 +9,12 @@ A small glossary of key terms for predictive uncertainty quantification.
 > a future outcome, or more than one possible outcome."
 
 In the context of machine learning, uncertainty refers to the lack of confidence in one's estimates.
-It is common to separate uncertainty into two categories: [aleatoric uncertainty](## Aleatoric Uncertainty)
-(inherent uncertainty of the system) and [epistemic uncertainty](## Epistemic Uncertainty) (uncertainty about the choice
+It is common to separate uncertainty into two categories: [aleatoric uncertainty](#aleatoric-uncertainty)
+(inherent uncertainty of the system) and [epistemic uncertainty](#epistemic-uncertainty) (uncertainty about the choice
 of model). These two classes of uncertainty are described more below.
 
 Uncertainty is an important consideration in many machine learning applications, and in particular, it may be
-crucial to quantify the amount of uncertainty for any given prediction (i.e. the [predictive uncertainty](## Predictive Uncertainty)).
+crucial to quantify the amount of uncertainty for any given prediction (i.e. the [predictive uncertainty](#predictive-uncertainty)).
 When high stakes decisions are being made based on predictions of machine learning models, e.g. in health care, it is 
 vital to know how much confidence to have in the prediction. Alternatively, for some sequential decision making tasks
 high uncertainty may correspond with potentially valuable decisions that should be tested.
