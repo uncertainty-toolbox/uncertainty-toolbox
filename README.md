@@ -4,7 +4,7 @@
 
 **Uncertainty Toolbox**
 > A python toolbox for predictive uncertainty quantification, calibration,
-> [metrics, and visualization](#quick-start).\
+> [metrics, and visualization](#metrics).\
 > Also: a [glossary of useful terms](docs/glossary.md) and a collection
 > of [relevant papers and references](docs/paper_list.md).
 
@@ -12,7 +12,7 @@
 Many machine learning methods return predictions along with uncertainties of some form,
 such as distributions or confidence intervals. This begs the questions: How do we
 determine which predictive uncertanties are best? What does it mean to produce a _best_
-or _ideal_ uncertainty? Are our uncertainties accurate and _well-calibrated_?
+or _ideal_ uncertainty? Are our uncertainties accurate and _well calibrated_?
 
 Uncertainty Toolbox provides standard metrics to quantify and compare predictive
 uncertainty estimates, gives intuition for these metrics, produces visualizations of
@@ -62,14 +62,17 @@ deviations), taken with respect to a corresponding set of observed values `y`.
 
 The [`get_all_metrics`](uncertainty_toolbox/metrics.py#L51) function will return metrics
 for:
-1. __average calibration__: _root mean squared calibration error, mean absolute calibration error, miscalibration area_
-2. __adversarial group calibration__: _root mean squared adversarial group calibration error, mean absolute adversarial group calibration error_
+1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area_
+2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error_
 3. __sharpness__: _expected standard deviation_
 4. __proper scoring rules__: _negative log-likelihood, continuous ranked probability score, check score, interval score_
-5. __accuracy__: _root mean squared error, mean absolute error, median absolute error, coefficient of determination, correlation_
+5. __accuracy__: _mean absolute error, root mean squared error, median absolute error, coefficient of determination, correlation_
 
 
 ## Visualizations
+
+The following plots are a few of the visualizations provided by Uncertainty Toolbox. See
+[this example](examples/viz_synth_sine.py) for code to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
@@ -85,12 +88,20 @@ for:
 <img src="docs/images/calibration_under.png" alt="" width="32%" align="top">
 </p>
 
-**Just right** (_well-calibrated_)
+**Well calibrated**
 <p align="center">
 <img src="docs/images/xy_correct.png" alt="" width="32%" align="top">
 <img src="docs/images/intervals_ordered_correct.png" alt="" width="32%" align="top">
 <img src="docs/images/calibration_correct.png" alt="" width="32%" align="top">
 </p>
+
+And here are a few of the calibration metrics for the above three cases:
+
+|              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
+| :----- | :-----: | :-----: | :-----: |
+| Overconfident | 0.19429 | 0.21753 | 0.19625 |
+| Underconfident | 0.20692 | 0.23003 | 0.20901 |
+| Well calibrated | 0.00862 | 0.01040 | 0.00865 |
 
 
 ## Citation
