@@ -11,6 +11,7 @@ import uncertainty_toolbox.metrics as umetrics
 import uncertainty_toolbox.viz as uviz
 
 import neatplot
+neatplot.set_style()
 
 
 # Set random seed
@@ -20,10 +21,13 @@ np.random.seed(11)
 n_obs = 650
 f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
 
+# Save figure (set to True to save)
+savefig = False
 
-def save_figure(name_str, file_type='png', save=False):
-    """Save figure, or do nothing if save is False."""
-    if save:
+
+def save_figure(name_str, file_type='png'):
+    """Save figure, or do nothing if savefig is False."""
+    if savefig:
         neatplot.save_figure(name_str, file_type)
 
 

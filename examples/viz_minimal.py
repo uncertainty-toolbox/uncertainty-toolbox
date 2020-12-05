@@ -7,6 +7,10 @@ import numpy as np
 import uncertainty_toolbox.viz as uviz
 import uncertainty_toolbox.data as udata
 
+import neatplot
+neatplot.set_style()
+neatplot.update_rc('figure.dpi', 150)
+
 
 # Set random seed
 np.random.seed(11)
@@ -21,6 +25,6 @@ print('* |y_true - y_pred|: {}'.format(np.abs(y_true - y_pred)))
 print('* y_std: {}'.format(y_std))
 
 # Plot
-uviz.plot_parity(y_pred, y_true, show=True)
 uviz.plot_intervals(y_pred, y_std, y_true, show=True)
 uviz.plot_calibration(y_pred, y_std, y_true, show=True)
+uviz.plot_intervals_ordered(y_pred, y_std, y_true, show=True)
