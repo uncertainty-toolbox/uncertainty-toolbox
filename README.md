@@ -103,6 +103,31 @@ And here are a few of the calibration metrics for the above three cases:
 | Underconfident | 0.20692 | 0.23003 | 0.20901 |
 | Well calibrated | 0.00862 | 0.01040 | 0.00865 |
 
+## Recalibration
+
+**Recalibrating overconfident predictions**
+<p align="center">
+<img src="docs/images/before_recal_over.png" alt="" width="32%" align="top">
+<img src="docs/images/recalibrate_arrow.png" alt="" width="32%" align="top">
+<img src="docs/images/after_recal_over.png" alt="" width="32%" align="top">
+</p>
+
+|              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
+| :----- | :-----: | :-----: | :-----: |
+| Before Recalibration | 0.10305 | 0.11518 | 0.10409 |
+| After Recalibration | 0.00178 | 0.00302 | 0.00153 |
+
+**Recalibrating underconfident predictions**
+<p align="center">
+<img src="docs/images/before_recal_under.png" alt="" width="32%" align="top">
+<img src="docs/images/recalibrate_arrow.png" alt="" width="32%" align="top">
+<img src="docs/images/after_recal_under.png" alt="" width="32%" align="top">
+</p>
+
+|              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
+| :----- | :-----: | :-----: | :-----: |
+| Before Recalibration | 0.29548 | 0.33284 | 0.29846 |
+| After Recalibration | 0.00170 | 0.00222 | 0.00150 |
 
 ## Citation
 
