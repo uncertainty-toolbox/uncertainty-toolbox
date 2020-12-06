@@ -108,7 +108,7 @@ And here are a few of the calibration metrics for the above three cases:
 The following plots show the results of a recalibration procedure provided by
 Uncertainty Toolbox, which transforms a set of predictive uncertainties to improve
 average calibration.
-The algorithm is based on isotonic regression, as proposed by [Kuleshov et al.](docs/paper_list#:~:text=Accurate%20Uncertainties%20for%20Deep%20Learning%20Using%20Calibrated%20Regression).
+The algorithm is based on isotonic regression, as proposed by [Kuleshov et al.](docs/paper_list.md#:~:text=Accurate%20Uncertainties%20for%20Deep%20Learning%20Using%20Calibrated%20Regression).
 
 See [this example](examples/viz_recalibrate.py) for code to
 reproduce these plots.
