@@ -2,20 +2,20 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
-import os, sys
 import numpy as np
 import argparse
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from metrics_accuracy import prediction_error_metrics
-from metrics_calibration import (
+from uncertainty_toolbox.metrics_accuracy import (
+    prediction_error_metrics
+)
+from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
     miscalibration_area,
     adversarial_group_calibration,
     sharpness,
 )
-from metrics_scoring_rule import (
+from uncertainty_toolbox.metrics_scoring_rule import (
     nll_gaussian,
     crps_gaussian,
     check_score,
