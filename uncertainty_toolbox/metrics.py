@@ -141,7 +141,7 @@ def get_all_scoring_rule_metrics(y_pred, y_std, y_true, resolution, scaled, verb
     return sr_metrics
 
 
-def print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3):
+def _print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3):
 
     for adv_group_cali_type, adv_group_cali_dic in adv_group_metric_dic.items():
         num_groups = adv_group_cali_dic["group_sizes"].shape[0]
@@ -180,7 +180,7 @@ def get_all_metrics(
     scoring_rule_metrics = get_all_scoring_rule_metrics(
         y_pred, y_std, y_true, resolution, scaled, verbose
     )
-    print("Finished Calculating All Metrics")
+    print("**Finished Calculating All Metrics**")
 
     # Print all outputs
     print("\n")
@@ -191,7 +191,7 @@ def get_all_metrics(
     for cali_metric, cali_val in calibration_metrics.items():
         print("  {:<37} {:.3f}".format(METRIC_NAMES[cali_metric], cali_val))
     print(" Adversarial Group Calibration Metrics ".center(60, "="))
-    print_adversarial_group_calibration(adv_group_cali_metrics, print_group_num=3)
+    _print_adversarial_group_calibration(adv_group_cali_metrics, print_group_num=3)
     print(" Sharpness Metrics ".center(60, "="))
     for sharp_metric, sharp_val in sharpness_metrics.items():
         print("  {:}   {:.3f}".format(METRIC_NAMES[sharp_metric], sharp_val))
