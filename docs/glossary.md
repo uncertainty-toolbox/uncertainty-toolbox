@@ -50,7 +50,8 @@ rules](#Proper-Scoring-Rules), and [accuracy](#Accuracy).
 ## Confidence
 Following the definition of [predictive uncertainty](#Predictive-Uncertainty), 
 assuming we make distributional predictions, the confidence of a prediction is the 
-probability attributed to that prediction according to the predicted distribution [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
+probability attributed to that prediction according to the predicted distribution 
+[(Guo et al., 2017)](docs/paper_list.md#:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
 
 For example, suppose our task is to predict the match outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A?t=6), 
 and we're interested in predicting the binary outcome, win or lose.
@@ -85,7 +86,7 @@ Put another way, epistemic uncertainty is the uncertainty that comes from being 
 
 > Confidence calibration is "the problem of predicting probability estimates representative of the 
 > true correctness likelihood." 
-> [(Guo et al., 2017)](docs/paper_list.md#user-content-calibration-sharpness-and-recalibration-in-deep-learning:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
+> [(Guo et al., 2017)](docs/paper_list.md#:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
 
 Intuitively, calibration refers to the degree to which a predicted uncertainty matches
 the true underlying uncertainty in the data.  For example, suppose you make a series of
