@@ -40,14 +40,14 @@ def iso_recal(exp_props, obs_props):
 
     exp_0_idx = get_q_idx(exp_props, 0.0)
     exp_1_idx = get_q_idx(exp_props, 1.0)
-    within_01 = obs_props[exp_0_idx:exp_1_idx+1]
+    within_01 = obs_props[exp_0_idx:exp_1_idx + 1]
 
     beg_idx, end_idx = None, None
     # Handle beg_idx
     min_obs_below = np.min(obs_props[:exp_0_idx])
     min_obs_within = np.min(within_01)
     if min_obs_below < min_obs_within:
-        i = exp_0_idx-1
+        i = exp_0_idx - 1
         while obs_props[i] > min_obs_below:
             i -= 1
         beg_idx = i
@@ -63,19 +63,19 @@ def iso_recal(exp_props, obs_props):
         raise RuntimeError('Inspect input arrays, cannot set beginning index')
 
     # Handle end_idx
-    max_obs_above = np.max(obs_props[exp_1_idx+1:])
+    max_obs_above = np.max(obs_props[exp_1_idx + 1:])
     max_obs_within = np.max(within_01)
     if max_obs_above > max_obs_within:
         i = exp_1_idx + 1
         while obs_props[i] < max_obs_above:
             i += 1
-        end_idx = i+1
+        end_idx = i + 1
     elif np.sum((within_01 == max_obs_within).astype(float)) > 1:
         # multiple minima in within_01 ==> get last min idx
         i = beg_idx
         while obs_props[i] < max_obs_within:
             i += 1
-        end_idx = i+1
+        end_idx = i + 1
     elif np.sum((within_01 == max_obs_within).astype(float)) == 1:
         end_idx = int(exp_0_idx + np.argmax(within_01) + 1)
     else:
@@ -89,7 +89,7 @@ def iso_recal(exp_props, obs_props):
 
     try:
         iso_model = iso_model.fit(filtered_obs_props, filtered_exp_props)
-    except:
+    except Exception:
         raise RuntimeError('Failed to fit isotonic regression model')
 
     return iso_model
@@ -106,4 +106,3 @@ if __name__ == '__main__':
     print(obs)
     print(exp)
     print(recal_model.predict(exp))
-

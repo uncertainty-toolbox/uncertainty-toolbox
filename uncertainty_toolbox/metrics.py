@@ -2,20 +2,20 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
-import os, sys
 import numpy as np
 import argparse
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-from metrics_accuracy import prediction_error_metrics
-from metrics_calibration import (
+from uncertainty_toolbox.metrics_accuracy import (
+    prediction_error_metrics
+)
+from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
     miscalibration_area,
     adversarial_group_calibration,
     sharpness,
 )
-from metrics_scoring_rule import (
+from uncertainty_toolbox.metrics_scoring_rule import (
     nll_gaussian,
     crps_gaussian,
     check_score,
@@ -23,34 +23,7 @@ from metrics_scoring_rule import (
 )
 
 
-def parse_run_options():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--cali_bins",
-        type=int,
-        default=100,
-        help="number of bins to discretize probabilities for calibration",
-    )
-    parser.add_argument(
-        "--sr_bins",
-        type=int,
-        default=99,
-        help="number of bins to discretize probabilities for scoring rules",
-    )
-    parser.add_argument(
-        "--sr_scale", type=int, default=1, help="1 to scale scoring rules outputs"
-    )
-    # parser.add_argument('--', type=, default=, help='')
-
-    options = parser.parse_args()
-    options.sr_scale = bool(options.sr_scale)
-
-    return options
-
-
-def get_all_metrics(y_pred, y_std, y_true):
-    options = parse_run_options()
-
+def get_all_metrics(y_pred, y_std, y_true, num_bins=100, resolution=99, scaled=True):
     """ Accuracy """
     print("Calculating accuracy metrics...")
     acc_metrics = prediction_error_metrics(y_pred, y_true)
@@ -59,13 +32,13 @@ def get_all_metrics(y_pred, y_std, y_true):
     print("Calculating average calibration metrics...")
     cali_metrics = {}
     cali_metrics["rms_cali"] = root_mean_squared_calibration_error(
-        y_pred, y_std, y_true, num_bins=options.cali_bins
+        y_pred, y_std, y_true, num_bins=num_bins
     )
     cali_metrics["ma_cali"] = mean_absolute_calibration_error(
-        y_pred, y_std, y_true, num_bins=options.cali_bins
+        y_pred, y_std, y_true, num_bins=num_bins
     )
     cali_metrics["miscal_area"] = miscalibration_area(
-        y_pred, y_std, y_true, num_bins=options.cali_bins
+        y_pred, y_std, y_true, num_bins=num_bins
     )
 
     """ Adversarial Group Calibration """
@@ -76,7 +49,7 @@ def get_all_metrics(y_pred, y_std, y_true):
         y_std,
         y_true,
         cali_type="mean_abs",
-        num_bins=options.cali_bins,
+        num_bins=num_bins,
     )
 
     ma_adv_group_size = ma_adv_group_cali.group_size
@@ -95,7 +68,7 @@ def get_all_metrics(y_pred, y_std, y_true):
         y_std,
         y_true,
         cali_type="root_mean_sq",
-        num_bins=options.cali_bins,
+        num_bins=num_bins,
     )
 
     rms_adv_group_size = rms_adv_group_cali.group_size
@@ -115,13 +88,13 @@ def get_all_metrics(y_pred, y_std, y_true):
     """ Proper Scoring Rules """
     print("Calculating proper scoring rule metrics...")
     sr_metrics = {}
-    sr_metrics["nll"] = nll_gaussian(y_pred, y_std, y_true, scaled=options.sr_scale)
-    sr_metrics["crps"] = crps_gaussian(y_pred, y_std, y_true, scaled=options.sr_scale)
+    sr_metrics["nll"] = nll_gaussian(y_pred, y_std, y_true, scaled=scaled)
+    sr_metrics["crps"] = crps_gaussian(y_pred, y_std, y_true, scaled=scaled)
     sr_metrics["check"] = check_score(
-        y_pred, y_std, y_true, scaled=options.sr_scale, resolution=options.sr_bins
+        y_pred, y_std, y_true, scaled=scaled, resolution=resolution
     )
     sr_metrics["interval"] = interval_score(
-        y_pred, y_std, y_true, scaled=options.sr_scale, resolution=options.sr_bins
+        y_pred, y_std, y_true, scaled=scaled, resolution=resolution
     )
 
     # Print all outputs
