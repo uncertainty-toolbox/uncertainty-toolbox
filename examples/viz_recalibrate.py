@@ -7,10 +7,11 @@ from matplotlib import rc
 
 import uncertainty_toolbox.data as udata
 import uncertainty_toolbox.metrics as umetrics
-from uncertainty_toolbox.metrics_calibration import get_proportion_lists_vectorized
+from uncertainty_toolbox.metrics_calibration import (
+    get_proportion_lists_vectorized,
+)
 import uncertainty_toolbox.viz as uviz
 from uncertainty_toolbox.recalibration import iso_recal
-from uncertainty_toolbox.viz import plot_calibration
 
 import neatplot
 
@@ -41,36 +42,8 @@ def update_rc_params():
     plt.rcParams.update({"ytick.labelsize": 14})
 
 
-def make_plots(pred_mean, pred_std, idx1, idx2):
-    """Make set of plots."""
-
-    update_rc_params()
-    ylims = [-3, 3]
-    n_subset = 50
-
-    # Make xy plot
-    uviz.plot_xy(pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15])
-    save_figure(f"xy_{idx1}_{idx2}")
-    plt.show()
-
-    # Make intervals plot
-    uviz.plot_intervals(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_figure(f"intervals_{idx1}_{idx2}")
-    plt.show()
-
-    # Make calibration plot
-    uviz.plot_calibration(pred_mean, pred_std, y)
-    save_figure(f"calibration_{idx1}_{idx2}")
-    plt.show()
-
-    # Make ordered intervals plot
-    uviz.plot_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_figure(f"intervals_ordered_{idx1}_{idx2}")
-    plt.show()
-
-
 # List of predictive means and standard deviations
-pred_mean_list = [f, f + 0.1]
+pred_mean_list = [f]
 
 pred_std_list = [
     std * 0.5,  # overconfident
@@ -93,9 +66,9 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print("Before Recalibration")
-        print("   MACE: {:.3f}, RMSCE: {:.3f}, MA: {:.3f}".format(mace, rmsce, ma))
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        plot_calibration(
+        uviz.plot_calibration(
             pred_mean,
             pred_std,
             y,
@@ -119,7 +92,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print(" After Recalibration")
-        print("   MACE: {:.3f}, RMSCE: {:.3f}, MA: {:.3f}".format(mace, rmsce, ma))
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         plot_calibration(
             pred_mean,
