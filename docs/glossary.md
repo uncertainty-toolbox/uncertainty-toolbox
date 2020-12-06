@@ -83,7 +83,9 @@ Put another way, epistemic uncertainty is the uncertainty that comes from being 
 
 ## Calibration
 
-> Confidence calibration is "the problem of predicting probability estimates representative of the true correctness likelihood." [(Guo et al., 2017)](paper_list.md#user-content-calibration-sharpness-and-recalibration-in-deep-learning:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
+> Confidence calibration is "the problem of predicting probability estimates representative of the 
+> true correctness likelihood." 
+> [(Guo et al., 2017)](docs/paper_list.md#user-content-calibration-sharpness-and-recalibration-in-deep-learning:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
 
 Intuitively, calibration refers to the degree to which a predicted uncertainty matches
 the true underlying uncertainty in the data.  For example, suppose you make a series of
