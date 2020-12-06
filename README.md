@@ -1,6 +1,5 @@
-# Uncertainty Toolbox
+<p align="center"><img src="docs/images/logo.png" width=700 /></p>
 
-<br/>
 
 **Uncertainty Toolbox**
 > A python toolbox for predictive uncertainty quantification, calibration,
@@ -108,7 +107,7 @@ And here are a few of the calibration metrics for the above three cases:
 The following plots show the results of a recalibration procedure provided by
 Uncertainty Toolbox, which transforms a set of predictive uncertainties to improve
 average calibration.
-The algorithm is based on isotonic regression, as proposed by [Kuleshov et al.](docs/paper_list.md#calibration-sharpness-and-recalibration-in-deep-learning).
+The algorithm is based on isotonic regression, as proposed by [Kuleshov et al](docs/paper_list.md#calibration-sharpness-and-recalibration-in-deep-learning).
 
 See [this example](examples/viz_recalibrate.py) for code to
 reproduce these plots.
