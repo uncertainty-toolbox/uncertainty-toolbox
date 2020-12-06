@@ -27,7 +27,7 @@ n_obs = 650
 f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
 
 # Save figure (set to True to save)
-savefig = False
+savefig = True
 
 
 def save_figure(name_str, file_type="png"):
@@ -43,38 +43,10 @@ def update_rc_params():
     plt.rcParams.update({"ytick.labelsize": 14})
 
 
-def make_plots(pred_mean, pred_std, idx1, idx2):
-    """Make set of plots."""
-
-    update_rc_params()
-    ylims = [-3, 3]
-    n_subset = 50
-
-    # Make xy plot
-    uviz.plot_xy(pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15])
-    save_figure(f"xy_{idx1}_{idx2}")
-    plt.show()
-
-    # Make intervals plot
-    uviz.plot_intervals(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_figure(f"intervals_{idx1}_{idx2}")
-    plt.show()
-
-    # Make calibration plot
-    uviz.plot_calibration(pred_mean, pred_std, y)
-    save_figure(f"calibration_{idx1}_{idx2}")
-    plt.show()
-
-    # Make ordered intervals plot
-    uviz.plot_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    save_figure(f"intervals_ordered_{idx1}_{idx2}")
-    plt.show()
-
-
 # List of predictive means and standard deviations
 pred_mean_list = [
     f,
-    f + 0.1,
+    # f + 0.1,
     # f - 0.1,
     # f + 0.25,
     # f - 0.25,
@@ -102,11 +74,13 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print("Before Recalibration")
-        print("   MACE: {:.3f}, RMSCE: {:.3f}, MA: {:.3f}".format(mace, rmsce, ma))
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        plot_calibration(
-            pred_mean, pred_std, y, exp_props=exp_props, obs_props=obs_props, show=True
+        uviz.plot_calibration(
+            pred_mean, pred_std, y, exp_props=exp_props, obs_props=obs_props,
+            show=True
         )
+
 
         # After recalibration
         recal_model = iso_recal(exp_props, obs_props)
@@ -123,7 +97,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print(" After Recalibration")
-        print("   MACE: {:.3f}, RMSCE: {:.3f}, MA: {:.3f}".format(mace, rmsce, ma))
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         plot_calibration(
             pred_mean,
@@ -131,5 +105,9 @@ for i, pred_mean in enumerate(pred_mean_list):
             y,
             exp_props=recal_exp_props,
             obs_props=recal_obs_props,
-            show=True,
+            show=True
         )
+        # if j==0:
+        #     save_figure('after_recal_over')
+        # else:
+        #     save_figure('after_recal_under')
