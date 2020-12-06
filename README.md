@@ -119,8 +119,8 @@ reproduce these plots.
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
 | :----- | :-----: | :-----: | :-----: |
-| Before Recalibration | 0.10305 | 0.11518 | 0.10409 |
-| After Recalibration | 0.00178 | 0.00302 | 0.00153 |
+| Before Recalibration | 0.19429 | 0.21753 | 0.19625 |
+| After Recalibration | 0.01124 | 0.02591 | 0.01117 |
 
 **Recalibrating underconfident predictions**
 <p align="center">
@@ -131,8 +131,8 @@ reproduce these plots.
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
 | :----- | :-----: | :-----: | :-----: |
-| Before Recalibration | 0.29548 | 0.33284 | 0.29846 |
-| After Recalibration | 0.00170 | 0.00222 | 0.00150 |
+| Before Recalibration | 0.20692 | 0.23003 | 0.20901 |
+| After Recalibration | 0.00157 | 0.00205 | 0.00132 |
 
 ## Citation
 
