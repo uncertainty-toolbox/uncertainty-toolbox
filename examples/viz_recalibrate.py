@@ -94,7 +94,7 @@ for i, pred_mean in enumerate(pred_mean_list):
         print(" After Recalibration")
         print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        plot_calibration(
+        uviz.plot_calibration(
             pred_mean,
             pred_std,
             y,
