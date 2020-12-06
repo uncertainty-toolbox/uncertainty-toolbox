@@ -105,6 +105,11 @@ And here are a few of the calibration metrics for the above three cases:
 
 ## Recalibration
 
+The following plots show the results of a recalibration procedure provided by
+Uncertainty Toolbox, which transforms a set of predictive uncertainties to improve
+average calibration. See [this example](examples/viz_recalibrate.py) for code to
+reproduce these plots.
+
 **Recalibrating overconfident predictions**
 <p align="center">
 <img src="docs/images/before_recal_over.png" alt="" width="32%" align="top">

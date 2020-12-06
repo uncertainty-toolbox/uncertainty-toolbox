@@ -1,5 +1,5 @@
 """
-Examples of code for visualizations.
+Examples of code for recalibration.
 """
 import numpy as np
 import matplotlib.pyplot as plt

@@ -12,6 +12,7 @@ import uncertainty_toolbox.viz as uviz
 
 import neatplot
 neatplot.set_style()
+neatplot.update_rc('text.usetex', False) # Set to True for system latex
 
 
 # Set random seed
