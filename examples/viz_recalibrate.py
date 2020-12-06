@@ -5,11 +5,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
-# plt.ion()
-
 import uncertainty_toolbox.data as udata
 import uncertainty_toolbox.metrics as umetrics
-from uncertainty_toolbox.metrics_calibration import get_proportion_lists_vectorized
+from uncertainty_toolbox.metrics_calibration import (
+    get_proportion_lists_vectorized,
+)
 import uncertainty_toolbox.viz as uviz
 from uncertainty_toolbox.recalibration import iso_recal
 from uncertainty_toolbox.viz import plot_calibration
@@ -27,7 +27,7 @@ n_obs = 650
 f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
 
 # Save figure (set to True to save)
-savefig = True
+savefig = False
 
 
 def save_figure(name_str, file_type="png"):
@@ -62,7 +62,9 @@ pred_std_list = [
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
         # Before recalibration
-        exp_props, obs_props = get_proportion_lists_vectorized(pred_mean, pred_std, y)
+        exp_props, obs_props = get_proportion_lists_vectorized(
+            pred_mean, pred_std, y
+        )
         recal_model = None
         mace = umetrics.mean_absolute_calibration_error(
             pred_mean, pred_std, y, recal_model=recal_model
@@ -74,13 +76,18 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print("Before Recalibration")
-        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
-
-        uviz.plot_calibration(
-            pred_mean, pred_std, y, exp_props=exp_props, obs_props=obs_props,
-            show=True
+        print(
+            "   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma)
         )
 
+        uviz.plot_calibration(
+            pred_mean,
+            pred_std,
+            y,
+            exp_props=exp_props,
+            obs_props=obs_props,
+            show=True,
+        )
 
         # After recalibration
         recal_model = iso_recal(exp_props, obs_props)
@@ -97,7 +104,9 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print(" After Recalibration")
-        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
+        print(
+            "   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma)
+        )
 
         plot_calibration(
             pred_mean,
@@ -105,9 +114,5 @@ for i, pred_mean in enumerate(pred_mean_list):
             y,
             exp_props=recal_exp_props,
             obs_props=recal_obs_props,
-            show=True
+            show=True,
         )
-        # if j==0:
-        #     save_figure('after_recal_over')
-        # else:
-        #     save_figure('after_recal_under')
