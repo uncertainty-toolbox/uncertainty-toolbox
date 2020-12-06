@@ -108,7 +108,7 @@ And here are a few of the calibration metrics for the above three cases:
 **Recalibrating overconfident predictions**
 <p align="center">
 <img src="docs/images/before_recal_over.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
+<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="center">
 <img src="docs/images/after_recal_over.png" alt="" width="32%" align="top">
 </p>
 
@@ -120,7 +120,7 @@ And here are a few of the calibration metrics for the above three cases:
 **Recalibrating underconfident predictions**
 <p align="center">
 <img src="docs/images/before_recal_under.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
+<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="center">
 <img src="docs/images/after_recal_under.png" alt="" width="32%" align="top">
 </p>
 
