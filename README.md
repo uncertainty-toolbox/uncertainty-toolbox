@@ -51,7 +51,10 @@ import uncertainty_toolbox as uct
 predictions, predictions_std, y, x = uct.data.synthetic_sine_heteroscedastic(100)
 
 # Compute all uncertainty metrics
-metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
+metrics = uct.metrics.get_all_metrics(
+    predictions, predictions_std, y,
+    num_bins=100, resolution=99, scaled=1)
+
 ```
 This example computes [metrics](#metrics) for a vector of predicted values
 (`predictions`) and associated uncertainties (`predictions_std`, a vector of standard
