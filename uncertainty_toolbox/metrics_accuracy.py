@@ -1,7 +1,6 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-
 import numpy as np
 from sklearn.metrics import (
     mean_absolute_error,
@@ -9,8 +8,6 @@ from sklearn.metrics import (
     r2_score,
     median_absolute_error,
 )
-
-""" Error, Calibration, Sharpness Metrics """
 
 
 def prediction_error_metrics(y_pred, y_true):

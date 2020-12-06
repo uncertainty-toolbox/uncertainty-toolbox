@@ -5,8 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
-# plt.ion()
-
 import uncertainty_toolbox.data as udata
 import uncertainty_toolbox.metrics as umetrics
 from uncertainty_toolbox.metrics_calibration import get_proportion_lists_vectorized
@@ -72,18 +70,11 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
 
 
 # List of predictive means and standard deviations
-pred_mean_list = [
-    f,
-    f + 0.1,
-    # f - 0.1,
-    # f + 0.25,
-    # f - 0.25,
-]
+pred_mean_list = [f, f + 0.1]
 
 pred_std_list = [
     std * 0.5,  # overconfident
     std * 2.0,  # underconfident
-    # std,                # correct
 ]
 
 # Loop through, make plots, and compute metrics
@@ -105,7 +96,12 @@ for i, pred_mean in enumerate(pred_mean_list):
         print("   MACE: {:.3f}, RMSCE: {:.3f}, MA: {:.3f}".format(mace, rmsce, ma))
 
         plot_calibration(
-            pred_mean, pred_std, y, exp_props=exp_props, obs_props=obs_props, show=True
+            pred_mean,
+            pred_std,
+            y,
+            exp_props=exp_props,
+            obs_props=obs_props,
+            show=True,
         )
 
         # After recalibration

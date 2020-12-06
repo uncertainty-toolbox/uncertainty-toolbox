@@ -40,8 +40,8 @@ def crps_gaussian(y_pred, y_std, y_true, scaled=True):
     """
     Return the negatively oriented continuous ranked probability score for
     held out data (y_true) given predictive uncertainty with mean (y_pred)
-    and standard-deviation (y_std).
-    Each test point is given equal weight in the overall score over the test set.
+    and standard-deviation (y_std). Each test point is given equal weight
+    in the overall score over the test set.
 
     Negatively oriented means a smaller value is more desirable.
     """
@@ -120,9 +120,9 @@ def interval_score(
 ):
     """
     Return the negatively oriented interval score for held out data (y_true)
-    given predictive uncertainty with mean (y_pred) and standard-deviation (y_std).
-    Each test point and each percentile is given equal weight
-    in the overall score over the test set and list of quantiles.
+    given predictive uncertainty with mean (y_pred) and standard-deviation
+    (y_std). Each test point and each percentile is given equal weight in the
+    overall score over the test set and list of quantiles.
 
     Negatively oriented means a smaller value is more desirable.
     """

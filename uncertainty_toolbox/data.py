@@ -12,7 +12,7 @@ def synthetic_arange_random(num_points=10):
     """
     y_true = np.arange(num_points)
     y_pred = np.arange(num_points) + np.random.random((num_points,))
-    y_std = np.abs(y_true - y_pred) + .1 * np.random.random((num_points,))
+    y_std = np.abs(y_true - y_pred) + 0.1 * np.random.random((num_points,))
 
     return (y_pred, y_std, y_true)
 
