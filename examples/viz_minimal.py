@@ -10,6 +10,7 @@ import uncertainty_toolbox.data as udata
 import neatplot
 neatplot.set_style()
 neatplot.update_rc('figure.dpi', 150)
+neatplot.update_rc('text.usetex', False)
 
 
 # Set random seed

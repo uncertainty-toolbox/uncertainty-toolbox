@@ -23,18 +23,18 @@ def sharpness(y_std):
 
 
 def root_mean_squared_calibration_error(
-    y_pred, y_std, y_true, num_bins=100, vectorized=False
+    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None
 ):
     """Return root mean squared calibration error."""
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
         (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
     else:
         (exp_proportions, obs_proportions) = get_proportion_lists(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
 
     squared_diff_proportions = np.square(exp_proportions - obs_proportions)
@@ -44,18 +44,18 @@ def root_mean_squared_calibration_error(
 
 
 def mean_absolute_calibration_error(
-    y_pred, y_std, y_true, num_bins=100, vectorized=False
+    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None
 ):
     """ Return mean absolute calibration error; identical to ECE. """
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
         (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
     else:
         (exp_proportions, obs_proportions) = get_proportion_lists(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
 
     abs_diff_proportions = np.abs(exp_proportions - obs_proportions)
@@ -136,7 +136,9 @@ def adversarial_group_calibration(
     return out
 
 
-def miscalibration_area(y_pred, y_std, y_true, num_bins=100, vectorized=False):
+def miscalibration_area(
+    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None
+):
     """
     Return miscalibration area.
 
@@ -149,11 +151,11 @@ def miscalibration_area(y_pred, y_std, y_true, num_bins=100, vectorized=False):
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
         (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
     else:
         (exp_proportions, obs_proportions) = get_proportion_lists(
-            y_pred, y_std, y_true, num_bins
+            y_pred, y_std, y_true, num_bins, recal_model
         )
 
     # Compute approximation to area between curves
@@ -174,7 +176,9 @@ def miscalibration_area(y_pred, y_std, y_true, num_bins=100, vectorized=False):
     return miscalibration_area
 
 
-def get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins=100):
+def get_proportion_lists_vectorized(
+    y_pred, y_std, y_true, num_bins=100, recal_model=None
+):
     """
     Return lists of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
@@ -182,10 +186,15 @@ def get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins=100):
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
+    # If we are recalibrating, input proportions are recalibrated proportions
+    if recal_model is not None:
+        in_exp_proportions = recal_model.predict(exp_proportions)
+    else:
+        in_exp_proportions = exp_proportions
 
     norm = stats.norm(loc=0, scale=1)
-    gaussian_lower_bound = norm.ppf(0.5 - exp_proportions / 2.0)
-    gaussian_upper_bound = norm.ppf(0.5 + exp_proportions / 2.0)
+    gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
+    gaussian_upper_bound = norm.ppf(0.5 + in_exp_proportions / 2.0)
     residuals = y_pred - y_true
     normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1, 1)
     above_lower = normalized_residuals >= gaussian_lower_bound
@@ -197,7 +206,7 @@ def get_proportion_lists_vectorized(y_pred, y_std, y_true, num_bins=100):
     return exp_proportions, obs_proportions
 
 
-def get_proportion_lists(y_pred, y_std, y_true, num_bins=100):
+def get_proportion_lists(y_pred, y_std, y_true, num_bins=100, recal_model=None):
     """
     Return lists of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
@@ -205,9 +214,15 @@ def get_proportion_lists(y_pred, y_std, y_true, num_bins=100):
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
+    # If we are recalibrating, input proportions are recalibrated proportions
+    if recal_model is not None:
+        in_exp_proportions = recal_model.predict(exp_proportions)
+    else:
+        in_exp_proportions = exp_proportions
+
     obs_proportions = [
         get_proportion_in_interval(y_pred, y_std, y_true, quantile)
-        for quantile in exp_proportions
+        for quantile in in_exp_proportions
     ]
 
     return exp_proportions, obs_proportions
