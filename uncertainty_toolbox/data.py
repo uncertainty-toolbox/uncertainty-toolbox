@@ -23,7 +23,7 @@ def synthetic_sine_heteroscedastic(n_points=10):
     """
     bounds = [0, 15]
 
-    #x = np.random.uniform(bounds[0], bounds[1], n_points)
+    # x = np.random.uniform(bounds[0], bounds[1], n_points)
     x = np.linspace(bounds[0], bounds[1], n_points)
 
     f = np.sin(x)
@@ -42,7 +42,7 @@ def curvy_cosine(x):
     x : ndarray
         2d numpy ndarray.
     """
-    flat_neg_cos = np.sum(-1*np.cos(x), 1) / x.shape[1]
+    flat_neg_cos = np.sum(-1 * np.cos(x), 1) / x.shape[1]
     curvy_cos = flat_neg_cos + 0.2 * np.linalg.norm(x, axis=1)
     curvy_cos = curvy_cos.reshape(-1, 1)
     return curvy_cos
