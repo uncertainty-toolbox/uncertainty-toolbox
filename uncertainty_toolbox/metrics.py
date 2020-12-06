@@ -3,11 +3,8 @@ Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
 import numpy as np
-import argparse
 
-from uncertainty_toolbox.metrics_accuracy import (
-    prediction_error_metrics
-)
+from uncertainty_toolbox.metrics_accuracy import prediction_error_metrics
 from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
@@ -23,27 +20,24 @@ from uncertainty_toolbox.metrics_scoring_rule import (
 )
 
 METRIC_NAMES = {
-    'mae': 'MAE',
-    'rmse': 'RMSE',
-    'mdae': 'MDAE',
-    'marpd': 'MARPD',
-    'r2': 'R2',
-    'corr': 'Correlation',
-    
-    'rms_cal': 'Root-mean-squared Calibration Error',
-    'ma_cal': 'Mean-absolute Calibration Error',
-    'miscal_area': 'Miscalibration Area',
-
-    'sharp': 'Sharpness',
-    
-    'nll': 'Negative-log-likelihood',
-    'crps': 'CRPS',
-    'check': 'Check Score',
-    'interval': 'Interval Score',
-
-    'rms_adv_group_cal': 'Root-mean-squared Adversarial Group Calibration Error',
-    'ma_adv_group_cal': 'Mean-absolute Adversarial Group Calibration Error',
+    "mae": "MAE",
+    "rmse": "RMSE",
+    "mdae": "MDAE",
+    "marpd": "MARPD",
+    "r2": "R2",
+    "corr": "Correlation",
+    "rms_cal": "Root-mean-squared Calibration Error",
+    "ma_cal": "Mean-absolute Calibration Error",
+    "miscal_area": "Miscalibration Area",
+    "sharp": "Sharpness",
+    "nll": "Negative-log-likelihood",
+    "crps": "CRPS",
+    "check": "Check Score",
+    "interval": "Interval Score",
+    "rms_adv_group_cal": "Root-mean-squared Adversarial Group Calibration Error",
+    "ma_adv_group_cal": "Mean-absolute Adversarial Group Calibration Error",
 }
+
 
 def get_all_accuracy_metrics(y_pred, y_true, verbose):
 
@@ -52,6 +46,7 @@ def get_all_accuracy_metrics(y_pred, y_true, verbose):
 
     acc_metrics = prediction_error_metrics(y_pred, y_true)
     return acc_metrics
+
 
 def get_all_average_calibration(y_pred, y_std, y_true, num_bins, verbose):
 
@@ -147,55 +142,62 @@ def get_all_scoring_rule_metrics(y_pred, y_std, y_true, resolution, scaled, verb
 
 
 def print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3):
-    # import pdb; pdb.set_trace()
+
     for adv_group_cali_type, adv_group_cali_dic in adv_group_metric_dic.items():
-        num_groups = adv_group_cali_dic['group_sizes'].shape[0]
-        print_idxs = [int(x) for x in np.linspace(1, num_groups-1, print_group_num)]
-        print(METRIC_NAMES[adv_group_cali_type])
+        num_groups = adv_group_cali_dic["group_sizes"].shape[0]
+        print_idxs = [int(x) for x in np.linspace(1, num_groups - 1, print_group_num)]
+        print("  {}".format(METRIC_NAMES[adv_group_cali_type]))
         for idx in print_idxs:
-            print("  Group Size: {:.2f} -- Calibration Error: {:.3f}".format(
-                adv_group_cali_dic['group_sizes'][idx],
-                adv_group_cali_dic['adv_group_cali_mean'][idx]
-            ))
+            print(
+                "     Group Size: {:.2f} -- Calibration Error: {:.3f}".format(
+                    adv_group_cali_dic["group_sizes"][idx],
+                    adv_group_cali_dic["adv_group_cali_mean"][idx],
+                )
+            )
 
 
-
-def get_all_metrics(y_pred, y_std, y_true, num_bins=100, resolution=99,
-                    scaled=True, verbose=True):
+def get_all_metrics(
+    y_pred, y_std, y_true, num_bins=100, resolution=99, scaled=True, verbose=True
+):
 
     """ Accuracy """
     accuracy_metrics = get_all_accuracy_metrics(y_pred, y_true, verbose)
 
     """ Calibration """
-    calibration_metrics = get_all_average_calibration(y_pred, y_std, y_true, num_bins, verbose)
+    calibration_metrics = get_all_average_calibration(
+        y_pred, y_std, y_true, num_bins, verbose
+    )
 
     """ Adversarial Group Calibration """
-    adv_group_cali_metrics = get_all_adversarial_group_calibration(y_pred, y_std, y_true, num_bins, verbose)
+    adv_group_cali_metrics = get_all_adversarial_group_calibration(
+        y_pred, y_std, y_true, num_bins, verbose
+    )
 
     """ Sharpness """
     sharpness_metrics = get_all_sharpness_metrics(y_std, verbose)
 
     """ Proper Scoring Rules """
-    scoring_rule_metrics = get_all_scoring_rule_metrics(y_pred, y_std, y_true,
-                                                        resolution, scaled, verbose)
+    scoring_rule_metrics = get_all_scoring_rule_metrics(
+        y_pred, y_std, y_true, resolution, scaled, verbose
+    )
+    print("Finished Calculating All Metrics")
 
     # Print all outputs
-    print('\n')
-    print("\n===== Accuracy Metrics =====")
+    print("\n")
+    print(" Accuracy Metrics ".center(60, "="))
     for acc_metric, acc_val in accuracy_metrics.items():
-        print("{:}: {:.3f}".format(METRIC_NAMES[acc_metric], acc_val))
-    print("\n===== Average Calibration Metrics =====")
+        print("  {:<13} {:.3f}".format(METRIC_NAMES[acc_metric], acc_val))
+    print(" Average Calibration Metrics ".center(60, "="))
     for cali_metric, cali_val in calibration_metrics.items():
-        print("{:}: {:.3f}".format(METRIC_NAMES[cali_metric], cali_val))
-    print("\n===== Adversarial Group Calibration Metrics =====")
+        print("  {:<37} {:.3f}".format(METRIC_NAMES[cali_metric], cali_val))
+    print(" Adversarial Group Calibration Metrics ".center(60, "="))
     print_adversarial_group_calibration(adv_group_cali_metrics, print_group_num=3)
-    print("\n===== Sharpness Metrics =====")
+    print(" Sharpness Metrics ".center(60, "="))
     for sharp_metric, sharp_val in sharpness_metrics.items():
-        print("{:}: {:.3f}".format(METRIC_NAMES[sharp_metric], sharp_val))
-    print("\n===== Scoring Rule Metrics =====")
+        print("  {:}   {:.3f}".format(METRIC_NAMES[sharp_metric], sharp_val))
+    print(" Scoring Rule Metrics ".center(60, "="))
     for sr_metric, sr_val in scoring_rule_metrics.items():
-        print("{:}: {:.3f}".format(METRIC_NAMES[sr_metric], sr_val))
-
+        print("  {:<25} {:.3f}".format(METRIC_NAMES[sr_metric], sr_val))
 
     all_scores = {
         "accuracy": accuracy_metrics,
@@ -206,8 +208,6 @@ def get_all_metrics(y_pred, y_std, y_true, num_bins=100, resolution=99,
     }
 
     return all_scores
-
-
 
 
 if __name__ == "__main__":
