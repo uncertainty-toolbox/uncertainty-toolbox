@@ -14,7 +14,7 @@ from sklearn.metrics import (
 )
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
-from metrics_calibration import (
+from uncertainty_toolbox.metrics_calibration import (
     get_proportion_lists,
     get_proportion_lists_vectorized,
     adversarial_group_calibration,
