@@ -53,7 +53,6 @@ def plot_intervals(y_pred, y_std, y_true, n_subset=None, ylims=None, show=False)
             int(np.floor(np.min(intervals_lower_upper[0]))),
             int(np.ceil(np.max(intervals_lower_upper[1]))),
         ]
-        lims_ext_range = list(range(lims_ext[0], lims_ext[1]))
     else:
         lims_ext = ylims
 
@@ -115,7 +114,6 @@ def plot_intervals_ordered(
             int(np.floor(np.min(intervals_lower_upper[0]))),
             int(np.ceil(np.max(intervals_lower_upper[1]))),
         ]
-        lims_ext_range = list(range(lims_ext[0], lims_ext[1]))
     else:
         lims_ext = ylims
 
@@ -306,7 +304,6 @@ def plot_calibration(
             raise RuntimeError("exp_props and obs_props shape mismatch")
 
     # Set figure defaults
-    width = 5
     fontsize = 12
 
     # Set label
@@ -466,7 +463,7 @@ def plot_residuals_vs_stds(residuals, stds):
     stds_scaled = (stds / np.sum(stds)) * res_sum
     # Plot
     plt.figure()
-    plt.plot(stds, np.abs(residuals), "x")
+    plt.plot(stds_scaled, np.abs(residuals), "x")
     lims = [
         np.min([plt.xlim()[0], plt.ylim()[0]]),
         np.max([plt.xlim()[1], plt.ylim()[1]]),
