@@ -102,7 +102,7 @@ with 50% chance"_, and if your prediction was correct for roughly 15 out of 30 d
 ## Sharpness
 
 > Sharpness refers to the concentration of the predictive distributions and is a
-> property of the forecasts only [(Gneiting et al.)](docs/paper_list.md:~:text=Probabilistic%20forecasts%2C%20calibration%20and%20sharpness)
+> property of the forecasts only [(Gneiting et al.)](docs/paper_list.md#:~:text=Probabilistic%20forecasts%2C%20calibration%20and%20sharpness)
 
 Sharpness is a measure of how narrow, concentrated, or peaked the predictive distribtion
 is.  Sharpness is evaluated *solely* based on the predictive distribution, and neither
