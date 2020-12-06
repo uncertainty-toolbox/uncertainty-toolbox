@@ -23,35 +23,7 @@ from uncertainty_toolbox.metrics_scoring_rule import (
 )
 
 
-def parse_run_options():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--cali_bins",
-        type=int,
-        default=100,
-        help="number of bins to discretize probabilities for calibration",
-    )
-    parser.add_argument(
-        "--sr_bins",
-        type=int,
-        default=99,
-        help="number of bins to discretize probabilities for scoring rules",
-    )
-    parser.add_argument(
-        "--sr_scale",
-        type=int,
-        default=1,
-        help="1 to scale scoring rules outputs"
-    )
-    # parser.add_argument('--', type=, default=, help='')
-
-    options = parser.parse_args()
-    options.sr_scale = bool(options.sr_scale)
-
-    return options
-
-
-def get_all_metrics(y_pred, y_std, y_true, num_bins, resolution, scaled):
+def get_all_metrics(y_pred, y_std, y_true, num_bins=100, resolution=99, scaled=True):
     """ Accuracy """
     print("Calculating accuracy metrics...")
     acc_metrics = prediction_error_metrics(y_pred, y_true)
@@ -148,12 +120,7 @@ def get_all_metrics(y_pred, y_std, y_true, num_bins, resolution, scaled):
 
 
 if __name__ == "__main__":
-    options = parse_run_options()
     y_pred = np.array([1, 2, 3, 4])
     y_std = np.array([1, 2, 3, 4])
     y_true = np.array([1.3, 2.3, 3.3, 4])
-    get_all_metrics(
-        y_pred, y_std, y_true,
-        num_bins=options.cali_bins,
-        resolution=options.sr_bins,
-        scaled=options.sr_scale)
+    get_all_metrics(y_pred, y_std, y_true)
