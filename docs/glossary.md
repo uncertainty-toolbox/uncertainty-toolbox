@@ -137,7 +137,7 @@ is another general score for continuous distribution predictions.  For quantile 
 the check score is an applicable proper scoring rule.  The check score is also known as
 the "pinall loss" and optimized in standard quantile regression.  The interval score is
 a proper scoring rule for centered prediction intervals. Uncertainty Toolbox includes
-each of these [scoring rules](uncertainty_toolbox/metrics_scoring_rule.py).
+each of these [scoring rules](uncertainty-toolbox/uncertainty_toolbox/metrics_scoring_rule.py).
 
 
 ## Accuracy
