@@ -463,7 +463,7 @@ def plot_residuals_vs_stds(residuals, stds):
     stds_scaled = (stds / np.sum(stds)) * res_sum
     # Plot
     plt.figure()
-    plt.plot(stds, np.abs(residuals), "x")
+    plt.plot(stds_scaled, np.abs(residuals), "x")
     lims = [
         np.min([plt.xlim()[0], plt.ylim()[0]]),
         np.max([plt.xlim()[1], plt.ylim()[1]]),
