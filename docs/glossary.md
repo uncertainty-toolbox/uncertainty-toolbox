@@ -50,7 +50,8 @@ rules](#Proper-Scoring-Rules), and [accuracy](#Accuracy).
 ## Confidence
 Following the definition of [predictive uncertainty](#Predictive-Uncertainty), 
 assuming we make distributional predictions, the confidence of a prediction is the 
-probability attributed to that prediction according to the predicted distribution [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
+probability attributed to that prediction according to the predicted distribution 
+[(Guo et al., 2017)](docs/paper_list.md#:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
 
 For example, suppose our task is to predict the match outcome of the world's greatest tennis player, [Nick Kyrgios](https://youtu.be/RaqRV9Kpy9A?t=6), 
 and we're interested in predicting the binary outcome, win or lose.
@@ -83,7 +84,9 @@ Put another way, epistemic uncertainty is the uncertainty that comes from being 
 
 ## Calibration
 
-> Confidence calibration is "the problem of predicting probability estimates representative of the true correctness likelihood." [(Guo et al., 2017)](https://arxiv.org/pdf/1706.04599.pdf).
+> Confidence calibration is "the problem of predicting probability estimates representative of the 
+> true correctness likelihood." 
+> [(Guo et al., 2017)](docs/paper_list.md#:~:text=On%20Calibration%20of%20Modern%20Neural%20Networks).
 
 Intuitively, calibration refers to the degree to which a predicted uncertainty matches
 the true underlying uncertainty in the data.  For example, suppose you make a series of
@@ -102,7 +105,8 @@ with 50% chance"_, and if your prediction was correct for roughly 15 out of 30 d
 ## Sharpness
 
 > Sharpness refers to the concentration of the predictive distributions and is a
-> property of the forecasts only [(Gneiting et al.)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jrssb.pdf)
+> property of the forecasts only 
+> [(Gneiting et al.)](docs/paper_list.md#:~:text=Probabilistic%20forecasts%2C%20calibration%20and%20sharpness)
 
 Sharpness is a measure of how narrow, concentrated, or peaked the predictive distribtion
 is.  Sharpness is evaluated *solely* based on the predictive distribution, and neither
@@ -117,7 +121,8 @@ datapoints and thus signifies more confidence in its predictions.
 ## Proper Scoring Rules
 
 Proper scoring rules are a scalar summary measure of the performance of a distributional prediction.
-According to [this seminal work (Gneiting and Raftery)](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf),
+According to 
+[this seminal work (Gneiting and Raftery)](docs/paper_list.md#:~:text=Strictly%20Proper%20Scoring%20Rules%2C%20Prediction%2C%20and%20Estimation),
 a proper scoring rule is any function (with mild conditions) that assigns a score to a
 predictive probability distribution, where the maximum score of the function is attained
 when the predictive distribution exactly matches the ground truth distribution (i.e. the
