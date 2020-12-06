@@ -61,7 +61,7 @@ def iso_recal(exp_props, obs_props):
         elif np.sum((within_01 == min_obs_within).astype(float)) == 1:
             beg_idx = int(np.argmin(within_01) + exp_0_idx)
         else:
-            raise RuntimeError("Inspect input arrays, cannot set beginning index")
+            raise RuntimeError(("Inspect input arrays, " "cannot set beginning index."))
     else:
         beg_idx = exp_0_idx
 
@@ -87,7 +87,7 @@ def iso_recal(exp_props, obs_props):
     else:
         end_idx = exp_1_idx + 1
 
-    if not end_idx > beg_idx:
+    if end_idx <= beg_idx:
         raise RuntimeError("Ending index before beginning index")
 
     filtered_obs_props = obs_props[beg_idx:end_idx]
@@ -99,17 +99,3 @@ def iso_recal(exp_props, obs_props):
         raise RuntimeError("Failed to fit isotonic regression model")
 
     return iso_model
-
-
-if __name__ == "__main__":
-    exp = np.linspace(-0.5, 1.5, 200)
-    from copy import deepcopy
-
-    obs = deepcopy(exp)
-    obs[:80] = 0
-    obs[-80:] = 1
-
-    recal_model = iso_recal(exp, obs)
-    print(obs)
-    print(exp)
-    print(recal_model.predict(exp))

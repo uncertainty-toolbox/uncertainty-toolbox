@@ -12,7 +12,6 @@ from uncertainty_toolbox.metrics_calibration import (
 )
 import uncertainty_toolbox.viz as uviz
 from uncertainty_toolbox.recalibration import iso_recal
-from uncertainty_toolbox.viz import plot_calibration
 
 import neatplot
 
@@ -44,27 +43,18 @@ def update_rc_params():
 
 
 # List of predictive means and standard deviations
-pred_mean_list = [
-    f,
-    # f + 0.1,
-    # f - 0.1,
-    # f + 0.25,
-    # f - 0.25,
-]
+pred_mean_list = [f]
 
 pred_std_list = [
     std * 0.5,  # overconfident
     std * 2.0,  # underconfident
-    # std,                # correct
 ]
 
 # Loop through, make plots, and compute metrics
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
         # Before recalibration
-        exp_props, obs_props = get_proportion_lists_vectorized(
-            pred_mean, pred_std, y
-        )
+        exp_props, obs_props = get_proportion_lists_vectorized(pred_mean, pred_std, y)
         recal_model = None
         mace = umetrics.mean_absolute_calibration_error(
             pred_mean, pred_std, y, recal_model=recal_model
@@ -76,9 +66,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print("Before Recalibration")
-        print(
-            "   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma)
-        )
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         uviz.plot_calibration(
             pred_mean,
@@ -104,11 +92,9 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print(" After Recalibration")
-        print(
-            "   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma)
-        )
+        print("   MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        plot_calibration(
+        uviz.plot_calibration(
             pred_mean,
             pred_std,
             y,
