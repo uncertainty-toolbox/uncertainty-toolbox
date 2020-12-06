@@ -8,7 +8,7 @@ from .data import (
     curvy_cosine,
 )
 
-from .metrics import(
+from .metrics import (
     get_all_metrics,
 )
 

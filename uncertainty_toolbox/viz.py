@@ -21,14 +21,22 @@ from uncertainty_toolbox.metrics_calibration import (
 )
 
 
-def plot_intervals(y_pred, y_std, y_true, n_subset=None, ylims=None, show=False):
+def plot_intervals(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    show=False,
+):
     """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed values (y_true).
+    Plot predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
     """
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-
-    intervals = 2 * y_std  # TODO set with argument
+    intervals = num_stds_confidence_bound * y_std
 
     # Plot
     fig = plt.figure()
@@ -73,10 +81,17 @@ def plot_intervals(y_pred, y_std, y_true, n_subset=None, ylims=None, show=False)
 
 
 def plot_intervals_ordered(
-    y_pred, y_std, y_true, n_subset=None, ylims=None, show=False
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    show=False,
 ):
     """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed values (y_true).
+    Plot predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
     """
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
@@ -84,8 +99,7 @@ def plot_intervals_ordered(
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
     xs = np.arange(len(order))
-
-    intervals = 2 * y_std  # TODO set with argument
+    intervals = num_stds_confidence_bound * y_std
 
     # Plot
     fig = plt.figure()
@@ -131,13 +145,21 @@ def plot_intervals_ordered(
 
 
 def plot_xy(
-    y_pred, y_std, y_true, x, n_subset=None, ylims=None, xlims=None, show=False
+    y_pred,
+    y_std,
+    y_true,
+    x,
+    n_subset=None,
+    ylims=None,
+    xlims=None,
+    num_stds_confidence_bound=2,
+    show=False,
 ):
     """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
     if n_subset is not None:
         [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
 
-    intervals = 2 * y_std  # TODO set with argument
+    intervals = num_stds_confidence_bound * y_std
 
     fig = plt.figure()
     fig.set_size_inches(5.0, 5.0)
@@ -152,7 +174,7 @@ def plot_xy(
     )
     plt.legend(
         [h1[0], h2[0], h3],
-        ["Observations", "Predictions", "95\% Interval"],
+        ["Observations", "Predictions", "95% Interval"],
         loc=3,
     )
 
@@ -175,7 +197,8 @@ def plot_parity(
     y_pred, y_true, n_subset=None, lims=None, axlabels=None, hexbins=False, show=False
 ):
     """
-    Make parity plot using predicted values (y_pred) and observed values (y_true).
+    Make parity plot using predicted values (y_pred) and
+    observed values (y_true).
     """
     if n_subset is not None:
         [y_pred, y_true] = filter_subset([y_pred, y_true], n_subset)
@@ -207,7 +230,12 @@ def plot_parity(
     # Plotting
     if hexbins:
         grid = sns.jointplot(
-            y_true, y_pred, kind="hex", bins="log", gridsize=25, extent=lims * 2
+            y_true,
+            y_pred,
+            kind="hex",
+            bins="log",
+            gridsize=25,
+            extent=lims * 2,
         )
     else:
         grid = sns.jointplot(
@@ -215,7 +243,6 @@ def plot_parity(
             y_pred,
             kind="scatter",
             space=0,
-            # marginal_kws=dict(kde=True, shade=True))
             marginal_kws=dict(kde=True),
         )
 
@@ -246,13 +273,6 @@ def plot_parity(
         + "  R2 = %.2f\n" % r2
         + "  PPMCC = %i%%\n" % corr
     )
-    # print('\nPredictive accuracy metrics:')
-    # print('MDAE = %.2f' % mdae)
-    # print('MAE = %.2f' % mae)
-    # print('RMSE = %.2f' % rmse)
-    # print('MARPD = %.2f' % marpd)
-    # print('R2 = %.2f' % r2)
-    # print('PPMCC = %.2f' % corr)
     _ = ax.text(
         x=lims[0],
         y=lims[1],
@@ -368,8 +388,9 @@ def plot_adversarial_group_calibration(
     score_stderr=None,
 ):
     """
-    Plot adversarial group calibration plots by spanning group size between 0% to 100% of
-    dataset size and recording the worst calibration occurred for each group size.
+    Plot adversarial group calibration plots by spanning group size
+    between 0% to 100% of dataset size and recording the worst calibration
+    occurred for each group size.
     """
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
@@ -401,7 +422,10 @@ def plot_adversarial_group_calibration(
     plt.figure()
     plt.plot(group_size, score_mean, "-o", label=curve_label, c="#1f77b4")
     plt.fill_between(
-        group_size, score_mean - score_stderr, score_mean + score_stderr, alpha=0.2
+        group_size,
+        score_mean - score_stderr,
+        score_mean + score_stderr,
+        alpha=0.2,
     )
     plt.xlabel("Group size")
     plt.ylabel("Calibration error of worst group")

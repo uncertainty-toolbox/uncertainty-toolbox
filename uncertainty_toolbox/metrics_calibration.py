@@ -1,14 +1,13 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-
+from argparse import Namespace
 
 import numpy as np
-import tqdm
-from argparse import Namespace
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
+from tqdm import tqdm
 
 
 def sharpness(y_std):
@@ -17,9 +16,9 @@ def sharpness(y_std):
     """
 
     # Compute sharpness
-    sharpness = np.sqrt(np.mean(y_std ** 2))
+    sharp_metric = np.sqrt(np.mean(y_std ** 2))
 
-    return sharpness
+    return sharp_metric
 
 
 def root_mean_squared_calibration_error(
@@ -74,6 +73,7 @@ def adversarial_group_calibration(
     draw_with_replacement=False,
     num_trials=10,
     num_group_draws=10,
+    verbose=False,
 ):
     # Flatten
     num_pts = y_true.shape[0]
@@ -96,12 +96,15 @@ def adversarial_group_calibration(
     ratio_arr = np.linspace(0, 1, num_group_bins)
     score_mean_per_ratio = []
     score_stderr_per_ratio = []
-    print(
-        "Measuring adversarial group calibration by spanning group size between {} and {}, in {} intervals".format(
-            np.min(ratio_arr), np.max(ratio_arr), num_group_bins
+    if verbose:
+        print(
+            (
+                "Measuring adversarial group calibration by spanning group"
+                " size between {} and {}, in {} intervals"
+            ).format(np.min(ratio_arr), np.max(ratio_arr), num_group_bins)
         )
-    )
-    for r in tqdm.tqdm(ratio_arr):
+    progress = tqdm(ratio_arr) if verbose else ratio_arr
+    for r in progress:
         group_size = max([int(round(num_pts * r)), 2])
         score_per_trial = []  # list of worst miscalibrations encountered
         for _ in range(num_trials):
