@@ -24,12 +24,9 @@ improve these uncertainties.  This toolbox currently focuses on regression tasks
 Uncertainty Toolbox contains:
 * [Glossary](docs/glossary.md) of terms related to predictive uncertainty
   quantification.
-* [Metrics](uncertainty_toolbox/metrics.py) for assessing quality of predictive
-  uncertainty estimates.
-* [Visualizations](uncertainty_toolbox/viz.py) for predictive uncertainty estimates and
-  metrics.
-* [Recalibration](uncertainty_toolbox/recalibration.py) methods for improving the calibration of a
-  predictor.
+* [Metrics](#metrics) for assessing quality of predictive uncertainty estimates.
+* [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
+* [Recalibration](#recalibration) methods for improving the calibration of a predictor.
 * Relevant [publications and references](docs/paper_list.md) on metrics and methods.
 
 
@@ -59,8 +56,9 @@ deviations), taken with respect to a corresponding set of observed values `y`.
 
 ## Metrics
 
-The [`get_all_metrics`](uncertainty_toolbox/metrics.py#L51) function will return metrics
-for:
+Uncertainty Toolbox provides a number of [metrics](uncertainty_toolbox/metrics.py) to
+quantify and compare predictive uncertainty estimates. For example, the
+[`get_all_metrics`](uncertainty_toolbox/metrics.py#L165) function will return:
 1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area_
 2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error_
 3. __sharpness__: _expected standard deviation_
@@ -70,8 +68,9 @@ for:
 
 ## Visualizations
 
-The following plots are a few of the visualizations provided by Uncertainty Toolbox. See
-[this example](examples/viz_synth_sine.py) for code to reproduce these plots.
+The following plots are a few of the [visualizations](uncertainty_toolbox/viz.py)
+provided by Uncertainty Toolbox. See [this example](examples/viz_synth_sine.py) for code
+to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
@@ -102,15 +101,16 @@ And here are a few of the calibration metrics for the above three cases:
 | Underconfident | 0.20692 | 0.23003 | 0.20901 |
 | Well calibrated | 0.00862 | 0.01040 | 0.00865 |
 
+
 ## Recalibration
 
-The following plots show the results of a recalibration procedure provided by
-Uncertainty Toolbox, which transforms a set of predictive uncertainties to improve
-average calibration.
-The algorithm is based on isotonic regression, as proposed by [Kuleshov et al](docs/paper_list.md#calibration-sharpness-and-recalibration-in-deep-learning).
+The following plots show the results of a
+[recalibration](uncertainty_toolbox/recalibration.py) procedure provided by Uncertainty
+Toolbox, which transforms a set of predictive uncertainties to improve average
+calibration. The algorithm is based on isotonic regression, as proposed by [Kuleshov et
+al](docs/paper_list.md#calibration-sharpness-and-recalibration-in-deep-learning).
 
-See [this example](examples/viz_recalibrate.py) for code to
-reproduce these plots.
+See [this example](examples/viz_recalibrate.py) for code to reproduce these plots.
 
 **Recalibrating overconfident predictions**
 <p align="center">
