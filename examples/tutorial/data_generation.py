@@ -10,7 +10,7 @@ def create_data(num_data, is_uniform_noise=True):
     if is_uniform_noise:
         y = mean_function(x) + np.random.uniform(-np.sqrt(3) * sigma_y,
                                                  np.sqrt(3) * sigma_y)
-    else
+    else:
         y = np.random.normal(loc=mean_function(x), scale=std_function(x))
     idxs = np.argsort(x)
     return x[idxs], y[idxs]
