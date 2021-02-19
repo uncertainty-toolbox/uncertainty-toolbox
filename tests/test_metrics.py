@@ -10,7 +10,6 @@ from uncertainty_toolbox.metrics import (
     get_all_scoring_rule_metrics,
     get_all_metrics,
 )
-
 from uncertainty_toolbox.data import synthetic_sine_heteroscedastic
 
 
