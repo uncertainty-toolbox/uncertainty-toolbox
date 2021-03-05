@@ -35,6 +35,7 @@ def test_get_proportion_lists_on_test_set(supply_test_set):
     test_exp_props, test_obs_props = get_proportion_lists(
         *supply_test_set, num_bins=100, recal_model=None
     )
+    assert len(test_exp_props) == len(test_obs_props)
     assert (
         np.max(np.abs(np.unique(test_exp_props) - np.linspace(0, 1, 100)))
         < 1e-6
@@ -54,6 +55,7 @@ def get_proportion_lists_vectorized_on_test_set(supply_test_set):
     test_exp_props, test_obs_props = get_proportion_lists_vectorized(
         *supply_test_set, num_bins=100, recal_model=None
     )
+    assert test_exp_props.shape == test_obs_props.shape
     assert (
         np.max(np.abs(np.unique(test_exp_props) - np.linspace(0, 1, 100)))
         < 1e-6
