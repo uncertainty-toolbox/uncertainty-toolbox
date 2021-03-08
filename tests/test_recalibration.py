@@ -1,16 +1,16 @@
 """
-Tests for calibration metrics.
+Tests for recalibration procedures.
 """
 import numpy as np
 import pytest
 
+from uncertainty_toolbox.recalibration import iso_recal
 from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
     miscalibration_area,
     get_proportion_lists_vectorized,
 )
-from uncertainty_toolbox.recalibration import iso_recal
 
 
 @pytest.fixture
