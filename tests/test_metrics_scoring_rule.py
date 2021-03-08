@@ -4,7 +4,12 @@ Tests for scoring rule metrics.
 import numpy as np
 import pytest
 
-from uncertainty_toolbox.metrics_scoring_rule import *
+from uncertainty_toolbox.metrics_scoring_rule import (
+    nll_gaussian,
+    crps_gaussian,
+    check_score,
+    interval_score,
+)
 
 
 @pytest.fixture
@@ -16,7 +21,7 @@ def supply_test_set():
 
 
 def test_nll_gaussian_on_test_set(supply_test_set):
-    """Test CRPS on the test set for some dummy values."""
+    """Test Gaussian NLL on the test set for some dummy values."""
     assert np.abs(nll_gaussian(*supply_test_set) - 4.920361108686675) < 1e-6
 
 
@@ -56,7 +61,7 @@ def test_check_score_on_one_pt():
 
 
 def test_interval_score_on_test_set(supply_test_set):
-    """Test check score on the test set for some dummy values."""
+    """Test interval score on the test set for some dummy values."""
     assert np.abs(interval_score(*supply_test_set) - 3.20755700861995) < 1e-6
 
 
