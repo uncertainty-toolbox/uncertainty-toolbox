@@ -43,7 +43,7 @@ $ pip install -e .
 ```python
 import uncertainty_toolbox as uct
 
-# Load an example dataset of 100 predictions, uncertainties, and observations
+# Load an example dataset of 100 predictions, uncertainties, and ground truth values
 predictions, predictions_std, y, x = uct.data.synthetic_sine_heteroscedastic(100)
 
 # Compute all uncertainty metrics
@@ -51,7 +51,7 @@ metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 ```
 This example computes [metrics](#metrics) for a vector of predicted values
 (`predictions`) and associated uncertainties (`predictions_std`, a vector of standard
-deviations), taken with respect to a corresponding set of observed values `y`.
+deviations), taken with respect to a corresponding set of ground truth values `y`.
 
 
 ## Metrics
