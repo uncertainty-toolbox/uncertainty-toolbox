@@ -5,7 +5,6 @@ Code for the Uncertainty Toolbox
 from .data import (
     synthetic_arange_random,
     synthetic_sine_heteroscedastic,
-    curvy_cosine,
 )
 
 from .metrics import (
