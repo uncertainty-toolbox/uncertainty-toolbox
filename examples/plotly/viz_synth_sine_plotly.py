@@ -61,6 +61,11 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     save_figure(f"calibration_{idx1}_{idx2}")
     plt.show()
 
+    # Make calibration alt plot
+    uviz.plotly_calibration_alt(pred_mean, pred_std, y)
+    save_figure(f"calibration_{idx1}_{idx2}")
+    plt.show()
+
     # Make ordered intervals plot
     uviz.plotly_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
     save_figure(f"intervals_ordered_{idx1}_{idx2}")
