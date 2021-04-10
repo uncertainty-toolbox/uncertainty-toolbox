@@ -136,6 +136,7 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 | Before Recalibration | 0.20692 | 0.23003 | 0.20901 |
 | After Recalibration | 0.00157 | 0.00205 | 0.00132 |
 
+
 ## Citation
 
 If you use this toolbox, please consider citing one of the papers that led to its
@@ -159,3 +160,15 @@ development:
   publisher={IOP Publishing}
 }
 ```
+
+
+## Acknowledgments
+
+Development of Uncertainty Toolbox is [supported by](docs/acknowledgments.md) the following organizations.
+<p align="top">
+    <img src="docs/assets/acks_aws.svg" width="7%">
+    &nbsp; &nbsp;
+    <img src="docs/assets/acks_doe.png" width="8%">
+    &nbsp; &nbsp;
+    <img src="docs/assets/acks_nsf.png" width="9%">
+</p>
