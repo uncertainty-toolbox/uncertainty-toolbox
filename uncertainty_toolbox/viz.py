@@ -144,6 +144,72 @@ def plot_intervals_ordered(
         plt.show()
 
 
+def plot_intervals_ordered_ax(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    ax=None,
+):
+    """
+    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
+    order = np.argsort(y_true.flatten())
+    y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
+    xs = np.arange(len(order))
+    intervals = num_stds_confidence_bound * y_std
+
+    # Plot
+    _ = ax.errorbar(
+        xs,
+        y_pred,
+        intervals,
+        fmt="o",
+        ls="none",
+        linewidth=1.5,
+        c="#1f77b4",
+        alpha=0.5,
+    )
+    h1 = ax.plot(xs, y_pred, "o", c="#1f77b4")
+    h2 = ax.plot(xs, y_true, "--", linewidth=2.0, c="#ff7f0e")
+
+    # Legend
+    ax.legend([h1[0], h2[0]], ["Predicted Values", "Observed Values"], loc=4)
+
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [
+            int(np.floor(np.min(intervals_lower_upper[0]))),
+            int(np.ceil(np.max(intervals_lower_upper[1]))),
+        ]
+    else:
+        lims_ext = ylims
+
+    # Format
+    _ = ax.set_ylim(lims_ext)
+    # _ = ax.set_xlabel('Observed Values Order')
+    _ = ax.set_xlabel("Index (Ordered by Observed Value)")
+    _ = ax.set_ylabel("Predicted Values and Intervals")
+    _ = ax.set_aspect("auto", "box")
+
+    ax.set_title("Ordered Prediction Intervals")
+    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+
+    return ax
+
+
 def plot_xy(
     y_pred,
     y_std,
@@ -191,6 +257,60 @@ def plot_xy(
 
     if show:
         plt.show()
+
+
+def plot_xy_ax(
+    y_pred,
+    y_std,
+    y_true,
+    x,
+    n_subset=None,
+    ylims=None,
+    xlims=None,
+    num_stds_confidence_bound=2,
+    ax=None,
+):
+    """
+    Return Axes for plot of 1D input (x) and predicted/true (y_pred/y_true)
+    values.
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
+
+    intervals = num_stds_confidence_bound * y_std
+
+    h1 = ax.plot(x, y_true, ".", mec="#ff7f0e", mfc="None")
+    h2 = ax.plot(x, y_pred, "-", c="#1f77b4", linewidth=2)
+    h3 = ax.fill_between(
+        x,
+        y_pred - intervals,
+        y_pred + intervals,
+        color="lightsteelblue",
+        alpha=0.4,
+    )
+    ax.legend(
+        [h1[0], h2[0], h3],
+        ["Observations", "Predictions", "95% Interval"],
+        loc=3,
+    )
+
+    if ylims is not None:
+        ax.set_ylim(ylims)
+
+    if xlims is not None:
+        ax.set_xlim(xlims)
+
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
+    ax.set_title("Confidence Band")
+    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+
+    return ax
 
 
 def plot_parity(

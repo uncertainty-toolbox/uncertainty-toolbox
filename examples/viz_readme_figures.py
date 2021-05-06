@@ -46,9 +46,17 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     ylims = [-3, 3]
     n_subset = 50
 
+    fig, axs = plt.subplots(1, 3, figsize=(19, 6))
+
     # Make xy plot
-    uviz.plot_xy(pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15])
-    save_figure(f"xy_{idx1}_{idx2}")
+    axs[0] = uviz.plot_xy_ax(
+        pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15], ax=axs[0]
+    )
+
+    # Make ordered intervals plot
+    axs[1] = uviz.plot_intervals_ordered_ax(
+        pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims, ax=axs[1]
+    )
 
     ## Make intervals plot
     #uviz.plot_intervals(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
@@ -59,11 +67,13 @@ def make_plots(pred_mean, pred_std, idx1, idx2):
     #save_figure(f"calibration_{idx1}_{idx2}")
     #plt.show()
 
-    ## Make ordered intervals plot
-    #uviz.plot_intervals_ordered(pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims)
-    #save_figure(f"intervals_ordered_{idx1}_{idx2}")
+    # Adjust subplots spacing
+    plt.subplots_adjust(
+        left=None, bottom=None, right=None, top=None, wspace=0.2, hspace=None
+    )
 
-    plt.show()
+    # Save figure
+    fig.savefig('test_row.svg')
 
 
 # List of predictive means and standard deviations
