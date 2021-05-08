@@ -295,7 +295,7 @@ def plot_xy_ax(
     )
     ax.legend(
         [h1[0], h2[0], h3],
-        ["Observations", "Predictions", "95% Interval"],
+        ["Observations", "Predictions", "95\% Interval"],
         loc=3,
     )
 
@@ -493,6 +493,95 @@ def plot_calibration(
 
     if show:
         plt.show()
+
+
+def plot_calibration_ax(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    curve_label=None,
+    show=False,
+    vectorized=True,
+    exp_props=None,
+    obs_props=None,
+    ax=None,
+):
+    """
+    Make calibration plot using predicted mean values (y_pred), predicted std
+    values (y_std), and observed values (y_true).
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
+    if (exp_props is None) or (obs_props is None):
+        # Compute exp_proportions and obs_proportions
+        if vectorized:
+            (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
+                y_pred, y_std, y_true
+            )
+        else:
+            (exp_proportions, obs_proportions) = get_proportion_lists(
+                y_pred, y_std, y_true
+            )
+    else:
+        # If expected and observed proportions are give
+        exp_proportions = np.array(exp_props).flatten()
+        obs_proportions = np.array(obs_props).flatten()
+        if exp_proportions.shape != obs_proportions.shape:
+            raise RuntimeError("exp_props and obs_props shape mismatch")
+
+    # Set figure defaults
+    fontsize = 12
+
+    # Set label
+    if curve_label is None:
+        curve_label = "Predictor"
+    # Plot
+    ax.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
+    ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
+    ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
+
+    ax.set_xlabel("Predicted proportion in interval")
+    ax.set_ylabel("Observed proportion in interval")
+
+    ax.axis("square")
+
+    buff = 0.01
+    ax.set_xlim([0 - buff, 1 + buff])
+    ax.set_ylim([0 - buff, 1 + buff])
+
+    ax.set_title("Average Calibration")
+
+    # Compute miscalibration area
+    polygon_points = []
+    for point in zip(exp_proportions, obs_proportions):
+        polygon_points.append(point)
+    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
+        polygon_points.append(point)
+    polygon_points.append((exp_proportions[0], obs_proportions[0]))
+    polygon = Polygon(polygon_points)
+    x, y = polygon.exterior.xy  # original data
+    ls = LineString(np.c_[x, y])  # closed, non-simple
+    lr = LineString(ls.coords[:] + ls.coords[0:1])
+    mls = unary_union(lr)
+    polygon_area_list = [poly.area for poly in polygonize(mls)]
+    miscalibration_area = np.asarray(polygon_area_list).sum()
+
+    # Annotate plot with the miscalibration area
+    ax.text(
+        x=0.95,
+        y=0.05,
+        s="Miscalibration area = %.2f" % miscalibration_area,
+        verticalalignment="bottom",
+        horizontalalignment="right",
+        fontsize=fontsize,
+    )
 
 
 def plot_adversarial_group_calibration(
