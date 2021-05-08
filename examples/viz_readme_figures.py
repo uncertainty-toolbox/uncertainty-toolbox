@@ -62,7 +62,7 @@ def make_plots(pred_mean, pred_std, plot_save_str='row'):
 
     # Save figure
     if savefig:
-        neatplot.save_figure(plot_save_str, ['svg', 'pdf'])
+        neatplot.save_figure(plot_save_str, ['svg'], white_background=False)
 
 
 # List of predictive means and standard deviations
