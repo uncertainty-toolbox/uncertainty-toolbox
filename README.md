@@ -74,23 +74,17 @@ to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
-<img src="docs/images/xy_over.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_over.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_over.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_1.svg" alt="" width="100%" align="top">
 </p>
 
 **Underconfident** (_too much uncertainty_)
 <p align="center">
-<img src="docs/images/xy_under.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_under.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_under.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_2.svg" alt="" width="100%" align="top">
 </p>
 
 **Well calibrated**
 <p align="center">
-<img src="docs/images/xy_correct.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_correct.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_correct.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_3.svg" alt="" width="100%" align="top">
 </p>
 
 And here are a few of the calibration metrics for the above three cases:
