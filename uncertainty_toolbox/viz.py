@@ -80,6 +80,70 @@ def plot_intervals(
         plt.show()
 
 
+def plot_intervals_ax(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    ax=None,
+):
+    """
+    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
+    # Compute intervals
+    intervals = num_stds_confidence_bound * y_std
+
+    # Plot
+    ax.errorbar(
+        y_true,
+        y_pred,
+        intervals,
+        fmt="o",
+        ls="none",
+        linewidth=1.5,
+        c="#1f77b4",
+        alpha=0.5,
+    )
+    h1 = ax.plot(y_true, y_pred, "o", c="#1f77b4")
+
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [
+            int(np.floor(np.min(intervals_lower_upper[0]))),
+            int(np.ceil(np.max(intervals_lower_upper[1]))),
+        ]
+    else:
+        lims_ext = ylims
+
+    # plot 45-degree parity line
+    h2 = ax.plot(lims_ext, lims_ext, "--", linewidth=1.5, c="#ff7f0e")
+
+    # Legend
+    ax.legend([h1[0], h2[0]], ["Predictions", "f(x) = x"], loc=4)
+
+    # Format
+    ax.set_xlim(lims_ext)
+    ax.set_ylim(lims_ext)
+    ax.set_xlabel("Observed Values")
+    ax.set_ylabel("Predicted Values and Intervals")
+    ax.set_title("Prediction Intervals")
+    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+
+    return ax
+
+
 def plot_intervals_ordered(
     y_pred,
     y_std,
@@ -171,7 +235,7 @@ def plot_intervals_ordered_ax(
     intervals = num_stds_confidence_bound * y_std
 
     # Plot
-    _ = ax.errorbar(
+    ax.errorbar(
         xs,
         y_pred,
         intervals,
@@ -198,12 +262,9 @@ def plot_intervals_ordered_ax(
         lims_ext = ylims
 
     # Format
-    _ = ax.set_ylim(lims_ext)
-    # _ = ax.set_xlabel('Observed Values Order')
-    _ = ax.set_xlabel("Index (Ordered by Observed Value)")
-    _ = ax.set_ylabel("Predicted Values and Intervals")
-    _ = ax.set_aspect("auto", "box")
-
+    ax.set_ylim(lims_ext)
+    ax.set_xlabel("Index (Ordered by Observed Value)")
+    ax.set_ylabel("Predicted Values and Intervals")
     ax.set_title("Ordered Prediction Intervals")
     ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
 
@@ -536,9 +597,6 @@ def plot_calibration_ax(
         if exp_proportions.shape != obs_proportions.shape:
             raise RuntimeError("exp_props and obs_props shape mismatch")
 
-    # Set figure defaults
-    fontsize = 12
-
     # Set label
     if curve_label is None:
         curve_label = "Predictor"
@@ -580,7 +638,7 @@ def plot_calibration_ax(
         s="Miscalibration area = %.2f" % miscalibration_area,
         verticalalignment="bottom",
         horizontalalignment="right",
-        fontsize=fontsize,
+        fontsize='small',
     )
 
 
