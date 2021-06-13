@@ -28,65 +28,6 @@ def plot_intervals(
     n_subset=None,
     ylims=None,
     num_stds_confidence_bound=2,
-    show=False,
-):
-    """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
-    """
-    if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-    intervals = num_stds_confidence_bound * y_std
-
-    # Plot
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    _ = plt.errorbar(
-        y_true,
-        y_pred,
-        intervals,
-        fmt="o",
-        ls="none",
-        linewidth=2.0,
-        c="#1f77b4",
-        alpha=0.5,
-    )
-    plt.plot(y_true, y_pred, "o", c="#1f77b4")
-    ax = plt.gca()
-
-    # Determine lims
-    if ylims is None:
-        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
-        lims_ext = [
-            int(np.floor(np.min(intervals_lower_upper[0]))),
-            int(np.ceil(np.max(intervals_lower_upper[1]))),
-        ]
-    else:
-        lims_ext = ylims
-
-    # plot 45-degree parity line
-    _ = ax.plot(lims_ext, lims_ext, "--", linewidth=1.5, c="#ff7f0e")
-
-    # Format
-    _ = ax.set_xlim(lims_ext)
-    _ = ax.set_ylim(lims_ext)
-    _ = ax.set_xlabel("Observed Values")
-    _ = ax.set_ylabel("Predicted Values and Intervals")
-    _ = ax.set_aspect("equal", "box")
-
-    plt.title("Prediction Intervals")
-
-    if show:
-        plt.show()
-
-
-def plot_intervals_ax(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
     ax=None,
 ):
     """
@@ -151,70 +92,6 @@ def plot_intervals_ordered(
     n_subset=None,
     ylims=None,
     num_stds_confidence_bound=2,
-    show=False,
-):
-    """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
-    """
-    if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-
-    order = np.argsort(y_true.flatten())
-    y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
-    xs = np.arange(len(order))
-    intervals = num_stds_confidence_bound * y_std
-
-    # Plot
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    _ = plt.errorbar(
-        xs,
-        y_pred,
-        intervals,
-        fmt="o",
-        ls="none",
-        linewidth=1.5,
-        c="#1f77b4",
-        alpha=0.5,
-    )
-    h1 = plt.plot(xs, y_pred, "o", c="#1f77b4")
-    h2 = plt.plot(xs, y_true, "--", linewidth=2.0, c="#ff7f0e")
-    ax = plt.gca()
-
-    # Legend
-    plt.legend([h1[0], h2[0]], ["Predicted Values", "Observed Values"], loc=4)
-
-    # Determine lims
-    if ylims is None:
-        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
-        lims_ext = [
-            int(np.floor(np.min(intervals_lower_upper[0]))),
-            int(np.ceil(np.max(intervals_lower_upper[1]))),
-        ]
-    else:
-        lims_ext = ylims
-
-    # Format
-    _ = ax.set_ylim(lims_ext)
-    # _ = ax.set_xlabel('Observed Values Order')
-    _ = ax.set_xlabel("Index (Ordered by Observed Value)")
-    _ = ax.set_ylabel("Predicted Values and Intervals")
-    _ = ax.set_aspect("auto", "box")
-
-    plt.title("Ordered Prediction Intervals")
-
-    if show:
-        plt.show()
-
-
-def plot_intervals_ordered_ax(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
     ax=None,
 ):
     """
@@ -272,55 +149,6 @@ def plot_intervals_ordered_ax(
 
 
 def plot_xy(
-    y_pred,
-    y_std,
-    y_true,
-    x,
-    n_subset=None,
-    ylims=None,
-    xlims=None,
-    num_stds_confidence_bound=2,
-    show=False,
-):
-    """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
-    if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
-
-    intervals = num_stds_confidence_bound * y_std
-
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    h1 = plt.plot(x, y_true, ".", mec="#ff7f0e", mfc="None")
-    h2 = plt.plot(x, y_pred, "-", c="#1f77b4", linewidth=2)
-    h3 = plt.fill_between(
-        x,
-        y_pred - intervals,
-        y_pred + intervals,
-        color="lightsteelblue",
-        alpha=0.4,
-    )
-    plt.legend(
-        [h1[0], h2[0], h3],
-        ["Observations", "Predictions", "95% Interval"],
-        loc=3,
-    )
-
-    if ylims is not None:
-        plt.ylim(ylims)
-
-    if xlims is not None:
-        plt.xlim(xlims)
-
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
-
-    plt.title("Confidence Band")
-
-    if show:
-        plt.show()
-
-
-def plot_xy_ax(
     y_pred,
     y_std,
     y_true,
@@ -479,93 +307,6 @@ def plot_calibration(
     vectorized=True,
     exp_props=None,
     obs_props=None,
-):
-    """
-    Make calibration plot using predicted mean values (y_pred), predicted std
-    values (y_std), and observed values (y_true).
-    """
-    if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-
-    if (exp_props is None) or (obs_props is None):
-        # Compute exp_proportions and obs_proportions
-        if vectorized:
-            (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-                y_pred, y_std, y_true
-            )
-        else:
-            (exp_proportions, obs_proportions) = get_proportion_lists(
-                y_pred, y_std, y_true
-            )
-    else:
-        # If expected and observed proportions are give
-        exp_proportions = np.array(exp_props).flatten()
-        obs_proportions = np.array(obs_props).flatten()
-        if exp_proportions.shape != obs_proportions.shape:
-            raise RuntimeError("exp_props and obs_props shape mismatch")
-
-    # Set figure defaults
-    fontsize = 12
-
-    # Set label
-    if curve_label is None:
-        curve_label = "Predictor"
-    # Plot
-    plt.figure()
-    plt.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
-    plt.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    plt.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
-    plt.xlabel("Predicted proportion in interval")
-    plt.ylabel("Observed proportion in interval")
-    plt.axis("square")
-    buff = 0.01
-    plt.xlim([0 - buff, 1 + buff])
-    plt.ylim([0 - buff, 1 + buff])
-
-    # Compute miscalibration area
-    polygon_points = []
-    for point in zip(exp_proportions, obs_proportions):
-        polygon_points.append(point)
-    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
-        polygon_points.append(point)
-    polygon_points.append((exp_proportions[0], obs_proportions[0]))
-    polygon = Polygon(polygon_points)
-    x, y = polygon.exterior.xy  # original data
-    ls = LineString(np.c_[x, y])  # closed, non-simple
-    lr = LineString(ls.coords[:] + ls.coords[0:1])
-    mls = unary_union(lr)
-    polygon_area_list = [poly.area for poly in polygonize(mls)]
-    miscalibration_area = np.asarray(polygon_area_list).sum()
-
-    # Annotate plot with the miscalibration area
-    plt.text(
-        x=0.95,
-        y=0.05,
-        s="Miscalibration area = %.2f" % miscalibration_area,
-        verticalalignment="bottom",
-        horizontalalignment="right",
-        fontsize=fontsize,
-    )
-
-    fig = plt.gcf()
-    fig.set_size_inches(5.0, 5.0)
-
-    plt.title("Average Calibration")
-
-    if show:
-        plt.show()
-
-
-def plot_calibration_ax(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    curve_label=None,
-    show=False,
-    vectorized=True,
-    exp_props=None,
-    obs_props=None,
     ax=None,
 ):
     """
@@ -605,8 +346,8 @@ def plot_calibration_ax(
     ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
     ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
 
-    ax.set_xlabel("Predicted proportion in interval")
-    ax.set_ylabel("Observed proportion in interval")
+    ax.set_xlabel("Predicted Proportion in Interval")
+    ax.set_ylabel("Observed Proportion in Interval")
 
     ax.axis("square")
 
@@ -778,19 +519,3 @@ def filter_subset(input_list, n_subset):
         outp = inp[idx]
         output_list.append(outp)
     return output_list
-
-
-if __name__ == "__main__":
-    import data
-    import metrics_calibration
-
-    y_pred, y_std, y_true, x_true = data.synthetic_sine_heteroscedastic(100)
-    print(
-        metrics_calibration.adversarial_group_calibration(
-            y_pred, y_std, y_true, "root_mean_sq"
-        )
-    )
-    plot_calibration(y_pred, y_std, y_true, show=True)
-    plot_adversarial_group_calibration(y_pred, y_std, y_true, show=True)
-    plot_sharpness(y_std)
-    plt.show()
