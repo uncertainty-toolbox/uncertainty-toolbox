@@ -42,6 +42,26 @@ def curvy_cosine(x):
     x : ndarray
         2d numpy ndarray.
     """
+    try:
+        type_condition = isinstance(x, np.ndarray)
+    except:
+        type_condition = False
+
+    try:
+        dim_condition = len(x.shape) == 2
+    except:
+        dim_condition = False
+
+    try:
+        shape_condition = tuple(x.shape)[1] == 1
+    except:
+        shape_condition = False
+
+    if not (type_condition and dim_condition and shape_condition):
+        raise RuntimeError(
+            "Input must be a 2D numpy array, with second dimension equal to 1"
+        )
+
     flat_neg_cos = np.sum(-1 * np.cos(x), 1) / x.shape[1]
     curvy_cos = flat_neg_cos + 0.2 * np.linalg.norm(x, axis=1)
     curvy_cos = curvy_cos.reshape(-1, 1)
