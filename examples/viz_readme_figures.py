@@ -39,17 +39,17 @@ def make_plots(pred_mean, pred_std, plot_save_str='row'):
     fig, axs = plt.subplots(1, 3, figsize=(17, 8))
 
     # Make xy plot
-    axs[0] = uviz.plot_xy_ax(
+    axs[0] = uviz.plot_xy(
         pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15], ax=axs[0]
     )
 
     # Make ordered intervals plot
-    axs[1] = uviz.plot_intervals_ordered_ax(
+    axs[1] = uviz.plot_intervals_ordered(
         pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims, ax=axs[1]
     )
 
     # Make calibration plot
-    axs[2] = uviz.plot_calibration_ax(pred_mean, pred_std, y, ax=axs[2])
+    axs[2] = uviz.plot_calibration(pred_mean, pred_std, y, ax=axs[2])
 
     # Adjust subplots spacing
     fig.subplots_adjust(wspace=0.25)

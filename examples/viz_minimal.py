@@ -24,18 +24,18 @@ np.random.seed(11)
 
 # Plot intervals
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-uviz.plot_intervals_ax(y_pred, y_std, y_true, ax=ax)
+uviz.plot_intervals(y_pred, y_std, y_true, ax=ax)
 neatplot.save_figure('viz_minimal_01', 'svg')
 plt.show()
 
 # Plot calibration
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-uviz.plot_calibration_ax(y_pred, y_std, y_true, ax=ax)
+uviz.plot_calibration(y_pred, y_std, y_true, ax=ax)
 neatplot.save_figure('viz_minimal_02', 'svg')
 plt.show()
 
 # Plot intervals_ordered
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-uviz.plot_intervals_ordered_ax(y_pred, y_std, y_true, ax=ax)
+uviz.plot_intervals_ordered(y_pred, y_std, y_true, ax=ax)
 neatplot.save_figure('viz_minimal_03', 'svg')
 plt.show()

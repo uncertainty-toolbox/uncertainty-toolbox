@@ -52,11 +52,11 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=None
         )
         ma = umetrics.miscalibration_area(pred_mean, pred_std, y, recal_model=None)
-        print("Before Recalibration")
-        print("  MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
+        print("Before Recalibration:  ", end='')
+        print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-        uviz.plot_calibration_ax(
+        uviz.plot_calibration(
             pred_mean,
             pred_std,
             y,
@@ -80,11 +80,11 @@ for i, pred_mean in enumerate(pred_mean_list):
         ma = umetrics.miscalibration_area(
             pred_mean, pred_std, y, recal_model=recal_model
         )
-        print("After Recalibration")
-        print("  MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
+        print("After Recalibration:  ", end='')
+        print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-        uviz.plot_calibration_ax(
+        uviz.plot_calibration(
             pred_mean,
             pred_std,
             y,
