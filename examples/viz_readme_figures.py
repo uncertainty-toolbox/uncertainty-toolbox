@@ -1,9 +1,9 @@
 """
 Examples of code for visualizations.
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import rc
 
 import uncertainty_toolbox.data as udata
 import uncertainty_toolbox.metrics as umetrics
@@ -11,9 +11,13 @@ import uncertainty_toolbox.viz as uviz
 
 import neatplot
 
-neatplot.set_style()
-neatplot.update_rc("text.usetex", True)  # Set to True for system latex
 
+# Set plot style
+neatplot.set_style()
+neatplot.update_rc("text.usetex", True)     # Set to True for system latex
+neatplot.update_rc("font.size", 14)         # Set font size
+neatplot.update_rc("xtick.labelsize", 14)   # Set font size for xaxis tick labels
+neatplot.update_rc("ytick.labelsize", 14)   # Set font size for yaxis tick labels
 
 # Set random seed
 np.random.seed(11)
@@ -26,17 +30,9 @@ f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
 savefig = True
 
 
-def update_rc_params():
-    """Update matplotlib rc params."""
-    plt.rcParams.update({"font.size": 14})
-    plt.rcParams.update({"xtick.labelsize": 14})
-    plt.rcParams.update({"ytick.labelsize": 14})
-
-
 def make_plots(pred_mean, pred_std, plot_save_str='row'):
     """Make set of plots."""
 
-    update_rc_params()
     ylims = [-3, 3]
     n_subset = 50
 
@@ -56,13 +52,11 @@ def make_plots(pred_mean, pred_std, plot_save_str='row'):
     axs[2] = uviz.plot_calibration_ax(pred_mean, pred_std, y, ax=axs[2])
 
     # Adjust subplots spacing
-    plt.subplots_adjust(
-        left=None, bottom=None, right=None, top=None, wspace=0.25, hspace=None
-    )
+    fig.subplots_adjust(wspace=0.25)
 
     # Save figure
     if savefig:
-        neatplot.save_figure(plot_save_str, ['svg'], white_background=False)
+        neatplot.save_figure(plot_save_str, 'svg', white_background=True)
 
 
 # List of predictive means and standard deviations
@@ -71,7 +65,7 @@ pred_mean_list = [f]
 pred_std_list = [
     std * 0.5,  # overconfident
     std * 2.0,  # underconfident
-    std,  # correct
+    std,        # correct
 ]
 
 # Loop through, make plots, and compute metrics
