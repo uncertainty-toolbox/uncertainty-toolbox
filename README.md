@@ -108,9 +108,9 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 
 **Recalibrating overconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_over.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
-<img src="docs/images/after_recal_over.png" alt="" width="32%" align="top">
+<img src="docs/images/before_recal_0.svg" alt="" width="32%" align="top">
+<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="docs/images/after_recal_0.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
@@ -120,9 +120,9 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 
 **Recalibrating underconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_under.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
-<img src="docs/images/after_recal_under.png" alt="" width="32%" align="top">
+<img src="docs/images/before_recal_1.svg" alt="" width="32%" align="top">
+<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="docs/images/after_recal_1.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
