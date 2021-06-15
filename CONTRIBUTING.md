@@ -3,12 +3,12 @@
 We welcome and greaty appreciate contributions from the community! You can
 help make the Uncertainty Toolbox even better by either
 
-1. [Creating a PR](create-a-pr) to fix a bug or add functionality.
-2. [Report a bug](report-a-bug) that you found in the toolbox.
-3. [Request a feature](request-a-feature) that you would like to
+1. [Creating a PR](#create-a-pr) to fix a bug or add functionality.
+2. [Report a bug](#report-a-bug) that you found in the toolbox.
+3. [Request a feature](#request-a-feature) that you would like to
    see in the toolbox.
 
-## Create a PR
+# Create a PR
 
 To create a PR:
 
@@ -32,15 +32,15 @@ ask yourself:
 * Does this change make the codebase more confusing or difficult to deal with?
 * Does this change make add heavy or niche dependencies?
 
-Feel free to [submit an issues](request-a-feature) before making the 
+Feel free to [submit an issues](#request-a-feature) before making the 
 feature to see if your feature is something that the maintainers would want.
 
-## Report a Bug
+# Report a Bug
 
 If you find a bug, please make an issue and include [Bug] in the title. In 
 your issue, please give a description of how to reproduce the bug.
 
-## Request a Feature
+# Request a Feature
 
 For any feature requests, submit an issue with [Feature Request] in the title.
 As part of the issue, argue why this would be beneficial for the toolbox and
