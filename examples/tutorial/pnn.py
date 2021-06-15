@@ -3,6 +3,7 @@ Implementation of a Probabilistic Neural Net.
 """
 import abc
 from collections import OrderedDict
+from copy import deepcopy
 from typing import Optional, Sequence, Tuple
 
 import numpy as np
@@ -58,7 +59,7 @@ def train_simple_pnn(tr_x, tr_y, val_x, val_y, epochs):
         epoch_val_loss /= len(val_data)
         if epoch_val_loss < best_val_loss:
             best_val_loss = epoch_val_loss
-            best_state = pnn.state_dict()
+            best_state = deepcopy(pnn.state_dict())
         pbar.set_postfix(ordered_dict=OrderedDict(
             TrainLoss=epoch_tr_loss,
             ValLoss=epoch_val_loss,
