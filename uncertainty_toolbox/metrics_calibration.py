@@ -127,7 +127,9 @@ def adversarial_group_calibration(
             max_miscal_score = np.max(group_miscal_scores)
             score_per_trial.append(max_miscal_score)
         score_mean_across_trials = np.mean(score_per_trial)
-        score_stderr_across_trials = np.std(score_per_trial, ddof=1)
+        score_stderr_across_trials = np.std(score_per_trial, ddof=1) / float(
+            np.sqrt(num_trials)
+        )
         score_mean_per_ratio.append(score_mean_across_trials)
         score_stderr_per_ratio.append(score_stderr_across_trials)
 
