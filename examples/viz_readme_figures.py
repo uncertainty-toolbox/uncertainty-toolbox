@@ -4,11 +4,7 @@ Examples of code for visualizations.
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-import uncertainty_toolbox.data as udata
-import uncertainty_toolbox.metrics as umetrics
-import uncertainty_toolbox.viz as uviz
-
+import uncertainty_toolbox as uct
 import neatplot
 
 
@@ -24,7 +20,7 @@ np.random.seed(11)
 
 # Generate synthetic predictive uncertainty results
 n_obs = 650
-f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
+f, std, y, x = uct.synthetic_sine_heteroscedastic(n_obs)
 
 # Save figure (set to True to save)
 savefig = True
@@ -39,17 +35,17 @@ def make_plots(pred_mean, pred_std, plot_save_str='row'):
     fig, axs = plt.subplots(1, 3, figsize=(17, 8))
 
     # Make xy plot
-    axs[0] = uviz.plot_xy(
+    axs[0] = uct.plot_xy(
         pred_mean, pred_std, y, x, n_subset=300, ylims=ylims, xlims=[0, 15], ax=axs[0]
     )
 
     # Make ordered intervals plot
-    axs[1] = uviz.plot_intervals_ordered(
+    axs[1] = uct.plot_intervals_ordered(
         pred_mean, pred_std, y, n_subset=n_subset, ylims=ylims, ax=axs[1]
     )
 
     # Make calibration plot
-    axs[2] = uviz.plot_calibration(pred_mean, pred_std, y, ax=axs[2])
+    axs[2] = uct.plot_calibration(pred_mean, pred_std, y, ax=axs[2])
 
     # Adjust subplots spacing
     fig.subplots_adjust(wspace=0.25)
@@ -72,9 +68,9 @@ pred_std_list = [
 idx_counter = 0
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
-        mace = umetrics.mean_absolute_calibration_error(pred_mean, pred_std, y)
-        rmsce = umetrics.root_mean_squared_calibration_error(pred_mean, pred_std, y)
-        ma = umetrics.miscalibration_area(pred_mean, pred_std, y)
+        mace = uct.mean_absolute_calibration_error(pred_mean, pred_std, y)
+        rmsce = uct.root_mean_squared_calibration_error(pred_mean, pred_std, y)
+        ma = uct.miscalibration_area(pred_mean, pred_std, y)
 
         idx_counter += 1
         make_plots(pred_mean, pred_std, f'row_{idx_counter}')

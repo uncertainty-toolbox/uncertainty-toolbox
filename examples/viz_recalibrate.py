@@ -4,13 +4,7 @@ Examples of code for recalibration.
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-import uncertainty_toolbox.data as udata
-import uncertainty_toolbox.metrics as umetrics
-from uncertainty_toolbox.metrics_calibration import get_proportion_lists_vectorized
-import uncertainty_toolbox.viz as uviz
-from uncertainty_toolbox.recalibration import iso_recal
-
+import uncertainty_toolbox as uct
 import neatplot
 
 
@@ -26,7 +20,7 @@ np.random.seed(11)
 
 # Generate synthetic predictive uncertainty results
 n_obs = 650
-f, std, y, x = udata.synthetic_sine_heteroscedastic(n_obs)
+f, std, y, x = uct.synthetic_sine_heteroscedastic(n_obs)
 
 # Save figure (set to True to save)
 savefig = True
@@ -44,19 +38,21 @@ for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
 
         # Before recalibration
-        exp_props, obs_props = get_proportion_lists_vectorized(pred_mean, pred_std, y)
-        mace = umetrics.mean_absolute_calibration_error(
+        exp_props, obs_props = uct.get_proportion_lists_vectorized(
+            pred_mean, pred_std, y
+        )
+        mace = uct.mean_absolute_calibration_error(
             pred_mean, pred_std, y, recal_model=None
         )
-        rmsce = umetrics.root_mean_squared_calibration_error(
+        rmsce = uct.root_mean_squared_calibration_error(
             pred_mean, pred_std, y, recal_model=None
         )
-        ma = umetrics.miscalibration_area(pred_mean, pred_std, y, recal_model=None)
+        ma = uct.miscalibration_area(pred_mean, pred_std, y, recal_model=None)
         print("Before Recalibration:  ", end='')
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-        uviz.plot_calibration(
+        uct.plot_calibration(
             pred_mean,
             pred_std,
             y,
@@ -67,24 +63,24 @@ for i, pred_mean in enumerate(pred_mean_list):
         neatplot.save_figure(f'before_recal_{j}', 'svg')
 
         # After recalibration
-        recal_model = iso_recal(exp_props, obs_props)
-        recal_exp_props, recal_obs_props = get_proportion_lists_vectorized(
+        recal_model = uct.iso_recal(exp_props, obs_props)
+        recal_exp_props, recal_obs_props = uct.get_proportion_lists_vectorized(
             pred_mean, pred_std, y, recal_model=recal_model
         )
-        mace = umetrics.mean_absolute_calibration_error(
+        mace = uct.mean_absolute_calibration_error(
             pred_mean, pred_std, y, recal_model=recal_model
         )
-        rmsce = umetrics.root_mean_squared_calibration_error(
+        rmsce = uct.root_mean_squared_calibration_error(
             pred_mean, pred_std, y, recal_model=recal_model
         )
-        ma = umetrics.miscalibration_area(
+        ma = uct.miscalibration_area(
             pred_mean, pred_std, y, recal_model=recal_model
         )
         print("After Recalibration:  ", end='')
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-        uviz.plot_calibration(
+        uct.plot_calibration(
             pred_mean,
             pred_std,
             y,
