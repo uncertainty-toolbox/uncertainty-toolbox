@@ -18,7 +18,7 @@ neatplot.update_rc("text.usetex", False)
 np.random.seed(11)
 
 # Generate synthetic predictive uncertainty results
-(y_pred, y_std, y_true) = udata.synthetic_arange_random()
+(y_pred, y_std, y_true, _) = udata.synthetic_arange_random()
 
 # Print details about the synthetic results
 print("* y_true: {}".format(y_true))

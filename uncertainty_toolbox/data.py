@@ -8,13 +8,14 @@ import numpy as np
 def synthetic_arange_random(num_points=10):
     """
     Simple dataset of evenly spaced points and identity function (with some
-    randomization)
+    randomization).
     """
+    x = np.arange(num_points)
     y_true = np.arange(num_points)
     y_pred = np.arange(num_points) + np.random.random((num_points,))
     y_std = np.abs(y_true - y_pred) + 0.1 * np.random.random((num_points,))
 
-    return (y_pred, y_std, y_true)
+    return y_pred, y_std, y_true, x
 
 
 def synthetic_sine_heteroscedastic(n_points=10):
@@ -31,38 +32,3 @@ def synthetic_sine_heteroscedastic(n_points=10):
     noise = np.random.normal(scale=std)
     y = f + noise
     return f, std, y, x
-
-
-def curvy_cosine(x):
-    """
-    Curvy cosine function.
-
-    Parameters
-    ----------
-    x : ndarray
-        2d numpy ndarray.
-    """
-    try:
-        type_condition = isinstance(x, np.ndarray)
-    except:
-        type_condition = False
-
-    try:
-        dim_condition = len(x.shape) == 2
-    except:
-        dim_condition = False
-
-    try:
-        shape_condition = tuple(x.shape)[1] == 1
-    except:
-        shape_condition = False
-
-    if not (type_condition and dim_condition and shape_condition):
-        raise RuntimeError(
-            "Input must be a 2D numpy array, with second dimension equal to 1"
-        )
-
-    flat_neg_cos = np.sum(-1 * np.cos(x), 1) / x.shape[1]
-    curvy_cos = flat_neg_cos + 0.2 * np.linalg.norm(x, axis=1)
-    curvy_cos = curvy_cos.reshape(-1, 1)
-    return curvy_cos
