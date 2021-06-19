@@ -40,7 +40,9 @@ def plot_intervals(
     check_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
     intervals = num_stds_confidence_bound * y_std
 
     # Plot
@@ -103,7 +105,9 @@ def plot_intervals_ordered(
     check_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
@@ -171,10 +175,17 @@ def plot_xy(
 
     # Order points in order of increasing x
     order = np.argsort(x)
-    y_pred, y_std, y_true, x = y_pred[order], y_std[order], y_true[order], x[order]
+    y_pred, y_std, y_true, x = (
+        y_pred[order],
+        y_std[order],
+        y_true[order],
+        x[order],
+    )
 
     if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
+        [y_pred, y_std, y_true, x] = filter_subset(
+            [y_pred, y_std, y_true, x], n_subset
+        )
 
     intervals = num_stds_confidence_bound * y_std
 
@@ -211,7 +222,13 @@ def plot_xy(
 
 
 def plot_parity(
-    y_pred, y_true, n_subset=None, lims=None, axlabels=None, hexbins=False, show=False
+    y_pred,
+    y_true,
+    n_subset=None,
+    lims=None,
+    axlabels=None,
+    hexbins=False,
+    show=False,
 ):
     """
     Make parity plot using predicted values (y_pred) and
@@ -279,7 +296,9 @@ def plot_parity(
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mdae = median_absolute_error(y_true, y_pred)
-    marpd = np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
+    marpd = (
+        np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
+    )
     r2 = r2_score(y_true, y_pred)
     corr = np.corrcoef(y_true, y_pred)[0, 1]
 
@@ -328,14 +347,17 @@ def plot_calibration(
     check_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
         if vectorized:
-            (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-                y_pred, y_std, y_true
-            )
+            (
+                exp_proportions,
+                obs_proportions,
+            ) = get_proportion_lists_vectorized(y_pred, y_std, y_true)
         else:
             (exp_proportions, obs_proportions) = get_proportion_lists(
                 y_pred, y_std, y_true
@@ -357,7 +379,9 @@ def plot_calibration(
     plt.figure()
     plt.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
     plt.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    plt.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
+    plt.fill_between(
+        exp_proportions, exp_proportions, obs_proportions, alpha=0.2
+    )
     plt.xlabel("Predicted proportion in interval")
     plt.ylabel("Observed proportion in interval")
     plt.axis("square")
@@ -417,7 +441,9 @@ def plot_adversarial_group_calibration(
     occurred for each group size.
     """
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     if (group_size is None) or (score_mean is None):
         # Compute adversarial group calibration

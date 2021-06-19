@@ -34,7 +34,9 @@ METRIC_NAMES = {
     "crps": "CRPS",
     "check": "Check Score",
     "interval": "Interval Score",
-    "rms_adv_group_cal": ("Root-mean-squared Adversarial Group " "Calibration Error"),
+    "rms_adv_group_cal": (
+        "Root-mean-squared Adversarial Group " "Calibration Error"
+    ),
     "ma_adv_group_cal": "Mean-absolute Adversarial Group Calibration Error",
 }
 
@@ -147,11 +149,15 @@ def get_all_scoring_rule_metrics(
     return sr_metrics
 
 
-def _print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3):
+def _print_adversarial_group_calibration(
+    adv_group_metric_dic, print_group_num=3
+):
 
     for a_group_cali_type, a_group_cali_dic in adv_group_metric_dic.items():
         num_groups = a_group_cali_dic["group_sizes"].shape[0]
-        print_idxs = [int(x) for x in np.linspace(1, num_groups - 1, print_group_num)]
+        print_idxs = [
+            int(x) for x in np.linspace(1, num_groups - 1, print_group_num)
+        ]
         print("  {}".format(METRIC_NAMES[a_group_cali_type]))
         for idx in print_idxs:
             print(
@@ -163,7 +169,13 @@ def _print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3
 
 
 def get_all_metrics(
-    y_pred, y_std, y_true, num_bins=100, resolution=99, scaled=True, verbose=True
+    y_pred,
+    y_std,
+    y_true,
+    num_bins=100,
+    resolution=99,
+    scaled=True,
+    verbose=True,
 ):
 
     # Accuracy
@@ -198,10 +210,14 @@ def get_all_metrics(
         for cali_metric, cali_val in calibration_metrics.items():
             print("  {:<37} {:.3f}".format(METRIC_NAMES[cali_metric], cali_val))
         print(" Adversarial Group Calibration Metrics ".center(60, "="))
-        _print_adversarial_group_calibration(adv_group_cali_metrics, print_group_num=3)
+        _print_adversarial_group_calibration(
+            adv_group_cali_metrics, print_group_num=3
+        )
         print(" Sharpness Metrics ".center(60, "="))
         for sharp_metric, sharp_val in sharpness_metrics.items():
-            print("  {:}   {:.3f}".format(METRIC_NAMES[sharp_metric], sharp_val))
+            print(
+                "  {:}   {:.3f}".format(METRIC_NAMES[sharp_metric], sharp_val)
+            )
         print(" Scoring Rule Metrics ".center(60, "="))
         for sr_metric, sr_val in scoring_rule_metrics.items():
             print("  {:<25} {:.3f}".format(METRIC_NAMES[sr_metric], sr_val))

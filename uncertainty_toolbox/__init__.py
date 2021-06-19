@@ -26,7 +26,7 @@ from .metrics_calibration import (
     sharpness,
     get_proportion_lists_vectorized,
     get_proportion_lists,
-    get_proportion_in_interval
+    get_proportion_in_interval,
 )
 
 from .metrics_scoring_rule import (
