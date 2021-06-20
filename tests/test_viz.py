@@ -85,6 +85,5 @@ def test_plot_residuals_vs_stds_returns(get_test_set, get_fig_ax):
     """Test if plot_residuals_vs_stds returns correct type."""
     y_pred, y_std, y_true, _ = get_test_set
     fig, ax = get_fig_ax
-    y_resid = y_true - y_pred
-    ax = plot_residuals_vs_stds(y_resid, y_std, ax=ax)
+    ax = plot_residuals_vs_stds(y_pred, y_std, y_true, ax=ax)
     assert isinstance(ax, matplotlib.axes.Axes)

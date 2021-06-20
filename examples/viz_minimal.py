@@ -57,7 +57,6 @@ plt.show()
 
 # Plot residuals vs stds
 fig, ax = plt.subplots(1, 1, figsize=(5, 5))
-y_resid = y_true - y_pred
-uct.plot_residuals_vs_stds(y_resid, y_std, ax=ax)
+uct.plot_residuals_vs_stds(y_pred, y_std, y_true, ax=ax)
 neatplot.save_figure('viz_minimal_06', 'png')
 plt.show()
