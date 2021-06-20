@@ -40,6 +40,12 @@ def plot_xy(
     if ax is None:
         fig, ax = plt.subplots(figsize=(5, 5))
 
+    # Order points in order of increasing x
+    order = np.argsort(x)
+    y_pred, y_std, y_true, x = (
+	y_pred[order], y_std[order], y_true[order], x[order]
+    )
+
     # Optionally select a subset
     if n_subset is not None:
         [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
@@ -409,7 +415,7 @@ def plot_sharpness(y_std, n_subset=None, ax=None):
     return ax
 
 
-def plot_residuals_vs_stds(residuals, stds, n_subset=None, ax=None):
+def plot_residuals_vs_stds(y_pred, y_std, y_true, n_subset=None, ax=None):
     """
     Plot absolute value of residuals versus predictive standard deviations.
     """
@@ -421,12 +427,15 @@ def plot_residuals_vs_stds(residuals, stds, n_subset=None, ax=None):
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
+    # Compute residuals
+    residuals = y_true - y_pred
+
     # Put stds on same scale as residuals
-    res_sum = np.sum(np.abs(residuals))
-    stds_scaled = (stds / np.sum(stds)) * res_sum
+    residuals_sum = np.sum(np.abs(residuals))
+    y_std_scaled = (y_std / np.sum(y_std)) * residuals_sum
 
     # Plot residuals vs standard devs
-    h1 = ax.plot(stds_scaled, np.abs(residuals), "o", c="#1f77b4")
+    h1 = ax.plot(y_std_scaled, np.abs(residuals), "o", c="#1f77b4")
 
     # Plot 45-degree line
     xlims = ax.get_xlim()
