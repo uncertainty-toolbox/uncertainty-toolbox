@@ -42,9 +42,7 @@ def plot_xy(
 
     # Order points in order of increasing x
     order = np.argsort(x)
-    y_pred, y_std, y_true, x = (
-	y_pred[order], y_std[order], y_true[order], x[order]
-    )
+    y_pred, y_std, y_true, x = (y_pred[order], y_std[order], y_true[order], x[order])
 
     # Optionally select a subset
     if n_subset is not None:
@@ -77,7 +75,7 @@ def plot_xy(
     ax.set_xlabel("$x$")
     ax.set_ylabel("$y$")
     ax.set_title("Confidence Band")
-    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
 
     return ax
 
@@ -141,7 +139,7 @@ def plot_intervals(
     ax.set_xlabel("Observed Values")
     ax.set_ylabel("Predicted Values and Intervals")
     ax.set_title("Prediction Intervals")
-    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
 
     return ax
 
@@ -204,7 +202,7 @@ def plot_intervals_ordered(
     ax.set_xlabel("Index (Ordered by Observed Value)")
     ax.set_ylabel("Predicted Values and Intervals")
     ax.set_title("Ordered Prediction Intervals")
-    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
 
     return ax
 
