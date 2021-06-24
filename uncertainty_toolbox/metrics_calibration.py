@@ -8,7 +8,7 @@ from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from tqdm import tqdm
-from uncertainty_toolbox.utils import check_flat_same_shape
+from uncertainty_toolbox.utils import is_flat_same_shape
 
 
 def sharpness(y_std):
@@ -16,7 +16,7 @@ def sharpness(y_std):
     Return sharpness (a single measure of the overall confidence).
     """
     # Check that input arrays are flat
-    check_flat_same_shape(y_std)
+    assert is_flat_same_shape(y_std)
 
     # Compute sharpness
     sharp_metric = np.sqrt(np.mean(y_std ** 2))
@@ -30,7 +30,7 @@ def root_mean_squared_calibration_error(
     """Return root mean squared calibration error."""
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -54,7 +54,7 @@ def mean_absolute_calibration_error(
     """Return mean absolute calibration error; identical to ECE."""
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -86,7 +86,7 @@ def adversarial_group_calibration(
 ):
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     num_pts = y_true.shape[0]
 
@@ -155,7 +155,7 @@ def miscalibration_area(
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -194,7 +194,7 @@ def get_proportion_lists_vectorized(
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
@@ -227,7 +227,7 @@ def get_proportion_lists(y_pred, y_std, y_true, num_bins=100, recal_model=None):
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
@@ -252,7 +252,7 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Computer lower and upper bound for quantile
     norm = stats.norm(loc=0, scale=1)

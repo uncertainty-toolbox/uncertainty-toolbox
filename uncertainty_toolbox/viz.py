@@ -19,7 +19,7 @@ from uncertainty_toolbox.metrics_calibration import (
     get_proportion_lists_vectorized,
     adversarial_group_calibration,
 )
-from uncertainty_toolbox.utils import check_flat_same_shape
+from uncertainty_toolbox.utils import is_flat_same_shape
 
 
 def plot_intervals(
@@ -37,7 +37,7 @@ def plot_intervals(
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset(
@@ -102,7 +102,7 @@ def plot_intervals_ordered(
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset(
@@ -171,7 +171,7 @@ def plot_xy(
     """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true, x)
+    assert is_flat_same_shape(y_pred, y_std, y_true, x)
 
     # Order points in order of increasing x
     order = np.argsort(x)
@@ -235,7 +235,7 @@ def plot_parity(
     observed values (y_true).
     """
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_true)
+    assert is_flat_same_shape(y_pred, y_true)
 
     if n_subset is not None:
         [y_pred, y_true] = filter_subset([y_pred, y_true], n_subset)
@@ -344,7 +344,7 @@ def plot_calibration(
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset(
@@ -465,7 +465,7 @@ def plot_adversarial_group_calibration(
                 "Input arrays for adversarial group calibration shape mismatch"
             )
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
     # Set label
     if curve_label is None:
         curve_label = "Predictor"
@@ -500,7 +500,7 @@ def plot_sharpness(y_std, n_subset=None):
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_std)
+    assert is_flat_same_shape(y_std)
 
     if n_subset is not None:
         [y_std] = filter_subset([y_std], n_subset)
@@ -539,7 +539,7 @@ def plot_sharpness(y_std, n_subset=None):
 def plot_residuals_vs_stds(y_pred, y_std, y_true):
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     residuals = y_pred - y_true
 

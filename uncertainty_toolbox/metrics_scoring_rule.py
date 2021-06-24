@@ -5,7 +5,7 @@ uncertainty quantification.
 
 import numpy as np
 from scipy import stats
-from uncertainty_toolbox.utils import check_flat_same_shape
+from uncertainty_toolbox.utils import is_flat_same_shape
 
 
 def nll_gaussian(y_pred, y_std, y_true, scaled=True):
@@ -15,7 +15,7 @@ def nll_gaussian(y_pred, y_std, y_true, scaled=True):
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Set residuals
     residuals = y_pred - y_true
@@ -42,7 +42,7 @@ def crps_gaussian(y_pred, y_std, y_true, scaled=True):
     """
 
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     # Compute crps
     y_standardized = (y_true - y_pred) / y_std
@@ -75,7 +75,7 @@ def check_score(
     Negatively oriented means a smaller value is more desirable.
     """
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     test_qs = np.linspace(start_q, end_q, resolution)
 
@@ -106,7 +106,7 @@ def interval_score(
     Negatively oriented means a smaller value is more desirable.
     """
     # Check that input arrays are flat
-    check_flat_same_shape(y_pred, y_std, y_true)
+    assert is_flat_same_shape(y_pred, y_std, y_true)
 
     test_ps = np.linspace(start_p, end_p, resolution)
 
