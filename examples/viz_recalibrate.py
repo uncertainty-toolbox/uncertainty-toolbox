@@ -10,10 +10,10 @@ import neatplot
 
 # Set plot style
 neatplot.set_style()
-neatplot.update_rc("text.usetex", True)     # Set to True for system latex
-neatplot.update_rc("font.size", 14)         # Set font size
-neatplot.update_rc("xtick.labelsize", 14)   # Set font size for xaxis tick labels
-neatplot.update_rc("ytick.labelsize", 14)   # Set font size for yaxis tick labels
+neatplot.update_rc("text.usetex", True)  # Set to True for system latex
+neatplot.update_rc("font.size", 14)  # Set font size
+neatplot.update_rc("xtick.labelsize", 14)  # Set font size for xaxis tick labels
+neatplot.update_rc("ytick.labelsize", 14)  # Set font size for yaxis tick labels
 
 # Set random seed
 np.random.seed(11)
@@ -48,7 +48,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             pred_mean, pred_std, y, recal_model=None
         )
         ma = uct.miscalibration_area(pred_mean, pred_std, y, recal_model=None)
-        print("Before Recalibration:  ", end='')
+        print("Before Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
@@ -60,7 +60,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             obs_props=obs_props,
             ax=ax,
         )
-        neatplot.save_figure(f'before_recal_{j}', 'svg')
+        neatplot.save_figure(f"before_recal_{j}", "svg")
 
         # After recalibration
         recal_model = uct.iso_recal(exp_props, obs_props)
@@ -73,10 +73,8 @@ for i, pred_mean in enumerate(pred_mean_list):
         rmsce = uct.root_mean_squared_calibration_error(
             pred_mean, pred_std, y, recal_model=recal_model
         )
-        ma = uct.miscalibration_area(
-            pred_mean, pred_std, y, recal_model=recal_model
-        )
-        print("After Recalibration:  ", end='')
+        ma = uct.miscalibration_area(pred_mean, pred_std, y, recal_model=recal_model)
+        print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
@@ -88,4 +86,4 @@ for i, pred_mean in enumerate(pred_mean_list):
             obs_props=recal_obs_props,
             ax=ax,
         )
-        neatplot.save_figure(f'after_recal_{j}', 'svg')
+        neatplot.save_figure(f"after_recal_{j}", "svg")
