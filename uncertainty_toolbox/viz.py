@@ -75,7 +75,7 @@ def plot_xy(
     ax.set_xlabel("$x$")
     ax.set_ylabel("$y$")
     ax.set_title("Confidence Band")
-    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
 
     return ax
 
@@ -139,7 +139,7 @@ def plot_intervals(
     ax.set_xlabel("Observed Values")
     ax.set_ylabel("Predicted Values and Intervals")
     ax.set_title("Prediction Intervals")
-    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
 
     return ax
 
@@ -202,7 +202,7 @@ def plot_intervals_ordered(
     ax.set_xlabel("Index (Ordered by Observed Value)")
     ax.set_ylabel("Predicted Values and Intervals")
     ax.set_title("Ordered Prediction Intervals")
-    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable='box')
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
 
     return ax
 
@@ -290,7 +290,7 @@ def plot_calibration(
         s="Miscalibration area = %.2f" % miscalibration_area,
         verticalalignment="bottom",
         horizontalalignment="right",
-        fontsize='small',
+        fontsize="small",
     )
 
     return ax
@@ -392,7 +392,7 @@ def plot_sharpness(y_std, n_subset=None, ax=None):
 
     # Calculate and report sharpness
     sharpness = np.sqrt(np.mean(y_std ** 2))
-    ax.axvline(x=sharpness, label="sharpness", color="k", linewidth=2, ls='--')
+    ax.axvline(x=sharpness, label="sharpness", color="k", linewidth=2, ls="--")
 
     if sharpness < (xlim[0] + xlim[1]) / 2:
         text = "\n  Sharpness = %.2f" % sharpness
