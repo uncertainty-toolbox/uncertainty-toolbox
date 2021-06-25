@@ -37,10 +37,9 @@ from .metrics_scoring_rule import (
 )
 
 from .viz import (
+    plot_xy,
     plot_intervals,
     plot_intervals_ordered,
-    plot_xy,
-    plot_parity,
     plot_calibration,
     plot_adversarial_group_calibration,
     plot_sharpness,
