@@ -5,6 +5,7 @@ uncertainty quantification.
 
 import numpy as np
 from scipy import stats
+from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 
 def nll_gaussian(y_pred, y_std, y_true, scaled=True):
@@ -13,17 +14,11 @@ def nll_gaussian(y_pred, y_std, y_true, scaled=True):
     uncertainty with mean (y_pred) and standard-deviation (y_std).
     """
 
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std, y_true)
+
     # Set residuals
     residuals = y_pred - y_true
-
-    # Flatten
-    num_pts = y_true.shape[0]
-    residuals = residuals.reshape(
-        num_pts,
-    )
-    y_std = y_std.reshape(
-        num_pts,
-    )
 
     # Compute nll
     nll_list = stats.norm.logpdf(residuals, scale=y_std)
@@ -46,23 +41,16 @@ def crps_gaussian(y_pred, y_std, y_true, scaled=True):
     Negatively oriented means a smaller value is more desirable.
     """
 
-    # Flatten
-    num_pts = y_true.shape[0]
-    y_pred = y_pred.reshape(
-        num_pts,
-    )
-    y_std = y_std.reshape(
-        num_pts,
-    )
-    y_true = y_true.reshape(
-        num_pts,
-    )
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std, y_true)
 
     # Compute crps
     y_standardized = (y_true - y_pred) / y_std
     term_1 = 1 / np.sqrt(np.pi)
     term_2 = 2 * stats.norm.pdf(y_standardized, loc=0, scale=1)
-    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1)
+    term_3 = y_standardized * (
+        2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1
+    )
 
     crps_list = -1 * y_std * (term_1 - term_2 - term_3)
     crps = np.sum(crps_list)
@@ -86,17 +74,8 @@ def check_score(
 
     Negatively oriented means a smaller value is more desirable.
     """
-    # Flatten
-    num_pts = y_true.shape[0]
-    y_pred = y_pred.reshape(
-        num_pts,
-    )
-    y_std = y_std.reshape(
-        num_pts,
-    )
-    y_true = y_true.reshape(
-        num_pts,
-    )
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std, y_true)
 
     test_qs = np.linspace(start_q, end_q, resolution)
 
@@ -126,17 +105,8 @@ def interval_score(
 
     Negatively oriented means a smaller value is more desirable.
     """
-    # Flatten
-    num_pts = y_true.shape[0]
-    y_pred = y_pred.reshape(
-        num_pts,
-    )
-    y_std = y_std.reshape(
-        num_pts,
-    )
-    y_true = y_true.reshape(
-        num_pts,
-    )
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std, y_true)
 
     test_ps = np.linspace(start_p, end_p, resolution)
 
