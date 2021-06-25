@@ -2,7 +2,8 @@ import numpy as np
 
 
 def is_flat_same_shape(*args):
-
+    if not isinstance(args[0], np.ndarray):
+        return False
     first_shape = args[0].shape
     for arr in args:
         if not isinstance(arr, np.ndarray):
