@@ -8,7 +8,7 @@ from sklearn.metrics import (
     r2_score,
     median_absolute_error,
 )
-from uncertainty_toolbox.utils import is_flat_same_shape
+from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 
 def prediction_error_metrics(y_pred, y_true):
@@ -22,7 +22,7 @@ def prediction_error_metrics(y_pred, y_true):
     - Pearson's correlation coefficient ('corr')
     """
     # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_true)
+    assert_is_flat_same_shape(y_pred, y_true)
 
     # Compute metrics
     mae = mean_absolute_error(y_true, y_pred)

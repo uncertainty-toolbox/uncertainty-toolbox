@@ -5,15 +5,11 @@ Util functions for the toolbox.
 import numpy as np
 
 
-def is_flat_same_shape(*args):
-    if not isinstance(args[0], np.ndarray):
-        return False
+def assert_is_flat_same_shape(*args):
+    assert isinstance(args[0], np.ndarray)
     first_shape = args[0].shape
     for arr in args:
-        if not isinstance(arr, np.ndarray):
-            return False
-        if len(arr.shape) != 1:
-            return False
-        if arr.shape != first_shape:
-            return False
+        assert isinstance(arr, np.ndarray)
+        assert len(arr.shape) == 1
+        assert arr.shape == first_shape
     return True
