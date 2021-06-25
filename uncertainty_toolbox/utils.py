@@ -1,3 +1,7 @@
+"""
+Util functions for the toolbox.
+"""
+
 import numpy as np
 
 

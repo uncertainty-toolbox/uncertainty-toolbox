@@ -5,7 +5,7 @@ Test for util functions.
 import pytest
 import numpy as np
 
-from uncertainty_toolbox.utils import *
+from uncertainty_toolbox.utils import is_flat_same_shape
 
 def test_is_flat_same_shape_wrong_type():
     wrong = [1, 2, 3]
