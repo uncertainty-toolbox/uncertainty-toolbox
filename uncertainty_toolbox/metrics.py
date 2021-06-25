@@ -19,6 +19,7 @@ from uncertainty_toolbox.metrics_scoring_rule import (
     interval_score,
 )
 
+
 METRIC_NAMES = {
     "mae": "MAE",
     "rmse": "RMSE",

@@ -19,6 +19,8 @@ from .metrics_calibration import (
     miscalibration_area,
     adversarial_group_calibration,
     sharpness,
+    get_proportion_lists,
+    get_proportion_lists_vectorized,
 )
 
 from .metrics_scoring_rule import (
@@ -26,4 +28,16 @@ from .metrics_scoring_rule import (
     crps_gaussian,
     check_score,
     interval_score,
+)
+
+from .recalibration import iso_recal
+
+from .viz import (
+    plot_xy,
+    plot_intervals,
+    plot_intervals_ordered,
+    plot_calibration,
+    plot_adversarial_group_calibration,
+    plot_sharpness,
+    plot_residuals_vs_stds,
 )
