@@ -19,7 +19,6 @@ from uncertainty_toolbox.metrics_calibration import (
     get_proportion_lists_vectorized,
     adversarial_group_calibration,
 )
-from uncertainty_toolbox.utils import is_flat_same_shape
 
 
 def plot_intervals(
@@ -35,14 +34,8 @@ def plot_intervals(
     Plot predicted values (y_pred) and intervals (y_std) vs observed
     values (y_true).
     """
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true)
-
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
     intervals = num_stds_confidence_bound * y_std
 
     # Plot
@@ -100,14 +93,8 @@ def plot_intervals_ordered(
     Plot predicted values (y_pred) and intervals (y_std) vs observed
     values (y_true).
     """
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true)
-
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
@@ -169,23 +156,8 @@ def plot_xy(
     show=False,
 ):
     """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true, x)
-
-    # Order points in order of increasing x
-    order = np.argsort(x)
-    y_pred, y_std, y_true, x = (
-        y_pred[order],
-        y_std[order],
-        y_true[order],
-        x[order],
-    )
-
     if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset(
-            [y_pred, y_std, y_true, x], n_subset
-        )
+        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
 
     intervals = num_stds_confidence_bound * y_std
 
@@ -222,21 +194,12 @@ def plot_xy(
 
 
 def plot_parity(
-    y_pred,
-    y_true,
-    n_subset=None,
-    lims=None,
-    axlabels=None,
-    hexbins=False,
-    show=False,
+    y_pred, y_true, n_subset=None, lims=None, axlabels=None, hexbins=False, show=False
 ):
     """
     Make parity plot using predicted values (y_pred) and
     observed values (y_true).
     """
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_true)
-
     if n_subset is not None:
         [y_pred, y_true] = filter_subset([y_pred, y_true], n_subset)
 
@@ -296,9 +259,7 @@ def plot_parity(
     mae = mean_absolute_error(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mdae = median_absolute_error(y_true, y_pred)
-    marpd = (
-        np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
-    )
+    marpd = np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
     r2 = r2_score(y_true, y_pred)
     corr = np.corrcoef(y_true, y_pred)[0, 1]
 
@@ -342,22 +303,15 @@ def plot_calibration(
     Make calibration plot using predicted mean values (y_pred), predicted std
     values (y_std), and observed values (y_true).
     """
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true)
-
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
         if vectorized:
-            (
-                exp_proportions,
-                obs_proportions,
-            ) = get_proportion_lists_vectorized(y_pred, y_std, y_true)
+            (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
+                y_pred, y_std, y_true
+            )
         else:
             (exp_proportions, obs_proportions) = get_proportion_lists(
                 y_pred, y_std, y_true
@@ -379,9 +333,7 @@ def plot_calibration(
     plt.figure()
     plt.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
     plt.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    plt.fill_between(
-        exp_proportions, exp_proportions, obs_proportions, alpha=0.2
-    )
+    plt.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
     plt.xlabel("Predicted proportion in interval")
     plt.ylabel("Observed proportion in interval")
     plt.axis("square")
@@ -441,9 +393,7 @@ def plot_adversarial_group_calibration(
     occurred for each group size.
     """
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     if (group_size is None) or (score_mean is None):
         # Compute adversarial group calibration
@@ -464,8 +414,7 @@ def plot_adversarial_group_calibration(
             raise RuntimeError(
                 "Input arrays for adversarial group calibration shape mismatch"
             )
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true)
+
     # Set label
     if curve_label is None:
         curve_label = "Predictor"
@@ -498,10 +447,6 @@ def plot_sharpness(y_std, n_subset=None):
     """
     Make sharpness plot using predicted std values (y_std).
     """
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_std)
-
     if n_subset is not None:
         [y_std] = filter_subset([y_std], n_subset)
 
@@ -536,16 +481,10 @@ def plot_sharpness(y_std, n_subset=None):
     )
 
 
-def plot_residuals_vs_stds(y_pred, y_std, y_true):
-
-    # Check that input arrays are flat
-    assert is_flat_same_shape(y_pred, y_std, y_true)
-
-    residuals = y_pred - y_true
-
+def plot_residuals_vs_stds(residuals, stds):
     # Put stds on same scale as residuals
     res_sum = np.sum(np.abs(residuals))
-    stds_scaled = (y_std / np.sum(y_std)) * res_sum
+    stds_scaled = (stds / np.sum(stds)) * res_sum
     # Plot
     plt.figure()
     plt.plot(stds_scaled, np.abs(residuals), "x")

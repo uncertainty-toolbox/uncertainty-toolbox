@@ -36,11 +36,12 @@ from .metrics_scoring_rule import (
     interval_score,
 )
 
+from .recalibration import iso_recal
+
 from .viz import (
+    plot_xy,
     plot_intervals,
     plot_intervals_ordered,
-    plot_xy,
-    plot_parity,
     plot_calibration,
     plot_adversarial_group_calibration,
     plot_sharpness,
