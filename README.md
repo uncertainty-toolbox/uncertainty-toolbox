@@ -74,23 +74,17 @@ to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
-<img src="docs/images/xy_over.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_over.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_over.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_1.svg" alt="" width="100%" align="top">
 </p>
 
 **Underconfident** (_too much uncertainty_)
 <p align="center">
-<img src="docs/images/xy_under.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_under.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_under.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_2.svg" alt="" width="100%" align="top">
 </p>
 
 **Well calibrated**
 <p align="center">
-<img src="docs/images/xy_correct.png" alt="" width="32%" align="top">
-<img src="docs/images/intervals_ordered_correct.png" alt="" width="32%" align="top">
-<img src="docs/images/calibration_correct.png" alt="" width="32%" align="top">
+    <img src="docs/images/row_3.svg" alt="" width="100%" align="top">
 </p>
 
 And here are a few of the calibration metrics for the above three cases:
@@ -114,9 +108,9 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 
 **Recalibrating overconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_over.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
-<img src="docs/images/after_recal_over.png" alt="" width="32%" align="top">
+<img src="docs/images/before_recal_0.svg" alt="" width="32%" align="top">
+<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="docs/images/after_recal_0.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
@@ -126,9 +120,9 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 
 **Recalibrating underconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_under.png" alt="" width="32%" align="top">
-<img src="docs/images/recalibrate_arrow.png" alt="" width="20%" align="top">
-<img src="docs/images/after_recal_under.png" alt="" width="32%" align="top">
+<img src="docs/images/before_recal_1.svg" alt="" width="32%" align="top">
+<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="docs/images/after_recal_1.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |

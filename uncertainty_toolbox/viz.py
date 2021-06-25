@@ -5,7 +5,6 @@ Visualizations for predictive uncertainties and metrics.
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.metrics import (
     mean_absolute_error,
     mean_squared_error,
@@ -21,129 +20,6 @@ from uncertainty_toolbox.metrics_calibration import (
 )
 
 
-def plot_intervals(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
-    show=False,
-):
-    """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
-    """
-    if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-    intervals = num_stds_confidence_bound * y_std
-
-    # Plot
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    _ = plt.errorbar(
-        y_true,
-        y_pred,
-        intervals,
-        fmt="o",
-        ls="none",
-        linewidth=2.0,
-        c="#1f77b4",
-        alpha=0.5,
-    )
-    plt.plot(y_true, y_pred, "o", c="#1f77b4")
-    ax = plt.gca()
-
-    # Determine lims
-    if ylims is None:
-        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
-        lims_ext = [
-            int(np.floor(np.min(intervals_lower_upper[0]))),
-            int(np.ceil(np.max(intervals_lower_upper[1]))),
-        ]
-    else:
-        lims_ext = ylims
-
-    # plot 45-degree parity line
-    _ = ax.plot(lims_ext, lims_ext, "--", linewidth=1.5, c="#ff7f0e")
-
-    # Format
-    _ = ax.set_xlim(lims_ext)
-    _ = ax.set_ylim(lims_ext)
-    _ = ax.set_xlabel("Observed Values")
-    _ = ax.set_ylabel("Predicted Values and Intervals")
-    _ = ax.set_aspect("equal", "box")
-
-    plt.title("Prediction Intervals")
-
-    if show:
-        plt.show()
-
-
-def plot_intervals_ordered(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
-    show=False,
-):
-    """
-    Plot predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
-    """
-    if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
-
-    order = np.argsort(y_true.flatten())
-    y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
-    xs = np.arange(len(order))
-    intervals = num_stds_confidence_bound * y_std
-
-    # Plot
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    _ = plt.errorbar(
-        xs,
-        y_pred,
-        intervals,
-        fmt="o",
-        ls="none",
-        linewidth=1.5,
-        c="#1f77b4",
-        alpha=0.5,
-    )
-    h1 = plt.plot(xs, y_pred, "o", c="#1f77b4")
-    h2 = plt.plot(xs, y_true, "--", linewidth=2.0, c="#ff7f0e")
-    ax = plt.gca()
-
-    # Legend
-    plt.legend([h1[0], h2[0]], ["Predicted Values", "Observed Values"], loc=4)
-
-    # Determine lims
-    if ylims is None:
-        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
-        lims_ext = [
-            int(np.floor(np.min(intervals_lower_upper[0]))),
-            int(np.ceil(np.max(intervals_lower_upper[1]))),
-        ]
-    else:
-        lims_ext = ylims
-
-    # Format
-    _ = ax.set_ylim(lims_ext)
-    # _ = ax.set_xlabel('Observed Values Order')
-    _ = ax.set_xlabel("Index (Ordered by Observed Value)")
-    _ = ax.set_ylabel("Predicted Values and Intervals")
-    _ = ax.set_aspect("auto", "box")
-
-    plt.title("Ordered Prediction Intervals")
-
-    if show:
-        plt.show()
-
-
 def plot_xy(
     y_pred,
     y_std,
@@ -153,139 +29,182 @@ def plot_xy(
     ylims=None,
     xlims=None,
     num_stds_confidence_bound=2,
-    show=False,
+    leg_loc=3,
+    ax=None,
 ):
-    """Plot 1D input (x) and predicted/true (y_pred/y_true) values."""
+    """
+    Return Axes for plot of 1D input (x) and predicted/true (y_pred/y_true)
+    values.
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Order points in order of increasing x
+    order = np.argsort(x)
+    y_pred, y_std, y_true, x = (y_pred[order], y_std[order], y_true[order], x[order])
+
+    # Optionally select a subset
     if n_subset is not None:
         [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
 
     intervals = num_stds_confidence_bound * y_std
 
-    fig = plt.figure()
-    fig.set_size_inches(5.0, 5.0)
-    h1 = plt.plot(x, y_true, ".", mec="#ff7f0e", mfc="None")
-    h2 = plt.plot(x, y_pred, "-", c="#1f77b4", linewidth=2)
-    h3 = plt.fill_between(
+    h1 = ax.plot(x, y_true, ".", mec="#ff7f0e", mfc="None")
+    h2 = ax.plot(x, y_pred, "-", c="#1f77b4", linewidth=2)
+    h3 = ax.fill_between(
         x,
         y_pred - intervals,
         y_pred + intervals,
         color="lightsteelblue",
         alpha=0.4,
     )
-    plt.legend(
+    ax.legend(
         [h1[0], h2[0], h3],
-        ["Observations", "Predictions", "95% Interval"],
-        loc=3,
+        ["Observations", "Predictions", "$95\%$ Interval"],
+        loc=leg_loc,
     )
 
+    # Format plot
     if ylims is not None:
-        plt.ylim(ylims)
+        ax.set_ylim(ylims)
 
     if xlims is not None:
-        plt.xlim(xlims)
+        ax.set_xlim(xlims)
 
-    plt.xlabel("$x$")
-    plt.ylabel("$y$")
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
+    ax.set_title("Confidence Band")
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
 
-    plt.title("Confidence Band")
-
-    if show:
-        plt.show()
+    return ax
 
 
-def plot_parity(
-    y_pred, y_true, n_subset=None, lims=None, axlabels=None, hexbins=False, show=False
+def plot_intervals(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    ax=None,
 ):
     """
-    Make parity plot using predicted values (y_pred) and
-    observed values (y_true).
+    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
     """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_true] = filter_subset([y_pred, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
-    # Set lims
-    if lims is None:
-        print("Lims is None. Setting lims now:")
-        min_max_true = (y_true.min(), y_true.max())
-        min_max_pred = (y_pred.min(), y_pred.max())
-        lims = (
-            np.min((min_max_true[0], min_max_pred[0])),
-            np.max((min_max_true[1], min_max_pred[1])),
-        )
-        lims_diff = lims[1] - lims[0]
-        lims_ext = (lims[0] - 0.1 * lims_diff, lims[1] + 0.1 * lims_diff)
+    # Compute intervals
+    intervals = num_stds_confidence_bound * y_std
 
-        print("min_max_true: {}".format(min_max_true))
-        print("min_max_pred: {}".format(min_max_pred))
-        print("lims: {}".format(lims))
-        print("lims_ext: {}".format(lims_ext))
+    # Plot
+    ax.errorbar(
+        y_true,
+        y_pred,
+        intervals,
+        fmt="o",
+        ls="none",
+        linewidth=1.5,
+        c="#1f77b4",
+        alpha=0.5,
+    )
+    h1 = ax.plot(y_true, y_pred, "o", c="#1f77b4")
 
-    # Set axlabels
-    if axlabels is None:
-        axlabels = ("Observed Values", "Predicted Values")
-
-    # Set residuals
-    residuals = y_pred - y_true
-
-    # Plotting
-    if hexbins:
-        grid = sns.jointplot(
-            y_true,
-            y_pred,
-            kind="hex",
-            bins="log",
-            gridsize=25,
-            extent=lims * 2,
-        )
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [
+            int(np.floor(np.min(intervals_lower_upper[0]))),
+            int(np.ceil(np.max(intervals_lower_upper[1]))),
+        ]
     else:
-        grid = sns.jointplot(
-            y_true,
-            y_pred,
-            kind="scatter",
-            space=0,
-            marginal_kws=dict(kde=True),
-        )
+        lims_ext = ylims
 
-    ax = grid.ax_joint
-    _ = ax.set_xlim(lims_ext)
-    _ = ax.set_ylim(lims_ext)
-    _ = ax.plot(lims_ext, lims_ext, "--")
-    _ = ax.set_xlabel(axlabels[0])
-    _ = ax.set_ylabel(axlabels[1])
+    # plot 45-degree line
+    h2 = ax.plot(lims_ext, lims_ext, "--", linewidth=1.5, c="#ff7f0e")
 
-    plt.title("Prediction Metrics")
+    # Legend
+    ax.legend([h1[0], h2[0]], ["Predictions", "$f(x) = x$"], loc=4)
 
-    # Calculate the error metrics
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mdae = median_absolute_error(y_true, y_pred)
-    marpd = np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
-    r2 = r2_score(y_true, y_pred)
-    corr = np.corrcoef(y_true, y_pred)[0, 1]
+    # Format plot
+    ax.set_xlim(lims_ext)
+    ax.set_ylim(lims_ext)
+    ax.set_xlabel("Observed Values")
+    ax.set_ylabel("Predicted Values and Intervals")
+    ax.set_title("Prediction Intervals")
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
 
-    # Report
-    fontsize = 12
-    text = (
-        "  MDAE = %.2f\n" % mdae
-        + "  MAE = %.2f\n" % mae
-        + "  RMSE = %.2f\n" % rmse
-        + "  MARPD = %i%%\n" % marpd
-        + "  R2 = %.2f\n" % r2
-        + "  PPMCC = %i%%\n" % corr
+    return ax
+
+
+def plot_intervals_ordered(
+    y_pred,
+    y_std,
+    y_true,
+    n_subset=None,
+    ylims=None,
+    num_stds_confidence_bound=2,
+    ax=None,
+):
+    """
+    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
+    values (y_true).
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
+    order = np.argsort(y_true.flatten())
+    y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
+    xs = np.arange(len(order))
+    intervals = num_stds_confidence_bound * y_std
+
+    # Plot
+    ax.errorbar(
+        xs,
+        y_pred,
+        intervals,
+        fmt="o",
+        ls="none",
+        linewidth=1.5,
+        c="#1f77b4",
+        alpha=0.5,
     )
-    _ = ax.text(
-        x=lims[0],
-        y=lims[1],
-        s=text,
-        horizontalalignment="left",
-        verticalalignment="top",
-        fontsize=fontsize,
-    )
-    fig = plt.gcf()
-    fig.set_size_inches(5.0, 5.0)
+    h1 = ax.plot(xs, y_pred, "o", c="#1f77b4")
+    h2 = ax.plot(xs, y_true, "--", linewidth=2.0, c="#ff7f0e")
 
-    if show:
-        plt.show()
+    # Legend
+    ax.legend([h1[0], h2[0]], ["Predicted Values", "Observed Values"], loc=4)
+
+    # Determine lims
+    if ylims is None:
+        intervals_lower_upper = [y_pred - intervals, y_pred + intervals]
+        lims_ext = [
+            int(np.floor(np.min(intervals_lower_upper[0]))),
+            int(np.ceil(np.max(intervals_lower_upper[1]))),
+        ]
+    else:
+        lims_ext = ylims
+
+    # Format plot
+    ax.set_ylim(lims_ext)
+    ax.set_xlabel("Index (Ordered by Observed Value)")
+    ax.set_ylabel("Predicted Values and Intervals")
+    ax.set_title("Ordered Prediction Intervals")
+    ax.set_aspect(1.0 / ax.get_data_ratio(), adjustable="box")
+
+    return ax
 
 
 def plot_calibration(
@@ -298,11 +217,17 @@ def plot_calibration(
     vectorized=True,
     exp_props=None,
     obs_props=None,
+    ax=None,
 ):
     """
     Make calibration plot using predicted mean values (y_pred), predicted std
     values (y_std), and observed values (y_true).
     """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
@@ -323,23 +248,25 @@ def plot_calibration(
         if exp_proportions.shape != obs_proportions.shape:
             raise RuntimeError("exp_props and obs_props shape mismatch")
 
-    # Set figure defaults
-    fontsize = 12
-
     # Set label
     if curve_label is None:
         curve_label = "Predictor"
+
     # Plot
-    plt.figure()
-    plt.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
-    plt.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    plt.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
-    plt.xlabel("Predicted proportion in interval")
-    plt.ylabel("Observed proportion in interval")
-    plt.axis("square")
+    ax.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
+    ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
+    ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
+
+    # Format plot
+    ax.set_xlabel("Predicted Proportion in Interval")
+    ax.set_ylabel("Observed Proportion in Interval")
+    ax.axis("square")
+
     buff = 0.01
-    plt.xlim([0 - buff, 1 + buff])
-    plt.ylim([0 - buff, 1 + buff])
+    ax.set_xlim([0 - buff, 1 + buff])
+    ax.set_ylim([0 - buff, 1 + buff])
+
+    ax.set_title("Average Calibration")
 
     # Compute miscalibration area
     polygon_points = []
@@ -357,22 +284,16 @@ def plot_calibration(
     miscalibration_area = np.asarray(polygon_area_list).sum()
 
     # Annotate plot with the miscalibration area
-    plt.text(
+    ax.text(
         x=0.95,
         y=0.05,
         s="Miscalibration area = %.2f" % miscalibration_area,
         verticalalignment="bottom",
         horizontalalignment="right",
-        fontsize=fontsize,
+        fontsize="small",
     )
 
-    fig = plt.gcf()
-    fig.set_size_inches(5.0, 5.0)
-
-    plt.title("Average Calibration")
-
-    if show:
-        plt.show()
+    return ax
 
 
 def plot_adversarial_group_calibration(
@@ -382,19 +303,25 @@ def plot_adversarial_group_calibration(
     n_subset=None,
     cali_type="mean_abs",
     curve_label=None,
-    show=False,
     group_size=None,
     score_mean=None,
     score_stderr=None,
+    ax=None,
 ):
     """
     Plot adversarial group calibration plots by spanning group size
     between 0% to 100% of dataset size and recording the worst calibration
     occurred for each group size.
     """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 5))
+
+    # Optionally select a subset
     if n_subset is not None:
         [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
+    # Compute group_size, score_mean, score_stderr
     if (group_size is None) or (score_mean is None):
         # Compute adversarial group calibration
         adv_group_cali_namespace = adversarial_group_calibration(
@@ -418,86 +345,114 @@ def plot_adversarial_group_calibration(
     # Set label
     if curve_label is None:
         curve_label = "Predictor"
+
     # Plot
-    plt.figure()
-    plt.plot(group_size, score_mean, "-o", label=curve_label, c="#1f77b4")
-    plt.fill_between(
+    ax.plot(group_size, score_mean, "-o", label=curve_label, c="#1f77b4")
+    ax.fill_between(
         group_size,
         score_mean - score_stderr,
         score_mean + score_stderr,
         alpha=0.2,
     )
-    plt.xlabel("Group size")
-    plt.ylabel("Calibration error of worst group")
-    plt.axis("square")
+
+    # Format plot
     buff = 0.02
-    plt.xlim([0 - buff, 1 + buff])
-    plt.ylim([0 - buff, 0.5 + buff])
+    ax.set_xlim([0 - buff, 1 + buff])
+    ax.set_ylim([0 - buff, 0.5 + buff])
+    ax.set_xlabel("Group size")
+    ax.set_ylabel("Calibration Error of Worst Group")
+    ax.set_title("Adversarial Group Calibration")
 
-    fig = plt.gcf()
-    fig.set_size_inches(7.0, 5.0)
-
-    plt.title("Adversarial Group Calibration")
-
-    if show:
-        plt.show()
+    return ax
 
 
-def plot_sharpness(y_std, n_subset=None):
+def plot_sharpness(y_std, n_subset=None, ax=None):
     """
     Make sharpness plot using predicted std values (y_std).
     """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
     if n_subset is not None:
-        [y_std] = filter_subset([y_std], n_subset)
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Plot sharpness curve
-    figsize = (5, 5)
-    fontsize = 12
+    ax.hist(y_std, edgecolor="#1f77b4", color="#a5c8e1", density=True)
+
+    # Format plot
     xlim = (y_std.min(), y_std.max())
-    fig_sharp = plt.figure(figsize=figsize)
-    ax_sharp = sns.distplot(y_std, kde=False, norm_hist=True)
-    ax_sharp.set_xlim(xlim)
-    ax_sharp.set_xlabel("Predicted standard deviation")
-    ax_sharp.set_ylabel("Normalized frequency")
-    ax_sharp.set_yticklabels([])
-    ax_sharp.set_yticks([])
+    ax.set_xlim(xlim)
+    ax.set_xlabel("Predicted Standard Deviation")
+    ax.set_ylabel("Normalized Frequency")
+    ax.set_title("Sharpness")
+    ax.set_yticklabels([])
+    ax.set_yticks([])
 
     # Calculate and report sharpness
     sharpness = np.sqrt(np.mean(y_std ** 2))
-    _ = ax_sharp.axvline(x=sharpness, label="sharpness")
+    ax.axvline(x=sharpness, label="sharpness", color="k", linewidth=2, ls="--")
+
     if sharpness < (xlim[0] + xlim[1]) / 2:
         text = "\n  Sharpness = %.2f" % sharpness
         h_align = "left"
     else:
-        text = "\nSharpness = %.2f " % sharpness
+        text = "\nSharpness = %.2f  " % sharpness
         h_align = "right"
-    _ = ax_sharp.text(
+
+    ax.text(
         x=sharpness,
-        y=ax_sharp.get_ylim()[1],
+        y=ax.get_ylim()[1],
         s=text,
         verticalalignment="top",
         horizontalalignment=h_align,
-        fontsize=fontsize,
+        fontsize="small",
     )
 
+    return ax
 
-def plot_residuals_vs_stds(residuals, stds):
+
+def plot_residuals_vs_stds(y_pred, y_std, y_true, n_subset=None, ax=None):
+    """
+    Plot absolute value of residuals versus predictive standard deviations.
+    """
+    # Create ax if it doesn't exist
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 5))
+
+    # Optionally select a subset
+    if n_subset is not None:
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+
+    # Compute residuals
+    residuals = y_true - y_pred
+
     # Put stds on same scale as residuals
-    res_sum = np.sum(np.abs(residuals))
-    stds_scaled = (stds / np.sum(stds)) * res_sum
-    # Plot
-    plt.figure()
-    plt.plot(stds_scaled, np.abs(residuals), "x")
-    lims = [
-        np.min([plt.xlim()[0], plt.ylim()[0]]),
-        np.max([plt.xlim()[1], plt.ylim()[1]]),
-    ]
-    plt.plot(lims, lims, "--", label="Ideal")
-    plt.xlabel("Standard deviations (scaled)")
-    plt.ylabel("Residuals (absolute value)")
-    plt.axis("square")
-    plt.xlim(lims)
-    plt.ylim(lims)
+    residuals_sum = np.sum(np.abs(residuals))
+    y_std_scaled = (y_std / np.sum(y_std)) * residuals_sum
+
+    # Plot residuals vs standard devs
+    h1 = ax.plot(y_std_scaled, np.abs(residuals), "o", c="#1f77b4")
+
+    # Plot 45-degree line
+    xlims = ax.get_xlim()
+    ylims = ax.get_ylim()
+    lims = [np.min([xlims[0], ylims[0]]), np.max([xlims[1], ylims[1]])]
+    h2 = ax.plot(lims, lims, "--", c="#ff7f0e")
+
+    # Legend
+    ax.legend([h1[0], h2[0]], ["Predictions", "$f(x) = x$"], loc=4)
+
+    # Format plot
+    ax.set_xlabel("Standard Deviations (Scaled)")
+    ax.set_ylabel("Residuals (Absolute Value)")
+    ax.set_title("Residuals vs. Predictive Standard Deviations")
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+    ax.axis("square")
+
+    return ax
 
 
 def filter_subset(input_list, n_subset):
@@ -511,19 +466,3 @@ def filter_subset(input_list, n_subset):
         outp = inp[idx]
         output_list.append(outp)
     return output_list
-
-
-if __name__ == "__main__":
-    import data
-    import metrics_calibration
-
-    y_pred, y_std, y_true, x_true = data.synthetic_sine_heteroscedastic(100)
-    print(
-        metrics_calibration.adversarial_group_calibration(
-            y_pred, y_std, y_true, "root_mean_sq"
-        )
-    )
-    plot_calibration(y_pred, y_std, y_true, show=True)
-    plot_adversarial_group_calibration(y_pred, y_std, y_true, show=True)
-    plot_sharpness(y_std)
-    plt.show()
