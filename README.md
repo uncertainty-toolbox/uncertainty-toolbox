@@ -33,8 +33,13 @@ Uncertainty Toolbox contains:
 ## Installation
 
 Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this repo, and run:
-```
+```bash
 $ pip install -e .
+```
+
+To verify correct installation, you can run the test suite via:
+```bash
+$ bash shell/run_all_tests.sh
 ```
 
 
@@ -130,6 +135,11 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 | Before Recalibration | 0.20692 | 0.23003 | 0.20901 |
 | After Recalibration | 0.00157 | 0.00205 | 0.00132 |
 
+## Contributing
+
+We welcome and greatly appreciate contributions from the community! Please see
+our [contributing guidelines](CONTRIBUTING.md) for details on how to help out.
+
 
 ## Citation
 
@@ -165,4 +175,12 @@ Development of Uncertainty Toolbox is [supported by](docs/acknowledgments.md) th
     <img src="docs/assets/acks_doe.png" width="8%">
     &nbsp; &nbsp;
     <img src="docs/assets/acks_nsf.png" width="9%">
+    &nbsp; &nbsp;
+    <img src="docs/assets/cmu_logo.png" width="40%">
+    &nbsp; &nbsp;
+</p>
+
+<p>
+    <img src="docs/assets/stanford_logo.png" width="23%">
+    &nbsp; &nbsp;
 </p>
