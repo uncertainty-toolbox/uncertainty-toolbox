@@ -36,6 +36,8 @@ from .metrics_scoring_rule import (
     interval_score,
 )
 
+from .recalibration import iso_recal
+
 from .viz import (
     plot_xy,
     plot_intervals,
