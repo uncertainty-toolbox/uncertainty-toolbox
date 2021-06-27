@@ -27,7 +27,8 @@ Uncertainty Toolbox contains:
 * [Metrics](#metrics) for assessing quality of predictive uncertainty estimates.
 * [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
 * [Recalibration](#recalibration) methods for improving the calibration of a predictor.
-* Relevant [publications and references](docs/paper_list.md) on metrics and methods.
+* [Website](https://uncertainty-toolbox.github.io/) with a [tutorial](https://uncertainty-toolbox.github.io/tutorial/) on how to use Uncertainty Toolbox.
+* [Publications and references](docs/paper_list.md) on relevant methods and metrics.
 
 
 ## Installation
@@ -37,9 +38,9 @@ Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this r
 $ pip install -e .
 ```
 
-To verify correct installation, you can run the test suite via:
+To verify correct installation, you can run the [test suite](tests/) via:
 ```bash
-$ bash shell/run_all_tests.sh
+$ source shell/run_all_tests.sh
 ```
 
 
@@ -57,6 +58,11 @@ metrics = uct.metrics.get_all_metrics(predictions, predictions_std, y)
 This example computes [metrics](#metrics) for a vector of predicted values
 (`predictions`) and associated uncertainties (`predictions_std`, a vector of standard
 deviations), taken with respect to a corresponding set of ground truth values `y`.
+
+**Colab notebook:**
+You can also take a look at [this Colab
+notebook](https://colab.research.google.com/drive/1fg61MFmVmgFYM4CRm_aoiZ_WRdxbIhIe?usp=sharing),
+which walks through a use case of Uncertainty Toolbox.
 
 
 ## Metrics
@@ -176,11 +182,11 @@ Development of Uncertainty Toolbox is [supported by](docs/acknowledgments.md) th
     &nbsp; &nbsp;
     <img src="docs/assets/acks_nsf.png" width="9%">
     &nbsp; &nbsp;
-    <img src="docs/assets/cmu_logo.png" width="40%">
+    <img src="docs/assets/cmu_logo.png" width="35%">
     &nbsp; &nbsp;
 </p>
 
 <p>
-    <img src="docs/assets/stanford_logo.png" width="23%">
+    <img src="docs/assets/stanford_logo.png" width="20%">
     &nbsp; &nbsp;
 </p>
