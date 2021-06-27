@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/logo.png" width=750 /></p>
+<p align="center"><img src="docs/images/logo.svg" width=730 /></p>
 
 
 **Uncertainty Toolbox**
