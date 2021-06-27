@@ -80,7 +80,7 @@ quantify and compare predictive uncertainty estimates. For example, the
 ## Visualizations
 
 The following plots are a few of the [visualizations](uncertainty_toolbox/viz.py)
-provided by Uncertainty Toolbox. See [this example](examples/viz_synth_sine.py) for code
+provided by Uncertainty Toolbox. See [this example](examples/viz_readme_figures.py) for code
 to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
