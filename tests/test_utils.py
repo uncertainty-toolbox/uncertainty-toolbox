@@ -9,24 +9,24 @@ from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 def test_is_flat_same_shape_wrong_type():
     wrong = [1, 2, 3]
-    with pytest.raises(SystemExit):
+    with pytest.raises(AssertionError):
         assert_is_flat_same_shape(wrong)
 
 def test_is_flat_same_shape_wrong_shape():
     wrong = np.arange(9).reshape(3, 3)
-    with pytest.raises(SystemExit):
+    with pytest.raises(AssertionError):
         assert_is_flat_same_shape(wrong)
 
 def test_is_flat_same_shape_wrong_type_and_shape():
     first = np.arange(3)
     wrong = np.arange(3).reshape(1, 3)
-    with pytest.raises(SystemExit):
+    with pytest.raises(AssertionError):
         assert_is_flat_same_shape(first, wrong)
 
 def test_is_flat_same_shape_not_all_same():
     first = np.arange(3)
     wrong = np.arange(5)
-    with pytest.raises(SystemExit):
+    with pytest.raises(AssertionError):
         assert_is_flat_same_shape(first, wrong)
 
 def test_is_flat_same_shape_correct():
