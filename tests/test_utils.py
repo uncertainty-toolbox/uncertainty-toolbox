@@ -17,6 +17,12 @@ def test_is_flat_same_shape_wrong_shape():
     with pytest.raises(AssertionError):
         assert_is_flat_same_shape(wrong)
 
+def test_is_flat_same_shape_wrong_type_and_shape():
+    first = np.arange(3)
+    wrong = np.arange(3).reshape(1, 3)
+    with pytest.raises(AssertionError):
+        assert_is_flat_same_shape(first, wrong)
+
 def test_is_flat_same_shape_not_all_same():
     first = np.arange(3)
     wrong = np.arange(5)
