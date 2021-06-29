@@ -2,7 +2,6 @@
 Util functions for the toolbox.
 """
 
-import sys
 import numpy as np
 
 
