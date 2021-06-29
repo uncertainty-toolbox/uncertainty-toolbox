@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/logo.png" width=700 /></p>
+<p align="center"><img src="docs/images/logo.svg" width=730 /></p>
 
 
 **Uncertainty Toolbox**
@@ -27,14 +27,20 @@ Uncertainty Toolbox contains:
 * [Metrics](#metrics) for assessing quality of predictive uncertainty estimates.
 * [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
 * [Recalibration](#recalibration) methods for improving the calibration of a predictor.
-* Relevant [publications and references](docs/paper_list.md) on metrics and methods.
+* [Website](https://uncertainty-toolbox.github.io/) with a [tutorial](https://uncertainty-toolbox.github.io/tutorial/) on how to use Uncertainty Toolbox.
+* [Publications and references](docs/paper_list.md) on relevant methods and metrics.
 
 
 ## Installation
 
 Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this repo, and run:
-```
+```bash
 $ pip install -e .
+```
+
+To verify correct installation, you can run the [test suite](tests/) via:
+```bash
+$ source shell/run_all_tests.sh
 ```
 
 
@@ -53,6 +59,11 @@ This example computes [metrics](#metrics) for a vector of predicted values
 (`predictions`) and associated uncertainties (`predictions_std`, a vector of standard
 deviations), taken with respect to a corresponding set of ground truth values `y`.
 
+**Colab notebook:**
+You can also take a look at [this Colab
+notebook](https://colab.research.google.com/drive/1fg61MFmVmgFYM4CRm_aoiZ_WRdxbIhIe?usp=sharing),
+which walks through a use case of Uncertainty Toolbox.
+
 
 ## Metrics
 
@@ -69,7 +80,7 @@ quantify and compare predictive uncertainty estimates. For example, the
 ## Visualizations
 
 The following plots are a few of the [visualizations](uncertainty_toolbox/viz.py)
-provided by Uncertainty Toolbox. See [this example](examples/viz_synth_sine.py) for code
+provided by Uncertainty Toolbox. See [this example](examples/viz_readme_figures.py) for code
 to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
@@ -130,6 +141,11 @@ See [this example](examples/viz_recalibrate.py) for code to reproduce these plot
 | Before Recalibration | 0.20692 | 0.23003 | 0.20901 |
 | After Recalibration | 0.00157 | 0.00205 | 0.00132 |
 
+## Contributing
+
+We welcome and greatly appreciate contributions from the community! Please see
+our [contributing guidelines](CONTRIBUTING.md) for details on how to help out.
+
 
 ## Citation
 
@@ -165,4 +181,12 @@ Development of Uncertainty Toolbox is [supported by](docs/acknowledgments.md) th
     <img src="docs/assets/acks_doe.png" width="8%">
     &nbsp; &nbsp;
     <img src="docs/assets/acks_nsf.png" width="9%">
+    &nbsp; &nbsp;
+    <img src="docs/assets/cmu_logo.png" width="35%">
+    &nbsp; &nbsp;
+</p>
+
+<p>
+    <img src="docs/assets/stanford_logo.png" width="20%">
+    &nbsp; &nbsp;
 </p>

@@ -1,6 +1,6 @@
 # Contributing
 
-We welcome and greaty appreciate contributions from the community! You can
+We welcome and greatly appreciate contributions from the community! You can
 help make the Uncertainty Toolbox even better by either
 
 1. [Creating a PR](#create-a-pr) to fix a bug or add functionality.
