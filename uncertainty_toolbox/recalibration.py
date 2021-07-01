@@ -1,9 +1,11 @@
 """
 Recalibrating uncertainty estimates.
 """
-
+import tqdm
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
+import uncertainty_toolbox as uct
+from scipy import special
 
 
 def get_q_idx(exp_props, q):
@@ -101,3 +103,66 @@ def iso_recal(exp_props, obs_props):
         raise RuntimeError("Failed to fit isotonic regression model")
 
     return iso_model
+
+
+def compute_std_ratio(
+    recal_model, exp_props=np.linspace(0.01, 0.99, 1000), reduce="mean"
+):
+    ratios = special.erfinv(
+        2 * recal_model.predict(exp_props) - 1
+    ) / special.erfinv(2 * exp_props - 1)
+
+    ratios = ratios[np.isfinite(ratios)]
+
+    if reduce == "mean":
+        ratio = np.nanmean(ratios)
+    elif reduce == "median":
+        ratio = np.nanmedian(ratios)
+    else:
+        raise RuntimeError("Wrong reduce option")
+
+    return ratio
+
+
+def get_recalibration_ratio(
+    y_mean, y_std, y_true, criterion="ma_cal", search_fidelity=500
+):
+    (
+        exp_props,
+        obs_props,
+    ) = uct.metrics_calibration.get_proportion_lists_vectorized(
+        y_mean, y_std, y_true
+    )
+    recal_model = iso_recal(exp_props, obs_props)
+
+    init_ratio = compute_std_ratio(recal_model)
+
+    ratio_candidates = np.linspace(
+        init_ratio / 5.0, init_ratio * 5, search_fidelity
+    )
+
+    cals = []
+    for ratio in tqdm.tqdm(ratio_candidates, ncols=80, desc="Grid searching for recalibration ratio"):
+        if criterion == "ma_cal":
+            curr_cal = uct.metrics.mean_absolute_calibration_error(
+                y_mean, ratio * y_std, y_true
+            )
+        elif criterion == "rms_cal":
+            curr_cal = uct.metrics.root_mean_squared_calibration_error(
+                y_mean, ratio * y_std, y_true
+            )
+        elif criterion == "miscal":
+            curr_cal = uct.metrics.miscalibration_area(
+                y_mean, ratio * y_std, y_true
+            )
+        else:
+            raise RuntimeError("Wrong criterion option")
+
+        cals.append(curr_cal)
+
+    out = {
+        "initial_ratio": init_ratio,
+        "recal_ratio": ratio_candidates[np.argmin(cals)],
+    }
+
+    return out
