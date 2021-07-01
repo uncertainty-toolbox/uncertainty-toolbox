@@ -6,6 +6,7 @@ import numpy as np
 from sklearn.isotonic import IsotonicRegression
 import uncertainty_toolbox as uct
 from scipy import special
+from scipy.optimize import minimize_scalar
 
 
 def get_q_idx(exp_props, q):
@@ -105,12 +106,10 @@ def iso_recal(exp_props, obs_props):
     return iso_model
 
 
-def compute_std_ratio(
-    recal_model, exp_props=np.linspace(0.01, 0.99, 1000), reduce="mean"
-):
-    ratios = special.erfinv(
-        2 * recal_model.predict(exp_props) - 1
-    ) / special.erfinv(2 * exp_props - 1)
+def compute_std_ratio(exp_props, obs_props, reduce="mean"):
+    ratios = special.erfinv(2 * exp_props - 1) / special.erfinv(
+        2 * obs_props - 1
+    )
 
     ratios = ratios[np.isfinite(ratios)]
 
@@ -133,16 +132,19 @@ def get_recalibration_ratio(
     ) = uct.metrics_calibration.get_proportion_lists_vectorized(
         y_mean, y_std, y_true
     )
-    recal_model = iso_recal(exp_props, obs_props)
 
-    init_ratio = compute_std_ratio(recal_model)
+    init_ratio = compute_std_ratio(exp_props, obs_props)
 
     ratio_candidates = np.linspace(
         init_ratio / 5.0, init_ratio * 5, search_fidelity
     )
 
     cals = []
-    for ratio in tqdm.tqdm(ratio_candidates, ncols=80, desc="Grid searching for recalibration ratio"):
+    for ratio in tqdm.tqdm(
+        ratio_candidates,
+        ncols=80,
+        desc="Grid searching for recalibration ratio",
+    ):
         if criterion == "ma_cal":
             curr_cal = uct.metrics.mean_absolute_calibration_error(
                 y_mean, ratio * y_std, y_true
@@ -163,6 +165,36 @@ def get_recalibration_ratio(
     out = {
         "initial_ratio": init_ratio,
         "recal_ratio": ratio_candidates[np.argmin(cals)],
+        "trace": (ratio_candidates, cals),
     }
 
     return out
+
+
+def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
+    def obj(ratio):
+        if criterion == "ma_cal":
+            curr_cal = uct.metrics.mean_absolute_calibration_error(
+                y_mean, ratio * y_std, y_true
+            )
+        elif criterion == "rms_cal":
+            curr_cal = uct.metrics.root_mean_squared_calibration_error(
+                y_mean, ratio * y_std, y_true
+            )
+        elif criterion == "miscal":
+            curr_cal = uct.metrics.miscalibration_area(
+                y_mean, ratio * y_std, y_true
+            )
+        else:
+            raise RuntimeError("Wrong criterion option")
+
+        return curr_cal
+
+    bounds = (1e-3, 1e3)
+
+    result = minimize_scalar(obj, bounds=bounds)
+    if not result.success:
+        raise Warning("Optimization did not succeed")
+    ratio = result.x
+
+    return ratio
