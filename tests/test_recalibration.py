@@ -87,3 +87,27 @@ def test_miscal_area_recalibration_on_test_set(supply_test_set):
     assert np.abs(recal_test_miscal_area - 0.0029569160997732057) < 1e-6
     for idx in range(1, recal_exp_props.shape[0]):
         assert recal_exp_props[idx - 1] <= recal_exp_props[idx]
+
+
+def test_mace_std_recalibration_on_test_set(supply_test_set):
+    """
+    Test standard deviation recalibration on mean absolute calibration error
+    on the test set for some dummy values.
+    """
+    pass
+
+
+def test_rmce_std_recalibration_on_test_set(supply_test_set):
+    """
+    Test standard deviation recalibration on root mean squared calibration error
+    on the test set for some dummy values.
+    """
+    pass
+
+
+def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
+    """
+    Test standard deviation recalibration on miscalibration area 
+    on the test set for some dummy values.
+    """
+    pass
