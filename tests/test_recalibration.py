@@ -4,7 +4,10 @@ Tests for recalibration procedures.
 import numpy as np
 import pytest
 
-from uncertainty_toolbox.recalibration import iso_recal
+from uncertainty_toolbox.recalibration import (
+    iso_recal, 
+    optimize_recalibration_ratio,
+)
 from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
@@ -107,7 +110,7 @@ def test_rmce_std_recalibration_on_test_set(supply_test_set):
 
 def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
     """
-    Test standard deviation recalibration on miscalibration area 
+    Test standard deviation recalibration on miscalibration area
     on the test set for some dummy values.
     """
     pass
