@@ -51,14 +51,21 @@ for i, pred_mean in enumerate(pred_mean_list):
         print("Before Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+        fig, axes = plt.subplots(1, 2, figsize=(11, 5))
         uct.plot_calibration(
             pred_mean,
             pred_std,
             y,
             exp_props=exp_props,
             obs_props=obs_props,
-            ax=ax,
+            ax=axes.flatten()[0],
+        )
+        uct.plot_xy(
+            pred_mean,
+            pred_std,
+            y,
+            x,
+            ax=axes.flatten()[1],
         )
         neatplot.save_figure(f"before_recal_{j}", "svg")
 
@@ -76,11 +83,18 @@ for i, pred_mean in enumerate(pred_mean_list):
         print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+        fig, axes = plt.subplots(1, 2, figsize=(11, 5))
         uct.plot_calibration(
             pred_mean,
             recal_ratio * pred_std,
             y,
-            ax=ax,
+            ax=axes.flatten()[0],
+        )
+        uct.plot_xy(
+            pred_mean,
+            recal_ratio * pred_std,
+            y,
+            x,
+            ax=axes.flatten()[1],
         )
         neatplot.save_figure(f"after_recal_{j}", "svg")
