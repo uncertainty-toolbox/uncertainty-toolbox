@@ -106,23 +106,6 @@ def iso_recal(exp_props, obs_props):
     return iso_model
 
 
-def compute_std_ratio(exp_props, obs_props, reduce="mean"):
-    ratios = special.erfinv(2 * exp_props - 1) / special.erfinv(
-        2 * obs_props - 1
-    )
-
-    ratios = ratios[np.isfinite(ratios)]
-
-    if reduce == "mean":
-        ratio = np.nanmean(ratios)
-    elif reduce == "median":
-        ratio = np.nanmedian(ratios)
-    else:
-        raise RuntimeError("Wrong reduce option")
-
-    return ratio
-
-
 def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
     if criterion == "ma_cal":
         cal_fn = uct.metrics.mean_absolute_calibration_error
