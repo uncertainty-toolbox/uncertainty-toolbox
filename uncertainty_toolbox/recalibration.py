@@ -117,11 +117,12 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
         raise RuntimeError("Wrong criterion option")
 
     def obj(ratio):
+        print(ratio)
         curr_cal = cal_fn(y_mean, ratio * y_std, y_true)
         return curr_cal
 
-    bounds = (1e-4, 1e4)
-    result = minimize_scalar(obj, bounds=bounds)
+    bounds = (1e-3, 1e3)
+    result = minimize_scalar(fun=obj, bounds=bounds)
     opt_ratio = result.x
 
     if not result.success:
