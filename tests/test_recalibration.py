@@ -3,6 +3,7 @@ Tests for recalibration procedures.
 """
 import numpy as np
 import pytest
+import random
 
 from uncertainty_toolbox.recalibration import (
     iso_recal, 
@@ -97,6 +98,9 @@ def test_mace_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on mean absolute calibration error
     on the test set for some dummy values.
     """
+    random.seed(0)
+    np.random.seed(seed=0)
+
     y_pred, y_std, y_true = supply_test_set
     ma_cal_ratio = optimize_recalibration_ratio(y_pred, y_std, y_true, criterion="ma_cal")
     recal_ma_cal = mean_absolute_calibration_error(
@@ -120,6 +124,9 @@ def test_rmce_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on root mean squared calibration error
     on the test set for some dummy values.
     """
+    random.seed(0)
+    np.random.seed(seed=0)
+
     y_pred, y_std, y_true = supply_test_set
     rms_cal_ratio = optimize_recalibration_ratio(
         y_pred, y_std, y_true, criterion="rms_cal"
@@ -145,6 +152,9 @@ def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on miscalibration area
     on the test set for some dummy values.
     """
+    random.seed(0)
+    np.random.seed(seed=0)
+
     y_pred, y_std, y_true = supply_test_set
     miscal_ratio = optimize_recalibration_ratio(
         y_pred, y_std, y_true, criterion="miscal"
