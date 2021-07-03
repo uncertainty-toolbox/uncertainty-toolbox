@@ -27,7 +27,6 @@ savefig = True
 
 # List of predictive means and standard deviations
 pred_mean_list = [f]
-
 pred_std_list = [
     std * 0.5,  # overconfident
     std * 2.0,  # underconfident
