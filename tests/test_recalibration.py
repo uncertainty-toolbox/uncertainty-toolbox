@@ -97,7 +97,22 @@ def test_mace_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on mean absolute calibration error
     on the test set for some dummy values.
     """
-    pass
+    y_pred, y_std, y_true = supply_test_set
+    ma_cal_ratio = optimize_recalibration_ratio(y_pred, y_std, y_true, criterion="ma_cal")
+    recal_ma_cal = mean_absolute_calibration_error(
+        y_pred, ma_cal_ratio * y_std, y_true
+    )
+    recal_rms_cal = root_mean_squared_calibration_error(
+        y_pred, ma_cal_ratio * y_std, y_true
+    )
+    recal_miscal = miscalibration_area(
+        y_pred, ma_cal_ratio * y_std, y_true
+    )
+    
+    assert np.abs(ma_cal_ratio - 0.33215708813773176) < 1e-6
+    assert np.abs(recal_ma_cal - 0.06821616161616162) < 1e-6
+    assert np.abs(recal_rms_cal - 0.08800130087804929) < 1e-6
+    assert np.abs(recal_miscal - 0.06886262626262629) < 1e-6
 
 
 def test_rmce_std_recalibration_on_test_set(supply_test_set):
@@ -105,7 +120,24 @@ def test_rmce_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on root mean squared calibration error
     on the test set for some dummy values.
     """
-    pass
+    y_pred, y_std, y_true = supply_test_set
+    rms_cal_ratio = optimize_recalibration_ratio(
+        y_pred, y_std, y_true, criterion="rms_cal"
+    )
+    recal_ma_cal = mean_absolute_calibration_error(
+        y_pred, rms_cal_ratio * y_std, y_true
+    )
+    recal_rms_cal = root_mean_squared_calibration_error(
+        y_pred, rms_cal_ratio * y_std, y_true
+    )
+    recal_miscal = miscalibration_area(
+        y_pred, rms_cal_ratio * y_std, y_true
+    )
+    
+    assert np.abs(rms_cal_ratio - 0.34900989073212507) < 1e-6
+    assert np.abs(recal_ma_cal - 0.06945555555555555) < 1e-6
+    assert np.abs(recal_rms_cal - 0.08570902541177935) < 1e-6
+    assert np.abs(recal_miscal - 0.07011706864564003) < 1e-6
 
 
 def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
@@ -113,4 +145,21 @@ def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
     Test standard deviation recalibration on miscalibration area
     on the test set for some dummy values.
     """
-    pass
+    y_pred, y_std, y_true = supply_test_set
+    miscal_ratio = optimize_recalibration_ratio(
+        y_pred, y_std, y_true, criterion="miscal"
+    )
+    recal_ma_cal = mean_absolute_calibration_error(
+        y_pred, miscal_ratio * y_std, y_true
+    )
+    recal_rms_cal = root_mean_squared_calibration_error(
+        y_pred, miscal_ratio * y_std, y_true
+    )
+    recal_miscal = miscalibration_area(
+        y_pred, miscal_ratio * y_std, y_true
+    )
+    
+    assert np.abs(miscal_ratio - 0.3321912522557988) < 1e-6
+    assert np.abs(recal_ma_cal - 0.06821616161616162) < 1e-6
+    assert np.abs(recal_rms_cal - 0.08800130087804929) < 1e-6
+    assert np.abs(recal_miscal - 0.06886262626262629) < 1e-6
