@@ -32,6 +32,9 @@ pred_std_list = [
     std * 2.0,  # underconfident
 ]
 
+# ylims for xy plot
+ylims_xy = (-2.51, 3.31)
+
 # Loop through, make plots, and compute metrics
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
@@ -65,7 +68,9 @@ for i, pred_mean in enumerate(pred_mean_list):
             y,
             x,
             ax=axes.flatten()[1],
+            ylims=ylims_xy,
         )
+
         neatplot.save_figure(f"before_recal_{j}", "svg")
 
         # After recalibration
@@ -95,5 +100,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             y,
             x,
             ax=axes.flatten()[1],
+            ylims=ylims_xy,
         )
+
         neatplot.save_figure(f"after_recal_{j}", "svg")
