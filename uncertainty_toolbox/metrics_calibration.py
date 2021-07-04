@@ -266,7 +266,7 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
 
     num_within_quantile = 0
     for resid in normalized_residuals:
-        if lower_bound <= resid <= upper_bound:
+        if lower_bound <= resid and resid <= upper_bound:
             num_within_quantile += 1.0
     proportion = num_within_quantile / len(residuals)
 
