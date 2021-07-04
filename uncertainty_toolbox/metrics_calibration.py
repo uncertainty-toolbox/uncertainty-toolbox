@@ -1,9 +1,8 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-from argparse import Namespace
-import sys
 
+from argparse import Namespace
 import numpy as np
 from scipy import stats
 from shapely.geometry import Polygon, LineString
@@ -263,12 +262,7 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
     # Compute proportion of normalized residuals within lower to upper bound
     residuals = y_pred - y_true
 
-    with np.errstate(divide="raise"):
-        try:
-            normalized_residuals = residuals.reshape(-1) / y_std.reshape(-1)
-        except FloatingPointError:
-            y_std = np.where(y_std == 0, sys.float_info.min, y_std)
-            normalized_residuals = residuals.reshape(-1) / y_std.reshape(-1)
+    normalized_residuals = residuals.reshape(-1) / y_std.reshape(-1)
 
     num_within_quantile = 0
     for resid in normalized_residuals:
