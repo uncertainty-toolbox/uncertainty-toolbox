@@ -109,10 +109,13 @@ def iso_recal(exp_props, obs_props):
 def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
     if criterion == "ma_cal":
         cal_fn = uct.metrics.mean_absolute_calibration_error
+        worst_cal = 0.5
     elif criterion == "rms_cal":
         cal_fn = uct.metrics.root_mean_squared_calibration_error
+        worst_cal = np.sqrt(1.0/3.0)
     elif criterion == "miscal":
         cal_fn = uct.metrics.miscalibration_area
+        worst_cal = 0.5
     else:
         raise RuntimeError("Wrong criterion option")
 
@@ -120,7 +123,7 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
 
         # If ratio is 0, return worst-possible calibration metric
         if ratio == 0:
-            return 1.0
+            return worst_cal
 
         curr_cal = cal_fn(y_mean, ratio * y_std, y_true)
         return curr_cal
