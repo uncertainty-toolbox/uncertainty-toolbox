@@ -271,3 +271,36 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
     proportion = num_within_quantile / len(residuals)
 
     return proportion
+
+
+def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
+    """
+    For a specified quantile level q (must be a float, or a singleton),
+    return the centered prediction interval corresponding
+    to the pair of quantiles at levels (0.5-q/2) and (0.5+q/2),
+    i.e. interval that has nominal coverage equal to q.
+    """
+
+    if isinstance(quantile, float):
+        quantile = np.array([quantile])
+
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std)
+    assert_is_flat_same_shape(quantile)
+    assert quantile.size == 1
+
+    # if recal_model is not None, calculate recalibrated quantile
+    if recal_model is not None:
+        quantile = recal_model.predict(quantile)
+
+    # Computer lower and upper bound for quantile
+    norm = stats.norm(loc=y_pred, scale=y_std)
+    lower_bound = norm.ppf(0.5 - quantile / 2)
+    upper_bound = norm.ppf(0.5 + quantile / 2)
+
+    bounds = {
+        "upper": upper_bound,
+        "lower": lower_bound,
+    }
+
+    return bounds
