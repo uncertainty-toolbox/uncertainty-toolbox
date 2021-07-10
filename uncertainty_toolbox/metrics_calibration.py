@@ -289,6 +289,9 @@ def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
     assert_is_flat_same_shape(quantile)
     assert quantile.size == 1
 
+    if not np.logical_and((0.0 < quantile.item()), (quantile.item() < 1.0)):
+       raise ValueError("Quantile must be greater than 0.0 and less than 1.0") 
+
     # if recal_model is not None, calculate recalibrated quantile
     if recal_model is not None:
         quantile = recal_model.predict(quantile)
