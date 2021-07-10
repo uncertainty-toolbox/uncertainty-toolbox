@@ -71,7 +71,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             ylims=ylims_xy,
         )
 
-        neatplot.save_figure(f"before_recal_{j}", "svg")
+        neatplot.save_figure(f"before_recal_{j}", "png")
 
         # After recalibration
         recal_ratio = uct.recalibration.optimize_recalibration_ratio(
@@ -103,4 +103,4 @@ for i, pred_mean in enumerate(pred_mean_list):
             ylims=ylims_xy,
         )
 
-        neatplot.save_figure(f"after_recal_{j}", "svg")
+        neatplot.save_figure(f"after_recal_{j}", "png")
