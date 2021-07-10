@@ -27,6 +27,7 @@ from .metrics_calibration import (
     get_proportion_lists_vectorized,
     get_proportion_lists,
     get_proportion_in_interval,
+    get_prediction_interval,
 )
 
 from .metrics_scoring_rule import (
@@ -36,7 +37,10 @@ from .metrics_scoring_rule import (
     interval_score,
 )
 
-from .recalibration import iso_recal
+from .recalibration import (
+    iso_recal,
+    optimize_recalibration_ratio,
+)
 
 from .viz import (
     plot_xy,
