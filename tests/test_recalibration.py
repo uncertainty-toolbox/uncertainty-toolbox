@@ -6,7 +6,7 @@ import pytest
 import random
 
 from uncertainty_toolbox.recalibration import (
-    iso_recal, 
+    iso_recal,
     optimize_recalibration_ratio,
 )
 from uncertainty_toolbox.metrics_calibration import (
@@ -14,6 +14,7 @@ from uncertainty_toolbox.metrics_calibration import (
     mean_absolute_calibration_error,
     miscalibration_area,
     get_proportion_lists_vectorized,
+    get_prediction_interval,
 )
 
 
@@ -102,17 +103,17 @@ def test_mace_std_recalibration_on_test_set(supply_test_set):
     np.random.seed(seed=0)
 
     y_pred, y_std, y_true = supply_test_set
-    ma_cal_ratio = optimize_recalibration_ratio(y_pred, y_std, y_true, criterion="ma_cal")
+    ma_cal_ratio = optimize_recalibration_ratio(
+        y_pred, y_std, y_true, criterion="ma_cal"
+    )
     recal_ma_cal = mean_absolute_calibration_error(
         y_pred, ma_cal_ratio * y_std, y_true
     )
     recal_rms_cal = root_mean_squared_calibration_error(
         y_pred, ma_cal_ratio * y_std, y_true
     )
-    recal_miscal = miscalibration_area(
-        y_pred, ma_cal_ratio * y_std, y_true
-    )
-    
+    recal_miscal = miscalibration_area(y_pred, ma_cal_ratio * y_std, y_true)
+
     assert np.abs(ma_cal_ratio - 0.33215708813773176) < 1e-6
     assert np.abs(recal_ma_cal - 0.06821616161616162) < 1e-6
     assert np.abs(recal_rms_cal - 0.08800130087804929) < 1e-6
@@ -137,10 +138,8 @@ def test_rmce_std_recalibration_on_test_set(supply_test_set):
     recal_rms_cal = root_mean_squared_calibration_error(
         y_pred, rms_cal_ratio * y_std, y_true
     )
-    recal_miscal = miscalibration_area(
-        y_pred, rms_cal_ratio * y_std, y_true
-    )
-    
+    recal_miscal = miscalibration_area(y_pred, rms_cal_ratio * y_std, y_true)
+
     assert np.abs(rms_cal_ratio - 0.34900989073212507) < 1e-6
     assert np.abs(recal_ma_cal - 0.06945555555555555) < 1e-6
     assert np.abs(recal_rms_cal - 0.08570902541177935) < 1e-6
@@ -165,11 +164,47 @@ def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
     recal_rms_cal = root_mean_squared_calibration_error(
         y_pred, miscal_ratio * y_std, y_true
     )
-    recal_miscal = miscalibration_area(
-        y_pred, miscal_ratio * y_std, y_true
-    )
-    
+    recal_miscal = miscalibration_area(y_pred, miscal_ratio * y_std, y_true)
+
     assert np.abs(miscal_ratio - 0.3321912522557988) < 1e-6
     assert np.abs(recal_ma_cal - 0.06821616161616162) < 1e-6
     assert np.abs(recal_rms_cal - 0.08800130087804929) < 1e-6
     assert np.abs(recal_miscal - 0.06886262626262629) < 1e-6
+
+
+def test_recalibrated_prediction_interval_on_test_set(supply_test_set):
+    """
+    Test standard deviation recalibration on miscalibration area
+    on the test set for some dummy values.
+    """
+    random.seed(0)
+    np.random.seed(seed=0)
+
+    y_pred, y_std, y_true = supply_test_set
+    test_exp_props, test_obs_props = get_proportion_lists_vectorized(
+        y_pred, y_std, y_true, num_bins=100, recal_model=None
+    )
+    recal_model = iso_recal(test_exp_props, test_obs_props)
+
+    test_quantile_prop_list = [
+        (0.01, 0.0, 0.0),
+        (0.25, 0.69, 0.25),
+        (0.5, 0.86, 0.5),
+        (0.75, 0.92, 0.75),
+        (0.99, 0.97, 0.97),
+    ]
+
+    for (q, test_orig_prop, test_recal_prop) in test_quantile_prop_list:
+        orig_bounds = get_prediction_interval(y_pred, y_std, q, None)
+        recal_bounds = get_prediction_interval(y_pred, y_std, q, recal_model)
+
+        orig_prop = np.mean(
+            (orig_bounds["lower"] <= y_true) * (y_true <= orig_bounds["upper"])
+        )
+        recal_prop = np.mean(
+            (recal_bounds["lower"] <= y_true)
+            * (y_true <= recal_bounds["upper"])
+        )
+
+        assert np.max(np.abs(test_orig_prop - orig_prop)) < 1e-6
+        assert np.max(np.abs(test_recal_prop - recal_prop)) < 1e-6
