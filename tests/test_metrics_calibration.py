@@ -62,7 +62,6 @@ def test_get_proportion_lists_vectorized_on_test_set(supply_test_set):
         np.max(np.abs(np.unique(test_exp_props) - np.linspace(0, 1, 100)))
         < 1e-6
     )
-    print(test_obs_props)
     assert (
         np.max(
             np.abs(
@@ -210,7 +209,6 @@ def test_adversarial_group_calibration_on_test_set(supply_test_set):
         verbose=False
     )
 
-    print(test_out.score_mean)
     assert np.max(np.abs(test_out.group_size - np.linspace(0, 1, 10))) < 1e-6
     assert test_out.score_mean[0] < 0.5
     assert np.abs(test_out.score_mean[-1] - 0.37333333) < 1e-6
