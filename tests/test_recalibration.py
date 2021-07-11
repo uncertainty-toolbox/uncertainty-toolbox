@@ -26,7 +26,7 @@ def supply_test_set():
     return y_pred, y_std, y_true
 
 
-def test_mace_recalibration_on_test_set(supply_test_set):
+def test_recal_model_mace_criterion_on_test_set(supply_test_set):
     """
     Test recalibration on mean absolute calibration error on the test set
     for some dummy values.
@@ -48,7 +48,7 @@ def test_mace_recalibration_on_test_set(supply_test_set):
         assert recal_exp_props[idx - 1] <= recal_exp_props[idx]
 
 
-def test_rmce_recalibration_on_test_set(supply_test_set):
+def test_recal_model_rmce_criterion_on_test_set(supply_test_set):
     """
     Test recalibration on root mean squared calibration error on the test set
     for some dummy values.
@@ -71,7 +71,7 @@ def test_rmce_recalibration_on_test_set(supply_test_set):
         assert recal_exp_props[idx - 1] <= recal_exp_props[idx]
 
 
-def test_miscal_area_recalibration_on_test_set(supply_test_set):
+def test_recal_model_miscal_area_criterion_on_test_set(supply_test_set):
     """
     Test recalibration on miscalibration area on the test set
     for some dummy values.
@@ -94,7 +94,7 @@ def test_miscal_area_recalibration_on_test_set(supply_test_set):
         assert recal_exp_props[idx - 1] <= recal_exp_props[idx]
 
 
-def test_mace_std_recalibration_on_test_set(supply_test_set):
+def test_optimize_recalibration_ratio_mace_criterion(supply_test_set):
     """
     Test standard deviation recalibration on mean absolute calibration error
     on the test set for some dummy values.
@@ -120,7 +120,7 @@ def test_mace_std_recalibration_on_test_set(supply_test_set):
     assert np.abs(recal_miscal - 0.06886262626262629) < 1e-6
 
 
-def test_rmce_std_recalibration_on_test_set(supply_test_set):
+def test_optimize_recalibration_ratio_rmce_criterion(supply_test_set):
     """
     Test standard deviation recalibration on root mean squared calibration error
     on the test set for some dummy values.
@@ -146,7 +146,7 @@ def test_rmce_std_recalibration_on_test_set(supply_test_set):
     assert np.abs(recal_miscal - 0.07011706864564003) < 1e-6
 
 
-def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
+def test_optimize_recalibration_ratio_miscal_area_criterion(supply_test_set):
     """
     Test standard deviation recalibration on miscalibration area
     on the test set for some dummy values.
@@ -172,7 +172,7 @@ def test_miscal_area_std_recalibration_on_test_set(supply_test_set):
     assert np.abs(recal_miscal - 0.06886262626262629) < 1e-6
 
 
-def test_recalibrated_prediction_interval_on_test_set(supply_test_set):
+def test_get_prediction_interval_recalibrated(supply_test_set):
     """
     Test standard deviation recalibration on miscalibration area
     on the test set for some dummy values.
