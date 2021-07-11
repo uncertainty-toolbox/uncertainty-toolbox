@@ -1,5 +1,7 @@
 """
-Examples of code for recalibration.
+This script produces the recalibration figures that appear in the README Recalibration
+section:
+https://github.com/uncertainty-toolbox/uncertainty-toolbox/blob/recal/README.md#recalibration
 """
 
 import numpy as np
