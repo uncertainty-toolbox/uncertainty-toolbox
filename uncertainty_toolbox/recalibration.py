@@ -4,9 +4,9 @@ Recalibrating uncertainty estimates.
 import tqdm
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
-import uncertainty_toolbox as uct
 from scipy import special
 from scipy.optimize import minimize_scalar
+import uncertainty_toolbox as uct
 
 
 def get_q_idx(exp_props, q):
