@@ -1,10 +1,9 @@
 """
 Recalibrating uncertainty estimates.
 """
-import tqdm
+
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
-from scipy import special
 from scipy.optimize import minimize_scalar
 import uncertainty_toolbox as uct
 
@@ -107,6 +106,10 @@ def iso_recal(exp_props, obs_props):
 
 
 def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
+    """
+    Return scale factor (opt_ratio), which rescales y_std to be better calibrated, i.e.
+    updated standard deviation can be written: opt_ratio * y_std.
+    """
     if criterion == "ma_cal":
         cal_fn = uct.metrics.mean_absolute_calibration_error
         worst_cal = 0.5
