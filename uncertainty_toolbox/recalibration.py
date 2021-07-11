@@ -4,6 +4,8 @@ Recalibrating uncertainty estimates.
 
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
+from scipy.optimize import minimize_scalar
+import uncertainty_toolbox as uct
 
 
 def get_q_idx(exp_props, q):
@@ -101,3 +103,46 @@ def iso_recal(exp_props, obs_props):
         raise RuntimeError("Failed to fit isotonic regression model")
 
     return iso_model
+
+
+def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
+    """
+    Return scale factor (opt_ratio), which rescales y_std to be better calibrated, i.e.
+    updated standard deviation can be written: opt_ratio * y_std.
+    """
+    if criterion == "ma_cal":
+        cal_fn = uct.metrics.mean_absolute_calibration_error
+        worst_cal = 0.5
+    elif criterion == "rms_cal":
+        cal_fn = uct.metrics.root_mean_squared_calibration_error
+        worst_cal = np.sqrt(1.0/3.0)
+    elif criterion == "miscal":
+        cal_fn = uct.metrics.miscalibration_area
+        worst_cal = 0.5
+    else:
+        raise RuntimeError("Wrong criterion option")
+
+    def obj(ratio):
+
+        # If ratio is 0, return worst-possible calibration metric
+        if ratio == 0:
+            return worst_cal
+
+        curr_cal = cal_fn(y_mean, ratio * y_std, y_true)
+        return curr_cal
+
+    bounds = (1e-3, 1e3)
+    result = minimize_scalar(fun=obj, bounds=bounds)
+    opt_ratio = result.x
+
+    if not result.success:
+        raise Warning("Optimization did not succeed")
+        original_cal = cal_fn(y_mean, y_std, y_true)
+        ratio_cal = cal_fn(y_mean, opt_ratio * y_std, y_true)
+        if ratio_cal > original_cal:
+            raise Warning(
+                "No better calibration found, no recalibration performed and returning original uncertainties"
+            )
+            opt_ratio = 1.0
+
+    return opt_ratio

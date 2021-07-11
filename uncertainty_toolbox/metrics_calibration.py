@@ -1,8 +1,8 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-from argparse import Namespace
 
+from argparse import Namespace
 import numpy as np
 from scipy import stats
 from shapely.geometry import Polygon, LineString
@@ -261,11 +261,49 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
 
     # Compute proportion of normalized residuals within lower to upper bound
     residuals = y_pred - y_true
+
     normalized_residuals = residuals.reshape(-1) / y_std.reshape(-1)
+
     num_within_quantile = 0
     for resid in normalized_residuals:
-        if lower_bound <= resid <= upper_bound:
+        if lower_bound <= resid and resid <= upper_bound:
             num_within_quantile += 1.0
     proportion = num_within_quantile / len(residuals)
 
     return proportion
+
+
+def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
+    """
+    For a specified quantile level q (must be a float, or a singleton),
+    return the centered prediction interval corresponding
+    to the pair of quantiles at levels (0.5-q/2) and (0.5+q/2),
+    i.e. interval that has nominal coverage equal to q.
+    """
+
+    if isinstance(quantile, float):
+        quantile = np.array([quantile])
+
+    # Check that input arrays are flat
+    assert_is_flat_same_shape(y_pred, y_std)
+    assert_is_flat_same_shape(quantile)
+    assert quantile.size == 1
+
+    if not np.logical_and((0.0 < quantile.item()), (quantile.item() < 1.0)):
+       raise ValueError("Quantile must be greater than 0.0 and less than 1.0") 
+
+    # if recal_model is not None, calculate recalibrated quantile
+    if recal_model is not None:
+        quantile = recal_model.predict(quantile)
+
+    # Computer lower and upper bound for quantile
+    norm = stats.norm(loc=y_pred, scale=y_std)
+    lower_bound = norm.ppf(0.5 - quantile / 2)
+    upper_bound = norm.ppf(0.5 + quantile / 2)
+
+    bounds = {
+        "upper": upper_bound,
+        "lower": lower_bound,
+    }
+
+    return bounds
