@@ -16,3 +16,11 @@ def assert_is_flat_same_shape(*args):
         assert arr.shape == first_shape, "All inputs must have the same length"
 
     return True
+
+
+def assert_is_positive(*args):
+    assert isinstance(args[0], np.ndarray), "All inputs must be of type numpy.ndarray"
+    for arr in args:
+        assert all(arr > 0.0)
+
+    return True

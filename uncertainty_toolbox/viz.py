@@ -242,7 +242,7 @@ def plot_calibration(
                 y_pred, y_std, y_true
             )
     else:
-        # If expected and observed proportions are give
+        # If expected and observed proportions are given
         exp_proportions = np.array(exp_props).flatten()
         obs_proportions = np.array(obs_props).flatten()
         if exp_proportions.shape != obs_proportions.shape:
