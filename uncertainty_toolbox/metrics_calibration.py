@@ -8,7 +8,10 @@ from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from tqdm import tqdm
-from uncertainty_toolbox.utils import assert_is_flat_same_shape, assert_is_positive
+from uncertainty_toolbox.utils import (
+    assert_is_flat_same_shape,
+    assert_is_positive,
+)
 
 
 def sharpness(y_std):
@@ -27,7 +30,13 @@ def sharpness(y_std):
 
 
 def root_mean_squared_calibration_error(
-    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None, prop_type='interval'
+    y_pred,
+    y_std,
+    y_true,
+    num_bins=100,
+    vectorized=False,
+    recal_model=None,
+    prop_type="interval",
 ):
     """Return root mean squared calibration error."""
 
@@ -36,7 +45,7 @@ def root_mean_squared_calibration_error(
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -55,7 +64,13 @@ def root_mean_squared_calibration_error(
 
 
 def mean_absolute_calibration_error(
-    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None, prop_type='interval'
+    y_pred,
+    y_std,
+    y_true,
+    num_bins=100,
+    vectorized=False,
+    recal_model=None,
+    prop_type="interval",
 ):
     """Return mean absolute calibration error; identical to ECE."""
 
@@ -64,7 +79,7 @@ def mean_absolute_calibration_error(
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -87,7 +102,7 @@ def adversarial_group_calibration(
     y_std,
     y_true,
     cali_type,
-    prop_type='interval',
+    prop_type="interval",
     num_bins=100,
     num_group_bins=10,
     draw_with_replacement=False,
@@ -101,7 +116,7 @@ def adversarial_group_calibration(
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     num_pts = y_true.shape[0]
 
@@ -159,7 +174,13 @@ def adversarial_group_calibration(
 
 
 def miscalibration_area(
-    y_pred, y_std, y_true, num_bins=100, vectorized=False, recal_model=None, prop_type='interval'
+    y_pred,
+    y_std,
+    y_true,
+    num_bins=100,
+    vectorized=False,
+    recal_model=None,
+    prop_type="interval",
 ):
     """
     Return miscalibration area.
@@ -175,7 +196,7 @@ def miscalibration_area(
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     # Get lists of expected and observed proportions for a range of quantiles
     if vectorized:
@@ -206,7 +227,7 @@ def miscalibration_area(
 
 
 def get_proportion_lists_vectorized(
-    y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type='interval'
+    y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type="interval"
 ):
     """
     Return lists of expected and observed proportions of points falling into
@@ -218,7 +239,7 @@ def get_proportion_lists_vectorized(
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
@@ -233,7 +254,7 @@ def get_proportion_lists_vectorized(
         -1, 1
     )
     norm = stats.norm(loc=0, scale=1)
-    if prop_type == 'interval':
+    if prop_type == "interval":
         gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
         gaussian_upper_bound = norm.ppf(0.5 + in_exp_proportions / 2.0)
 
@@ -241,16 +262,22 @@ def get_proportion_lists_vectorized(
         below_upper = normalized_residuals <= gaussian_upper_bound
 
         within_quantile = above_lower * below_upper
-        obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(residuals)
-    elif prop_type == 'quantile':
+        obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(
+            residuals
+        )
+    elif prop_type == "quantile":
         gaussian_quantile_bound = norm.ppf(in_exp_proportions)
         below_quantile = normalized_residuals <= gaussian_quantile_bound
-        obs_proportions = np.sum(below_quantile, axis=0).flatten() / len(residuals)
+        obs_proportions = np.sum(below_quantile, axis=0).flatten() / len(
+            residuals
+        )
 
     return exp_proportions, obs_proportions
 
 
-def get_proportion_lists(y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type='interval'):
+def get_proportion_lists(
+    y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type="interval"
+):
     """
     Return lists of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
@@ -261,7 +288,7 @@ def get_proportion_lists(y_pred, y_std, y_true, num_bins=100, recal_model=None, 
     # Check that input std is positive
     assert_is_positive(y_std)
     # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ['interval', 'quantile']
+    assert prop_type in ["interval", "quantile"]
 
     # Compute proportions
     exp_proportions = np.linspace(0, 1, num_bins)
@@ -271,12 +298,12 @@ def get_proportion_lists(y_pred, y_std, y_true, num_bins=100, recal_model=None, 
     else:
         in_exp_proportions = exp_proportions
 
-    if prop_type == 'interval':
+    if prop_type == "interval":
         obs_proportions = [
             get_proportion_in_interval(y_pred, y_std, y_true, quantile)
             for quantile in in_exp_proportions
         ]
-    elif prop_type == 'quantile':
+    elif prop_type == "quantile":
         obs_proportions = [
             get_proportion_under_quantile(y_pred, y_std, y_true, quantile)
             for quantile in in_exp_proportions
@@ -363,7 +390,7 @@ def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
     assert_is_positive(y_std)
 
     if not np.logical_and((0.0 < quantile.item()), (quantile.item() < 1.0)):
-       raise ValueError("Quantile must be greater than 0.0 and less than 1.0")
+        raise ValueError("Quantile must be greater than 0.0 and less than 1.0")
 
     # if recal_model is not None, calculate recalibrated quantile
     if recal_model is not None:
@@ -386,7 +413,7 @@ def get_quantile(y_pred, y_std, quantile, recal_model=None):
     """
     For a specified quantile level q (must be a float, or a singleton),
     return the quantile prediction,
-    i.e. upper bound that has nominal coverage below the bound equal to q.
+    i.e. bound that has nominal coverage below the bound equal to q.
     """
     if isinstance(quantile, float):
         quantile = np.array([quantile])
@@ -399,7 +426,7 @@ def get_quantile(y_pred, y_std, quantile, recal_model=None):
     assert_is_positive(y_std)
 
     if not np.logical_and((0.0 < quantile.item()), (quantile.item() < 1.0)):
-       raise ValueError("Quantile must be greater than 0.0 and less than 1.0")
+        raise ValueError("Quantile must be greater than 0.0 and less than 1.0")
 
     # if recal_model is not None, calculate recalibrated quantile
     if recal_model is not None:
