@@ -208,9 +208,7 @@ def get_proportion_lists_vectorized(
     gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
     gaussian_upper_bound = norm.ppf(0.5 + in_exp_proportions / 2.0)
     residuals = y_pred - y_true
-    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(
-        -1, 1
-    )
+    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1, 1)
     above_lower = normalized_residuals >= gaussian_lower_bound
     below_upper = normalized_residuals <= gaussian_upper_bound
 
@@ -290,7 +288,7 @@ def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
     assert quantile.size == 1
 
     if not np.logical_and((0.0 < quantile.item()), (quantile.item() < 1.0)):
-       raise ValueError("Quantile must be greater than 0.0 and less than 1.0") 
+        raise ValueError("Quantile must be greater than 0.0 and less than 1.0")
 
     # if recal_model is not None, calculate recalibrated quantile
     if recal_model is not None:

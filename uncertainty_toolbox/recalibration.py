@@ -63,9 +63,7 @@ def iso_recal(exp_props, obs_props):
         elif np.sum((within_01 == min_obs_within).astype(float)) == 1:
             beg_idx = int(np.argmin(within_01) + exp_0_idx)
         else:
-            raise RuntimeError(
-                ("Inspect input arrays, " "cannot set beginning index.")
-            )
+            raise RuntimeError(("Inspect input arrays, " "cannot set beginning index."))
     else:
         beg_idx = exp_0_idx
 
@@ -115,7 +113,7 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
         worst_cal = 0.5
     elif criterion == "rms_cal":
         cal_fn = uct.metrics.root_mean_squared_calibration_error
-        worst_cal = np.sqrt(1.0/3.0)
+        worst_cal = np.sqrt(1.0 / 3.0)
     elif criterion == "miscal":
         cal_fn = uct.metrics.miscalibration_area
         worst_cal = 0.5
