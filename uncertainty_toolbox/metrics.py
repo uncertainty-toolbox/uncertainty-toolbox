@@ -53,7 +53,7 @@ def get_all_accuracy_metrics(
         y_true: 1D array of the true labels in the held out dataset.
         verbose: Activate verbose mode.
 
-    Return:
+    Returns:
         The evaluations for all accuracy related metrics.
     """
     if verbose:
@@ -79,7 +79,7 @@ def get_all_average_calibration(
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
 
-    Return:
+    Returns:
         The evaluations for all metrics relating to average calibration.
     """
     if verbose:
@@ -115,7 +115,7 @@ def get_all_adversarial_group_calibration(
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
 
-    Return:
+    Returns:
         The evaluations for all metrics relating to adverarial group calibration.
         Each inner dictionary contains the size of each group and the metrics
         computed for each group.
@@ -175,7 +175,7 @@ def get_all_sharpness_metrics(
         y_std: 1D array of he predicted standard deviations for the held out dataset.
         verbose: Activate verbose mode.
 
-    Return:
+    Returns:
         The evaluations for all sharpness metrics.
     """
     if verbose:
@@ -259,7 +259,7 @@ def get_all_metrics(
         scaled: Whether to scale the score by size of held out set.
         verbose: Activate verbose mode.
 
-    Return:
+    Returns:
         Dictionary containing all metrics.
     """
     # Accuracy
