@@ -35,47 +35,97 @@ def test_sharpness_on_test_set(supply_test_set):
 
 def test_root_mean_squared_calibration_error_on_test_set(supply_test_set):
     """Test root mean squared calibration error on some dummy values."""
-    test_rmsce_nonvectorized = root_mean_squared_calibration_error(
+    test_rmsce_nonvectorized_interval = root_mean_squared_calibration_error(
         *supply_test_set,
         num_bins=100,
         vectorized=False,
         recal_model=None,
         prop_type="interval"
     )
-    test_rmsce_vectorized = root_mean_squared_calibration_error(
+    test_rmsce_vectorized_interval = root_mean_squared_calibration_error(
         *supply_test_set,
         num_bins=100,
         vectorized=True,
         recal_model=None,
         prop_type="interval"
     )
-    assert np.abs(test_rmsce_nonvectorized - test_rmsce_vectorized) < 1e-6
-    assert np.abs(test_rmsce_vectorized - 0.4165757476562379) < 1e-6
+    assert (
+        np.abs(
+            test_rmsce_nonvectorized_interval - test_rmsce_vectorized_interval
+        )
+        < 1e-6
+    )
+    assert np.abs(test_rmsce_vectorized_interval - 0.4165757476562379) < 1e-6
+
+    test_rmsce_nonvectorized_quantile = root_mean_squared_calibration_error(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=False,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    test_rmsce_vectorized_quantile = root_mean_squared_calibration_error(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=True,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    assert (
+        np.abs(
+            test_rmsce_nonvectorized_quantile - test_rmsce_vectorized_quantile
+        )
+        < 1e-6
+    )
+    assert np.abs(test_rmsce_vectorized_quantile - 0.30362567774902066) < 1e-6
 
 
 def test_mean_absolute_calibration_error_on_test_set(supply_test_set):
     """Test mean absolute calibration error on some dummy values."""
-    test_mace_nonvectorized = mean_absolute_calibration_error(
+    test_mace_nonvectorized_interval = mean_absolute_calibration_error(
         *supply_test_set,
         num_bins=100,
         vectorized=False,
         recal_model=None,
         prop_type="interval"
     )
-    test_mace_vectorized = mean_absolute_calibration_error(
+    test_mace_vectorized_interval = mean_absolute_calibration_error(
         *supply_test_set,
         num_bins=100,
         vectorized=True,
         recal_model=None,
         prop_type="interval"
     )
-    assert np.abs(test_mace_nonvectorized - test_mace_vectorized) < 1e-6
-    assert np.abs(test_mace_vectorized - 0.3733333333333335) < 1e-6
+    assert (
+        np.abs(test_mace_nonvectorized_interval - test_mace_vectorized_interval)
+        < 1e-6
+    )
+    assert np.abs(test_mace_vectorized_interval - 0.3733333333333335) < 1e-6
+
+    test_mace_nonvectorized_quantile = mean_absolute_calibration_error(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=False,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    test_mace_vectorized_quantile = mean_absolute_calibration_error(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=True,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    assert (
+        np.abs(test_mace_nonvectorized_quantile - test_mace_vectorized_quantile)
+        < 1e-6
+    )
+    assert np.abs(test_mace_vectorized_quantile - 0.23757575757575758) < 1e-6
 
 
 def test_adversarial_group_calibration_on_test_set(supply_test_set):
     """Test adversarial group calibration on test set for some dummy values."""
-    test_out = adversarial_group_calibration(
+    test_out_interval = adversarial_group_calibration(
         *supply_test_set,
         cali_type="mean_abs",
         prop_type="interval",
@@ -87,22 +137,45 @@ def test_adversarial_group_calibration_on_test_set(supply_test_set):
         verbose=False
     )
 
-    assert np.max(np.abs(test_out.group_size - np.linspace(0, 1, 10))) < 1e-6
-    assert test_out.score_mean[0] < 0.5
-    assert np.abs(test_out.score_mean[-1] - 0.37333333) < 1e-6
-    assert np.min(test_out.score_stderr) >= 0
+    assert (
+        np.max(np.abs(test_out_interval.group_size - np.linspace(0, 1, 10)))
+        < 1e-6
+    )
+    assert np.all(test_out_interval.score_mean < 0.5)
+    assert np.abs(test_out_interval.score_mean[-1] - 0.3733333333333335) < 1e-6
+    assert np.min(test_out_interval.score_stderr) >= 0
+
+    test_out_quantile = adversarial_group_calibration(
+        *supply_test_set,
+        cali_type="mean_abs",
+        prop_type="quantile",
+        num_bins=100,
+        num_group_bins=10,
+        draw_with_replacement=False,
+        num_trials=10,
+        num_group_draws=10,
+        verbose=False
+    )
+
+    assert (
+        np.max(np.abs(test_out_quantile.group_size - np.linspace(0, 1, 10)))
+        < 1e-6
+    )
+    assert np.all(test_out_quantile.score_mean < 0.5)
+    assert np.abs(test_out_quantile.score_mean[-1] - 0.2375757575757576) < 1e-6
+    assert np.min(test_out_quantile.score_stderr) >= 0
 
 
 def test_miscalibration_area_on_test_set(supply_test_set):
     """Test miscalibration area on some dummy values."""
-    test_miscal_area_nonvectorized = miscalibration_area(
+    test_miscal_area_nonvectorized_interval = miscalibration_area(
         *supply_test_set,
         num_bins=100,
         vectorized=False,
         recal_model=None,
         prop_type="interval"
     )
-    test_miscal_area_vectorized = miscalibration_area(
+    test_miscal_area_vectorized_interval = miscalibration_area(
         *supply_test_set,
         num_bins=100,
         vectorized=True,
@@ -110,39 +183,141 @@ def test_miscalibration_area_on_test_set(supply_test_set):
         prop_type="interval"
     )
     assert (
-        np.abs(test_miscal_area_nonvectorized - test_miscal_area_vectorized)
+        np.abs(
+            test_miscal_area_nonvectorized_interval
+            - test_miscal_area_vectorized_interval
+        )
         < 1e-6
     )
-    assert np.abs(test_miscal_area_vectorized - 0.37710437710437716) < 1e-6
+    assert (
+        np.abs(test_miscal_area_vectorized_interval - 0.37710437710437716)
+        < 1e-6
+    )
+
+    test_miscal_area_nonvectorized_quantile = miscalibration_area(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=False,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    test_miscal_area_vectorized_quantile = miscalibration_area(
+        *supply_test_set,
+        num_bins=100,
+        vectorized=True,
+        recal_model=None,
+        prop_type="quantile"
+    )
+    assert (
+        np.abs(
+            test_miscal_area_nonvectorized_quantile
+            - test_miscal_area_vectorized_quantile
+        )
+        < 1e-6
+    )
+    assert (
+        np.abs(test_miscal_area_vectorized_quantile - 0.23916245791245788)
+        < 1e-6
+    )
 
 
 def test_vectorization_for_proportion_list_on_test_set(supply_test_set):
     """Test vectorization in get_proportion_lists on the test set for some dummy values."""
-    test_exp_props_nonvec, test_obs_props_nonvec = get_proportion_lists(
+    (
+        test_exp_props_nonvec_interval,
+        test_obs_props_nonvec_interval,
+    ) = get_proportion_lists(
         *supply_test_set, num_bins=100, recal_model=None, prop_type="interval"
     )
 
-    test_exp_props_vec, test_obs_props_vec = get_proportion_lists_vectorized(
+    (
+        test_exp_props_vec_interval,
+        test_obs_props_vec_interval,
+    ) = get_proportion_lists_vectorized(
         *supply_test_set, num_bins=100, recal_model=None, prop_type="interval"
     )
-    assert np.max(np.abs(test_exp_props_nonvec - test_exp_props_vec)) < 1e-6
-    assert np.max(np.abs(test_obs_props_nonvec - test_obs_props_vec)) < 1e-6
+    assert (
+        np.max(
+            np.abs(test_exp_props_nonvec_interval - test_exp_props_vec_interval)
+        )
+        < 1e-6
+    )
+    assert (
+        np.max(
+            np.abs(test_obs_props_nonvec_interval - test_obs_props_vec_interval)
+        )
+        < 1e-6
+    )
+
+    (
+        test_exp_props_nonvec_quantile,
+        test_obs_props_nonvec_quantile,
+    ) = get_proportion_lists(
+        *supply_test_set, num_bins=100, recal_model=None, prop_type="quantile"
+    )
+
+    (
+        test_exp_props_vec_quantile,
+        test_obs_props_vec_quantile,
+    ) = get_proportion_lists_vectorized(
+        *supply_test_set, num_bins=100, recal_model=None, prop_type="quantile"
+    )
+    assert (
+        np.max(
+            np.abs(test_exp_props_nonvec_quantile - test_exp_props_vec_quantile)
+        )
+        < 1e-6
+    )
+    assert (
+        np.max(
+            np.abs(test_obs_props_nonvec_quantile - test_obs_props_vec_quantile)
+        )
+        < 1e-6
+    )
 
 
 def test_get_proportion_lists_vectorized_on_test_set(supply_test_set):
     """Test get_proportion_lists_vectorized on the test set for some dummy values."""
-    test_exp_props, test_obs_props = get_proportion_lists_vectorized(
+    (
+        test_exp_props_interval,
+        test_obs_props_interval,
+    ) = get_proportion_lists_vectorized(
         *supply_test_set, num_bins=100, recal_model=None, prop_type="interval"
     )
-    assert test_exp_props.shape == test_obs_props.shape
+    assert test_exp_props_interval.shape == test_obs_props_interval.shape
     assert (
-        np.max(np.abs(np.unique(test_exp_props) - np.linspace(0, 1, 100)))
+        np.max(
+            np.abs(np.unique(test_exp_props_interval) - np.linspace(0, 1, 100))
+        )
         < 1e-6
     )
     assert (
         np.max(
             np.abs(
-                np.sort(np.unique(test_obs_props))
+                np.sort(np.unique(test_obs_props_interval))
+                - np.array([0.0, 0.33333333, 0.66666667, 1.0])
+            )
+        )
+        < 1e-6
+    )
+
+    (
+        test_exp_props_quantile,
+        test_obs_props_quantile,
+    ) = get_proportion_lists_vectorized(
+        *supply_test_set, num_bins=100, recal_model=None, prop_type="quantile"
+    )
+    assert test_exp_props_quantile.shape == test_obs_props_quantile.shape
+    assert (
+        np.max(
+            np.abs(np.unique(test_exp_props_quantile) - np.linspace(0, 1, 100))
+        )
+        < 1e-6
+    )
+    assert (
+        np.max(
+            np.abs(
+                np.sort(np.unique(test_obs_props_quantile))
                 - np.array([0.0, 0.33333333, 0.66666667, 1.0])
             )
         )
@@ -152,18 +327,40 @@ def test_get_proportion_lists_vectorized_on_test_set(supply_test_set):
 
 def test_get_proportion_lists_on_test_set(supply_test_set):
     """Test get_proportion_lists on the test set for some dummy values."""
-    test_exp_props, test_obs_props = get_proportion_lists(
+    test_exp_props_interval, test_obs_props_interval = get_proportion_lists(
         *supply_test_set, num_bins=100, recal_model=None, prop_type="interval"
     )
-    assert len(test_exp_props) == len(test_obs_props)
+    assert len(test_exp_props_interval) == len(test_obs_props_interval)
     assert (
-        np.max(np.abs(np.unique(test_exp_props) - np.linspace(0, 1, 100)))
+        np.max(
+            np.abs(np.unique(test_exp_props_interval) - np.linspace(0, 1, 100))
+        )
         < 1e-6
     )
     assert (
         np.max(
             np.abs(
-                np.sort(np.unique(test_obs_props))
+                np.sort(np.unique(test_obs_props_interval))
+                - np.array([0.0, 0.33333333, 0.66666667, 1.0])
+            )
+        )
+        < 1e-6
+    )
+
+    test_exp_props_quantile, test_obs_props_quantile = get_proportion_lists(
+        *supply_test_set, num_bins=100, recal_model=None, prop_type="quantile"
+    )
+    assert len(test_exp_props_quantile) == len(test_obs_props_quantile)
+    assert (
+        np.max(
+            np.abs(np.unique(test_exp_props_quantile) - np.linspace(0, 1, 100))
+        )
+        < 1e-6
+    )
+    assert (
+        np.max(
+            np.abs(
+                np.sort(np.unique(test_obs_props_quantile))
                 - np.array([0.0, 0.33333333, 0.66666667, 1.0])
             )
         )

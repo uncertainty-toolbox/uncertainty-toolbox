@@ -161,7 +161,7 @@ def get_std_recalibrator(y_mean, y_std, y_true, criterion="ma_cal"):
 
 def get_quantile_recalibrator(y_pred, y_std, y_true):
     exp_props, obs_props = uct.get_proportion_lists_vectorized(
-        y_pred, y_std, y_true, prop_type='quantile'
+        y_pred, y_std, y_true, prop_type="quantile"
     )
     iso_model = iso_recal(exp_props, obs_props)
 
@@ -174,16 +174,16 @@ def get_quantile_recalibrator(y_pred, y_std, y_true):
     return quantile_recalibrator
 
 
-def get_pi_recalibrator(y_pred, y_std, y_true):
+def get_interval_recalibrator(y_pred, y_std, y_true):
     exp_props, obs_props = uct.get_proportion_lists_vectorized(
-        y_pred, y_std, y_true, prop_type='interval'
+        y_pred, y_std, y_true, prop_type="interval"
     )
     iso_model = iso_recal(exp_props, obs_props)
 
-    def pi_recalibrator(y_pred, y_std, quantile):
+    def interval_recalibrator(y_pred, y_std, quantile):
         recal_bounds = uct.metrics_calibration.get_prediction_interval(
             y_pred, y_std, quantile, recal_model=iso_model
         )
         return recal_bounds
 
-    return pi_recalibrator
+    return interval_recalibrator

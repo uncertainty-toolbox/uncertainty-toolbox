@@ -10,7 +10,7 @@ from uncertainty_toolbox.recalibration import (
     optimize_recalibration_ratio,
     get_std_recalibrator,
     get_quantile_recalibrator,
-    get_pi_recalibrator,
+    get_interval_recalibrator,
 )
 from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
@@ -268,7 +268,7 @@ def test_get_quantile_recalibrator(supply_test_set):
         assert np.max(np.abs(test_prop_under_q - prop_under_q_recal)) < 1e-6
 
 
-def test_get_pi_recalibrator(supply_test_set):
+def test_get_interval_recalibrator(supply_test_set):
     """
     Test get_std_recalibration on the test set for some dummy values.
     """
@@ -285,11 +285,14 @@ def test_get_pi_recalibrator(supply_test_set):
         (0.99, 0.97),
     ]
 
-    pi_recalibrator = get_pi_recalibrator(y_pred, y_std, y_true)
+    interval_recalibrator = get_interval_recalibrator(y_pred, y_std, y_true)
 
-    for (q, test_prop_in_pi) in test_quantile_prop_list:
-        pi_recal = pi_recalibrator(y_pred, y_std, q)
-        prop_in_pi_recal = (
-            (pi_recal.lower <= y_true) * (y_true <= pi_recal.upper)
+    for (q, test_prop_in_interval) in test_quantile_prop_list:
+        interval_recal = interval_recalibrator(y_pred, y_std, q)
+        prop_in_interval_recal = (
+            (interval_recal.lower <= y_true) * (y_true <= interval_recal.upper)
         ).mean()
-        assert np.max(np.abs(test_prop_in_pi - prop_in_pi_recal)) < 1e-6
+        assert (
+            np.max(np.abs(test_prop_in_interval - prop_in_interval_recal))
+            < 1e-6
+        )
