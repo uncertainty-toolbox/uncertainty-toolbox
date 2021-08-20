@@ -31,7 +31,6 @@ def test_prediction_error_metric_fields(get_test_set):
 def test_prediction_error_metric_values(get_test_set):
     """Test if prediction error metrics have correct values."""
     y_pred, y_std, y_true = get_test_set
-    # predictions, predictions_std, y, x = synthetic_sine_heteroscedastic(1000)
     met_dict = prediction_error_metrics(y_pred, y_true)
     print(met_dict)
     assert met_dict["mae"] > 0.21 and met_dict["mae"] < 0.22
