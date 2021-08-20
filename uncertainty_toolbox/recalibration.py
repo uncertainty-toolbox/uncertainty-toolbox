@@ -115,7 +115,7 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
         worst_cal = 0.5
     elif criterion == "rms_cal":
         cal_fn = uct.metrics.root_mean_squared_calibration_error
-        worst_cal = np.sqrt(1.0/3.0)
+        worst_cal = np.sqrt(1.0 / 3.0)
     elif criterion == "miscal":
         cal_fn = uct.metrics.miscalibration_area
         worst_cal = 0.5
@@ -146,3 +146,44 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
             opt_ratio = 1.0
 
     return opt_ratio
+
+
+def get_std_recalibrator(y_mean, y_std, y_true, criterion="ma_cal"):
+    std_recal_ratio = optimize_recalibration_ratio(
+        y_mean, y_std, y_true, criterion
+    )
+
+    def std_recalibrator(std_arr):
+        return std_recal_ratio * std_arr
+
+    return std_recalibrator
+
+
+def get_quantile_recalibrator(y_pred, y_std, y_true):
+    exp_props, obs_props = uct.get_proportion_lists_vectorized(
+        y_pred, y_std, y_true, prop_type="quantile"
+    )
+    iso_model = iso_recal(exp_props, obs_props)
+
+    def quantile_recalibrator(y_pred, y_std, quantile):
+        recal_quantile = uct.metrics_calibration.get_quantile(
+            y_pred, y_std, quantile, recal_model=iso_model
+        )
+        return recal_quantile
+
+    return quantile_recalibrator
+
+
+def get_interval_recalibrator(y_pred, y_std, y_true):
+    exp_props, obs_props = uct.get_proportion_lists_vectorized(
+        y_pred, y_std, y_true, prop_type="interval"
+    )
+    iso_model = iso_recal(exp_props, obs_props)
+
+    def interval_recalibrator(y_pred, y_std, quantile):
+        recal_bounds = uct.metrics_calibration.get_prediction_interval(
+            y_pred, y_std, quantile, recal_model=iso_model
+        )
+        return recal_bounds
+
+    return interval_recalibrator
