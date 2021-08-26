@@ -8,6 +8,9 @@ import random
 from uncertainty_toolbox.recalibration import (
     iso_recal,
     optimize_recalibration_ratio,
+    get_std_recalibrator,
+    get_quantile_recalibrator,
+    get_interval_recalibrator,
 )
 from uncertainty_toolbox.metrics_calibration import (
     root_mean_squared_calibration_error,
@@ -15,6 +18,7 @@ from uncertainty_toolbox.metrics_calibration import (
     miscalibration_area,
     get_proportion_lists_vectorized,
     get_prediction_interval,
+    get_quantile,
 )
 
 
@@ -199,12 +203,96 @@ def test_get_prediction_interval_recalibrated(supply_test_set):
         recal_bounds = get_prediction_interval(y_pred, y_std, q, recal_model)
 
         orig_prop = np.mean(
-            (orig_bounds["lower"] <= y_true) * (y_true <= orig_bounds["upper"])
+            (orig_bounds.lower <= y_true) * (y_true <= orig_bounds.upper)
         )
         recal_prop = np.mean(
-            (recal_bounds["lower"] <= y_true)
-            * (y_true <= recal_bounds["upper"])
+            (recal_bounds.lower <= y_true) * (y_true <= recal_bounds.upper)
         )
 
         assert np.max(np.abs(test_orig_prop - orig_prop)) < 1e-6
         assert np.max(np.abs(test_recal_prop - recal_prop)) < 1e-6
+
+
+def test_get_std_recalibrator(supply_test_set):
+    """
+    Test get_std_recalibration on the test set for some dummy values.
+    """
+    random.seed(0)
+    np.random.seed(seed=0)
+
+    y_pred, y_std, y_true = supply_test_set
+
+    test_quantile_prop_list = [
+        (0.01, 0.00, 0.00),
+        (0.25, 0.06, 0.00),
+        (0.50, 0.56, 0.00),
+        (0.75, 0.74, 0.56),
+        (0.99, 0.89, 0.88),
+    ]
+
+    std_recalibrator = get_std_recalibrator(y_pred, y_std, y_true)
+
+    for (q, test_prop_in_pi, test_prop_under_q) in test_quantile_prop_list:
+        y_std_recal = std_recalibrator(y_std)
+        pi = get_prediction_interval(y_pred, y_std_recal, q)
+        prop_in_pi = ((pi.lower <= y_true) * (y_true <= pi.upper)).mean()
+        quantile_bound = get_quantile(y_pred, y_std_recal, q)
+        prop_under_q = (quantile_bound >= y_true).mean()
+        assert np.max(np.abs(test_prop_in_pi - prop_in_pi)) < 1e-6
+        assert np.max(np.abs(test_prop_under_q - prop_under_q)) < 1e-6
+
+
+def test_get_quantile_recalibrator(supply_test_set):
+    """
+    Test get_std_recalibration on the test set for some dummy values.
+    """
+    random.seed(0)
+    np.random.seed(seed=0)
+
+    y_pred, y_std, y_true = supply_test_set
+
+    test_quantile_prop_list = [
+        (0.01, 0.00),
+        (0.25, 0.00),
+        (0.50, 0.00),
+        (0.75, 0.00),
+        (0.99, 0.83),
+    ]
+
+    quantile_recalibrator = get_quantile_recalibrator(y_pred, y_std, y_true)
+
+    for (q, test_prop_under_q) in test_quantile_prop_list:
+        quantile_bound_recal = quantile_recalibrator(y_pred, y_std, q)
+        assert all(np.isfinite(quantile_bound_recal))
+        prop_under_q_recal = (quantile_bound_recal >= y_true).mean()
+        assert np.max(np.abs(test_prop_under_q - prop_under_q_recal)) < 1e-6
+
+
+def test_get_interval_recalibrator(supply_test_set):
+    """
+    Test get_std_recalibration on the test set for some dummy values.
+    """
+    random.seed(0)
+    np.random.seed(seed=0)
+
+    y_pred, y_std, y_true = supply_test_set
+
+    test_quantile_prop_list = [
+        (0.01, 0.00),
+        (0.25, 0.25),
+        (0.50, 0.50),
+        (0.75, 0.75),
+        (0.99, 0.97),
+    ]
+
+    interval_recalibrator = get_interval_recalibrator(y_pred, y_std, y_true)
+
+    for (q, test_prop_in_interval) in test_quantile_prop_list:
+        interval_recal = interval_recalibrator(y_pred, y_std, q)
+        prop_in_interval_recal = (
+            (interval_recal.lower <= y_true) * (y_true <= interval_recal.upper)
+        ).mean()
+        assert (
+            np.max(np.abs(test_prop_in_interval - prop_in_interval_recal))
+            < 1e-6
+        )
