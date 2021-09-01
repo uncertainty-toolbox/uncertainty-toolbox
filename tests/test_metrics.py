@@ -62,7 +62,11 @@ def test_get_all_adversarial_group_calibration_returns(get_test_set):
         inner_dict = met_dict[met_str]
         inner_keys = inner_dict.keys()
         assert len(inner_keys) == 3
-        inner_str_list = ["group_sizes", "adv_group_cali_mean", "adv_group_cali_stderr"]
+        inner_str_list = [
+            "group_sizes",
+            "adv_group_cali_mean",
+            "adv_group_cali_stderr",
+        ]
         bool_list = [s in inner_keys for s in inner_str_list]
         assert all(bool_list)
 
@@ -100,7 +104,7 @@ def test_get_all_metrics_returns(get_test_set):
         "avg_calibration",
         "adv_group_calibration",
         "sharpness",
-        "scoring_rule"
+        "scoring_rule",
     ]
     bool_list = [s in met_keys for s in met_str_list]
     assert all(bool_list)

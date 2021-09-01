@@ -74,29 +74,29 @@ for i, pred_mean in enumerate(pred_mean_list):
         neatplot.save_figure(f"before_recal_{j}", "png")
 
         # After recalibration
-        recal_ratio = uct.recalibration.optimize_recalibration_ratio(
+        std_recalibrator = uct.recalibration.get_std_recalibrator(
             pred_mean, pred_std, y
         )
-        mace = uct.mean_absolute_calibration_error(
-            pred_mean, recal_ratio * pred_std, y
-        )
+        pred_std_recal = std_recalibrator(pred_std)
+
+        mace = uct.mean_absolute_calibration_error(pred_mean, pred_std_recal, y)
         rmsce = uct.root_mean_squared_calibration_error(
-            pred_mean, recal_ratio * pred_std, y
+            pred_mean, pred_std_recal, y
         )
-        ma = uct.miscalibration_area(pred_mean, recal_ratio * pred_std, y)
+        ma = uct.miscalibration_area(pred_mean, pred_std_recal, y)
         print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
         fig, axes = plt.subplots(1, 2, figsize=(11, 5))
         uct.plot_calibration(
             pred_mean,
-            recal_ratio * pred_std,
+            pred_std_recal,
             y,
             ax=axes.flatten()[0],
         )
         uct.plot_xy(
             pred_mean,
-            recal_ratio * pred_std,
+            pred_std_recal,
             y,
             x,
             ax=axes.flatten()[1],

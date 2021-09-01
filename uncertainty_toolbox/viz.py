@@ -42,11 +42,18 @@ def plot_xy(
 
     # Order points in order of increasing x
     order = np.argsort(x)
-    y_pred, y_std, y_true, x = (y_pred[order], y_std[order], y_true[order], x[order])
+    y_pred, y_std, y_true, x = (
+        y_pred[order],
+        y_std[order],
+        y_true[order],
+        x[order],
+    )
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
+        [y_pred, y_std, y_true, x] = filter_subset(
+            [y_pred, y_std, y_true, x], n_subset
+        )
 
     intervals = num_stds_confidence_bound * y_std
 
@@ -99,7 +106,9 @@ def plot_intervals(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     # Compute intervals
     intervals = num_stds_confidence_bound * y_std
@@ -163,7 +172,9 @@ def plot_intervals_ordered(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
@@ -229,20 +240,23 @@ def plot_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
         if vectorized:
-            (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-                y_pred, y_std, y_true
-            )
+            (
+                exp_proportions,
+                obs_proportions,
+            ) = get_proportion_lists_vectorized(y_pred, y_std, y_true)
         else:
             (exp_proportions, obs_proportions) = get_proportion_lists(
                 y_pred, y_std, y_true
             )
     else:
-        # If expected and observed proportions are give
+        # If expected and observed proportions are given
         exp_proportions = np.array(exp_props).flatten()
         obs_proportions = np.array(obs_props).flatten()
         if exp_proportions.shape != obs_proportions.shape:
@@ -255,7 +269,9 @@ def plot_calibration(
     # Plot
     ax.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
     ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
+    ax.fill_between(
+        exp_proportions, exp_proportions, obs_proportions, alpha=0.2
+    )
 
     # Format plot
     ax.set_xlabel("Predicted Proportion in Interval")
@@ -319,7 +335,9 @@ def plot_adversarial_group_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     # Compute group_size, score_mean, score_stderr
     if (group_size is None) or (score_mean is None):
@@ -376,7 +394,9 @@ def plot_sharpness(y_std, n_subset=None, ax=None):
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     # Plot sharpness curve
     ax.hist(y_std, edgecolor="#1f77b4", color="#a5c8e1", density=True)
@@ -423,7 +443,9 @@ def plot_residuals_vs_stds(y_pred, y_std, y_true, n_subset=None, ax=None):
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        [y_pred, y_std, y_true] = filter_subset(
+            [y_pred, y_std, y_true], n_subset
+        )
 
     # Compute residuals
     residuals = y_true - y_pred
