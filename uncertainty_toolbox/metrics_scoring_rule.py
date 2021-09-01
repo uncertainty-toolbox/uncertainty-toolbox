@@ -22,7 +22,7 @@ def nll_gaussian(
     Args:
         y_pred: 1D array of the predicted means for the held out dataset.
         y_std: 1D array of the predicted standard deviations for the held out dataset.
-        y_true: 1D array of the true labels in the held out dataset.
+        y_true: 1D array of the true means in the held out dataset.
         scaled: Whether to scale the negative log likelihood by size of held out set.
 
     Returns:
