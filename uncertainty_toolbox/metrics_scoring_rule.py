@@ -22,7 +22,7 @@ def nll_gaussian(
     Args:
         y_pred: 1D array of the predicted means for the held out dataset.
         y_std: 1D array of the predicted standard deviations for the held out dataset.
-        y_true: 1D array of the true means in the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
         scaled: Whether to scale the negative log likelihood by size of held out set.
 
     Returns:
@@ -47,7 +47,10 @@ def nll_gaussian(
 
 
 def crps_gaussian(
-    y_pred: np.ndarray, y_std: np.ndarray, y_true: np.ndarray, scaled: bool = True
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    scaled: bool = True,
 ) -> float:
     """The negatively oriented continuous ranked probability score for Gaussians.
 
@@ -74,7 +77,9 @@ def crps_gaussian(
     y_standardized = (y_true - y_pred) / y_std
     term_1 = 1 / np.sqrt(np.pi)
     term_2 = 2 * stats.norm.pdf(y_standardized, loc=0, scale=1)
-    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1)
+    term_3 = y_standardized * (
+        2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1
+    )
 
     crps_list = -1 * y_std * (term_1 - term_2 - term_3)
     crps = np.sum(crps_list)
@@ -109,7 +114,7 @@ def check_score(
 
     Args:
         y_pred: 1D array of the predicted means for the held out dataset.
-        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
         y_true: 1D array of the true labels in the held out dataset.
         scaled: Whether to scale the score by size of held out set.
         start_q: The lower bound of the quantiles to use for computation.
@@ -163,7 +168,7 @@ def interval_score(
 
     Args:
         y_pred: 1D array of the predicted means for the held out dataset.
-        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
         y_true: 1D array of the true labels in the held out dataset.
         scaled: Whether to scale the score by size of held out set.
         start_p: The lower bound of probability to capture in a prediction interval.
