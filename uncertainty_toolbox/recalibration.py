@@ -2,13 +2,26 @@
 Recalibrating uncertainty estimates.
 """
 
+from typing import Callable, Union
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
 from scipy.optimize import minimize_scalar
 import uncertainty_toolbox as uct
 
 
-def get_q_idx(exp_props, q):
+def get_q_idx(exp_props: np.ndarray, q: float) -> int:
+    """Utility function which outputs the array index of an element.
+
+    Gets the (approximate) index of a specified probability value, q, in the expected proportions array.
+    Used as a utility function in isotonic regression recalibration.
+
+    Args:
+        exp_props: 1D array of expected probabilities.
+        q: a specified probability float
+
+    Returns:
+        An index which specifies the (approximate) index of q in exp_props
+    """
     num_pts = exp_props.shape[0]
     target_idx = None
     for idx, x in enumerate(exp_props):
@@ -24,9 +37,22 @@ def get_q_idx(exp_props, q):
     return target_idx
 
 
-def iso_recal(exp_props, obs_props):
-    """
-    Returns an isotonic regression model that maps from obs_props to exp_props
+def iso_recal(
+    exp_props: np.ndarray,
+    obs_props: np.ndarray,
+) -> IsotonicRegression:
+    """Recalibration algorithm based on isotonic regression.
+
+    Fits and outputs an isotonic recalibration model that maps observed
+    probabilities to expected probabilities. This mapping proivdes
+    the necessary adjustments to produce better calibrated outputs.
+
+    Args:
+        exp_props: 1D array of expected probabilities (values must span [0, 1]).
+        obs_props: 1D array of observed probabilities
+
+    Returns:
+        An sklearn IsotonicRegression recalibration model.
     """
     # Flatten
     exp_props = exp_props.flatten()
@@ -63,7 +89,9 @@ def iso_recal(exp_props, obs_props):
         elif np.sum((within_01 == min_obs_within).astype(float)) == 1:
             beg_idx = int(np.argmin(within_01) + exp_0_idx)
         else:
-            raise RuntimeError(("Inspect input arrays, " "cannot set beginning index."))
+            raise RuntimeError(
+                ("Inspect input arrays, " "cannot set beginning index.")
+            )
     else:
         beg_idx = exp_0_idx
 
@@ -103,10 +131,26 @@ def iso_recal(exp_props, obs_props):
     return iso_model
 
 
-def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
-    """
-    Return scale factor (opt_ratio), which rescales y_std to be better calibrated, i.e.
-    updated standard deviation can be written: opt_ratio * y_std.
+def optimize_recalibration_ratio(
+    y_mean: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    criterion: str = "ma_cal",
+) -> float:
+    """Scale factor which uniformly recalibrates predicted standard deviations.
+
+    Searches via black-box optimization the standard deviation scale factor (opt_ratio)
+    which produces the best recalibration, i.e. updated standard deviation
+    can be written as opt_ratio * y_std.
+
+    Args:
+        y_mean: 1D array of the predicted means for the recalibration dataset.
+        y_std: 1D array of the predicted standard deviations for the recalibration dataset.
+        y_true: 1D array of the true means for the recalibration dataset.
+        criterion: calibration metric to optimize for during recalibration; must be one of {"ma_cal", "rms_cal", "miscal"}.
+
+    Returns:
+        A single scalar which optimally recalibrates the predicted standard deviations.
     """
     if criterion == "ma_cal":
         cal_fn = uct.metrics.mean_absolute_calibration_error
@@ -146,7 +190,28 @@ def optimize_recalibration_ratio(y_mean, y_std, y_true, criterion="ma_cal"):
     return opt_ratio
 
 
-def get_std_recalibrator(y_mean, y_std, y_true, criterion="ma_cal"):
+def get_std_recalibrator(
+    y_mean: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    criterion: str = "ma_cal",
+) -> Callable[[np.ndarray], np.ndarray]:
+    """Standard deviation recalibrator.
+
+    Computes the standard deviation recalibration ratio and returns a function
+    which takes in an array of uncalibrated standard deviations and returns
+    an array of recalibrated standard deviations.
+
+    Args:
+        y_mean: 1D array of the predicted means for the recalibration dataset.
+        y_std: 1D array of the predicted standard deviations for the recalibration dataset.
+        y_true: 1D array of the true means for the recalibration dataset.
+        criterion: calibration metric to optimize for during recalibration; must be one of {"ma_cal", "rms_cal", "miscal"}.
+
+    Returns:
+        A function which takes uncalibrated standard deviations as input and
+        outputs the recalibrated standard deviations.
+    """
     std_recal_ratio = optimize_recalibration_ratio(
         y_mean, y_std, y_true, criterion
     )
@@ -157,7 +222,25 @@ def get_std_recalibrator(y_mean, y_std, y_true, criterion="ma_cal"):
     return std_recalibrator
 
 
-def get_quantile_recalibrator(y_pred, y_std, y_true):
+def get_quantile_recalibrator(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+) -> Callable[[np.ndarray, np.ndarray, Union[float, np.ndarray]], np.ndarray]:
+    """Quantile recalibrator.
+
+    Fits an isotonic regression recalibration model and returns a function
+    which takes in the mean and standard deviation predictions and a specified
+    quantile level, and returns the recalibrated quantile.
+
+    Args:
+        y_pred: 1D array of the predicted means for the recalibration dataset.
+        y_std: 1D array of the predicted standard deviations for the recalibration dataset.
+        y_true: 1D array of the true means for the recalibration dataset.
+
+    Returns:
+        A function which outputs the recalibrated quantile prediction.
+    """
     exp_props, obs_props = uct.get_proportion_lists_vectorized(
         y_pred, y_std, y_true, prop_type="quantile"
     )
@@ -172,7 +255,25 @@ def get_quantile_recalibrator(y_pred, y_std, y_true):
     return quantile_recalibrator
 
 
-def get_interval_recalibrator(y_pred, y_std, y_true):
+def get_interval_recalibrator(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+) -> Callable[[np.ndarray, np.ndarray, Union[float, np.ndarray]], np.ndarray]:
+    """Prediction interval recalibrator.
+
+    Fits an isotonic regression recalibration model and returns a function
+    which takes in the mean and standard deviation predictions and a specified
+    centered interval coverage level, and returns the recalibrated interval.
+
+    Args:
+        y_pred: 1D array of the predicted means for the recalibration dataset.
+        y_std: 1D array of the predicted standard deviations for the recalibration dataset.
+        y_true: 1D array of the true means for the recalibration dataset.
+
+    Returns:
+        A function which outputs the recalibrated prediction interval.
+    """
     exp_props, obs_props = uct.get_proportion_lists_vectorized(
         y_pred, y_std, y_true, prop_type="interval"
     )
