@@ -1,6 +1,8 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
+from typing import Dict
+
 import numpy as np
 from sklearn.metrics import (
     mean_absolute_error,
@@ -11,15 +13,24 @@ from sklearn.metrics import (
 from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 
-def prediction_error_metrics(y_pred, y_true):
-    """
-    Return prediction error metrics as a dict with keys:
-    - Mean average error ('mae')
-    - Root mean squared error ('rmse')
-    - Median absolute error ('mdae')
-    - Mean absolute relative percent difference ('marpd')
-    - r^2 ('r2')
-    - Pearson's correlation coefficient ('corr')
+def prediction_error_metrics(
+        y_pred: np.ndarray,
+        y_true: np.ndarray,
+) -> Dict[str, float]:
+    """Get all prediction error metrics.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+
+    Returns:
+        A dictionary with:
+            * Mean average error ('mae')
+            * Root mean squared error ('rmse')
+            * Median absolute error ('mdae')
+            * Mean absolute relative percent difference ('marpd')
+            * r^2 ('r2')
+            * Pearson's correlation coefficient ('corr')
     """
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_true)
