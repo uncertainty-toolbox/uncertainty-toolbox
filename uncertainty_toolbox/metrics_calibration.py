@@ -8,6 +8,7 @@ import numpy as np
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
+from sklearn.isotonic import IsotonicRegression
 from tqdm import tqdm
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
@@ -15,7 +16,7 @@ from uncertainty_toolbox.utils import (
 )
 
 
-def sharpness(y_std):
+def sharpness(y_std: np.ndarray) -> float:
     """Return sharpness (a single measure of the overall confidence).
 
     Args:
@@ -427,10 +428,22 @@ def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
     return proportion
 
 
-def get_proportion_under_quantile(y_pred, y_std, y_true, quantile):
-    """
-    For a specified quantile, return the proportion of points falling under
-    a predicted quantile.
+def get_proportion_under_quantile(
+        y_pred: np.ndarray,
+        y_std: np.ndarray,
+        y_true: np.ndarray,
+        quantile: float,
+) -> float:
+    """Get the proportion of data that are below the predicted quantile.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        quantile: The quantile level to check.
+
+    Returns:
+        The proportion of data below the quantile level.
     """
 
     # Check that input arrays are flat
@@ -456,12 +469,28 @@ def get_proportion_under_quantile(y_pred, y_std, y_true, quantile):
     return proportion
 
 
-def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
-    """
+def get_prediction_interval(
+        y_pred: np.ndarray,
+        y_std: np.ndarray,
+        quantile: np.ndarray,
+        recal_model: Optional[IsotonicRegression] = None,
+) -> Namespace:
+    """Return the centered predictional interval corresponding to a quantile.
+
     For a specified quantile level q (must be a float, or a singleton),
     return the centered prediction interval corresponding
     to the pair of quantiles at levels (0.5-q/2) and (0.5+q/2),
     i.e. interval that has nominal coverage equal to q.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        quantile: The quantile level to check.
+        recal_model: A recalibration model to apply before computing the interval.
+
+    Returns:
+        Namespace containing the lower and upper bound corresponding to the
+        centered interval.
     """
 
     if isinstance(quantile, float):
@@ -494,11 +523,26 @@ def get_prediction_interval(y_pred, y_std, quantile, recal_model=None):
     return bounds
 
 
-def get_quantile(y_pred, y_std, quantile, recal_model=None):
-    """
+def get_quantile(
+        y_pred: np.ndarray,
+        y_std: np.ndarray,
+        quantile: np.ndarray,
+        recal_model: Optional[IsotonicRegression] = None,
+) -> float:
+    """Return the value corresponding with a quantile.
+
     For a specified quantile level q (must be a float, or a singleton),
     return the quantile prediction,
     i.e. bound that has nominal coverage below the bound equal to q.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        quantile: The quantile level to check.
+        recal_model: A recalibration model to apply before computing the interval.
+
+    Returns:
+        The value at which the quantile is achieved.
     """
     if isinstance(quantile, float):
         quantile = np.array([quantile])
