@@ -11,7 +11,7 @@ Then :code:`cd` into this repo, and run:
 
 .. code-block:: console
 
-  $ pip install -r requirements/requirements.txt
+  $ pip install -e .
 
 Or, to install all dependencies for development, run:
 
