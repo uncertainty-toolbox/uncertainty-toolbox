@@ -18,19 +18,5 @@ User Guide
    :maxdepth: 2
 
    installation
-
-
-Indices and tables
-******************
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   quick_start
+   api_reference/index
