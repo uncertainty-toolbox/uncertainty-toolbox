@@ -5,6 +5,7 @@ Metrics for assessing the quality of predictive uncertainty quantification.
 from typing import Any, Tuple
 from argparse import Namespace
 import numpy as np
+from sklearn.isotonic import IsotonicRegression
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
@@ -41,7 +42,7 @@ def root_mean_squared_calibration_error(
     y_true: np.ndarray,
     num_bins: int = 100,
     vectorized: bool = False,
-    recal_model: Any = None,
+    recal_model: IsotonicRegression = None,
     prop_type: str = "interval",
 ) -> float:
     """Root mean squared calibration error.
@@ -86,13 +87,13 @@ def root_mean_squared_calibration_error(
 
 
 def mean_absolute_calibration_error(
-    y_pred,
-    y_std,
-    y_true,
-    num_bins=100,
-    vectorized=False,
-    recal_model=None,
-    prop_type="interval",
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    vectorized: bool = False,
+    recal_model: IsotonicRegression =None,
+    prop_type: str = "interval",
 ) -> float:
     """Mean absolute calibration error; identical to ECE.
 
@@ -312,10 +313,22 @@ def get_proportion_lists_vectorized(
     recal_model: Any = None,
     prop_type: str = "interval"
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Return lists of expected and observed proportions of points falling into
+    """Return arrays of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
+    Computations here are vectorized for faster execution, but this function is
+    not suited when there are memory constraints.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
 
+    Returns:
+        A tuple of two numpy arrays, expected proportions and observed proportions
 
     """
 
@@ -361,13 +374,29 @@ def get_proportion_lists_vectorized(
 
 
 def get_proportion_lists(
-    y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type="interval"
-):
-    """
-    Return lists of expected and observed proportions of points falling into
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    recal_model: IsotonicRegression = None,
+    prop_type: str = "interval"
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Return arrays of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
-    """
+    Computations here are not vectorized, in case there are memory constraints.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+
+    Returns:
+        A tuple of two numpy arrays, expected proportions and observed proportions
+    """
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
     # Check that input std is positive
@@ -397,11 +426,25 @@ def get_proportion_lists(
     return exp_proportions, obs_proportions
 
 
-def get_proportion_in_interval(y_pred, y_std, y_true, quantile):
-    """
-    For a specified quantile, return the proportion of points falling into
+def get_proportion_in_interval(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    quantile: float
+) -> float:
+    """For a specified quantile, return the proportion of points falling into
     an interval corresponding to that quantile.
-    """
+
+     Args:
+         y_pred: 1D array of the predicted means for the held out dataset.
+         y_std: 1D array of the predicted standard deviations for the held out dataset.
+         y_true: 1D array of the true labels in the held out dataset.
+         quantile: float
+
+     Returns:
+         A single scalar which is the proportion of the true labels falling into the
+         prediction interval for the specified quantile.
+     """
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
