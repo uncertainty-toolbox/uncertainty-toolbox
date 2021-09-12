@@ -2,6 +2,7 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
+from typing import Any, Tuple
 from argparse import Namespace
 import numpy as np
 from scipy import stats
@@ -15,8 +16,13 @@ from uncertainty_toolbox.utils import (
 
 
 def sharpness(y_std):
-    """
-    Return sharpness (a single measure of the overall confidence).
+    """Return sharpness (a single measure of the overall confidence).
+
+    Args:
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+
+    Returns:
+        A single scalar which quantifies the average of the standard deviations.
     """
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_std)
@@ -30,15 +36,31 @@ def sharpness(y_std):
 
 
 def root_mean_squared_calibration_error(
-    y_pred,
-    y_std,
-    y_true,
-    num_bins=100,
-    vectorized=False,
-    recal_model=None,
-    prop_type="interval",
-):
-    """Return root mean squared calibration error."""
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    vectorized: bool = False,
+    recal_model: Any = None,
+    prop_type: str = "interval",
+) -> float:
+    """Root mean squared calibration error.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+        vectorized: whether to vectorize computation for observed proportions.
+                    (while setting to True is faster, it has much higher memory requirements
+                    and may fail to run for larger datasets).
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+
+    Returns:
+        A single scalar which calculates the root mean squared calibration error.
+    """
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
@@ -71,8 +93,24 @@ def mean_absolute_calibration_error(
     vectorized=False,
     recal_model=None,
     prop_type="interval",
-):
-    """Return mean absolute calibration error; identical to ECE."""
+) -> float:
+    """Mean absolute calibration error; identical to ECE.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+        vectorized: whether to vectorize computation for observed proportions.
+                    (while setting to True is faster, it has much higher memory requirements
+                    and may fail to run for larger datasets).
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+
+    Returns:
+        A single scalar which calculates the mean absolute calibration error.
+    """
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
@@ -98,18 +136,44 @@ def mean_absolute_calibration_error(
 
 
 def adversarial_group_calibration(
-    y_pred,
-    y_std,
-    y_true,
-    cali_type,
-    prop_type="interval",
-    num_bins=100,
-    num_group_bins=10,
-    draw_with_replacement=False,
-    num_trials=10,
-    num_group_draws=10,
-    verbose=False,
-):
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    cali_type: str,
+    prop_type: str = "interval",
+    num_bins: int = 100,
+    num_group_bins: int = 10,
+    draw_with_replacement: bool = False,
+    num_trials: int = 10,
+    num_group_draws: int = 10,
+    verbose: bool = False,
+) -> Namespace:
+    """Adversarial group calibration.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        cali_type: type of calibration error to measure; one of ["mean_abs", "root_mean_sq"].
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+        num_bins: number of discretizations for the probability space [0, 1].
+        num_group_bins: number of discretizations for group size proportions between 0 and 1.
+        draw_with_replacement: True to draw subgroups that draw from the dataset with replacement.
+        num_trials: number of trials to estimate the worst calibration error per group size.
+        num_group_draws: number of subgroups to draw per given group size to measure calibration error on.
+        vectorized: whether to vectorize computation for observed proportions.
+                    (while setting to True is faster, it has much higher memory requirements
+                    and may fail to run for larger datasets).
+        verbose: True to print progress statements.
+
+    Returns:
+        A Namespace with:
+            * Group size array
+            * Mean of the worst calibration errors for each group size
+            * Standard error of the worst calibration error for each group size
+    """
+
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
@@ -174,21 +238,35 @@ def adversarial_group_calibration(
 
 
 def miscalibration_area(
-    y_pred,
-    y_std,
-    y_true,
-    num_bins=100,
-    vectorized=False,
-    recal_model=None,
-    prop_type="interval",
-):
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    vectorized: bool = False,
+    recal_model: Any = None,
+    prop_type: str = "interval",
+) -> float:
     """
     Return miscalibration area.
-
     This is identical to mean absolute calibration error and ECE, however
     the integration here is taken by tracing the area between curves.
     In the limit of num_bins, miscalibration area and
     mean absolute calibration error will converge to the same value.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+        vectorized: whether to vectorize computation for observed proportions.
+                    (while setting to True is faster, it has much higher memory requirements
+                    and may fail to run for larger datasets).
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+
+    Returns:
+        A single scalar which calculates the miscalibration area.
     """
 
     # Check that input arrays are flat
@@ -227,11 +305,18 @@ def miscalibration_area(
 
 
 def get_proportion_lists_vectorized(
-    y_pred, y_std, y_true, num_bins=100, recal_model=None, prop_type="interval"
-):
-    """
-    Return lists of expected and observed proportions of points falling into
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    recal_model: Any = None,
+    prop_type: str = "interval"
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Return lists of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
+
+
+
     """
 
     # Check that input arrays are flat
