@@ -17,9 +17,11 @@ def synthetic_arange_random(
         num_points: The number of data points in the set.
 
     Returns:
-        - The y labels of the dataset with uniform noise.
-        - The standard deviation by taking the difference between the
-        -   noisy y observation and the truth and adding some uniform noise.
+        - The y predictions given by some synthetic model. These are the true
+          values of y but with uniform noise added.
+        - The standard deviation estimation given by some synthetic model. These
+          are the errors between the predictions and the truth plus some unifom
+          noise.
         - The true y labels.
         - The x data points.
     """

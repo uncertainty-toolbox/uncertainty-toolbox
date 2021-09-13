@@ -171,9 +171,10 @@ def adversarial_group_calibration(
 
     Returns:
         A Namespace with:
-            * Group size array
-            * Mean of the worst calibration errors for each group size
-            * Standard error of the worst calibration error for each group size
+
+        - Group size array
+        - Mean of the worst calibration errors for each group size
+        - Standard error of the worst calibration error for each group size
     """
 
 
