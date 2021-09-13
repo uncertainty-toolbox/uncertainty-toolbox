@@ -68,7 +68,7 @@ def get_all_average_calibration(
     y_std: np.ndarray,
     y_true: np.ndarray,
     num_bins: int,
-    verbose=True,
+    verbose: bool = True,
 ) -> Dict[str, float]:
     """Compute all metrics for average calibration.
 
