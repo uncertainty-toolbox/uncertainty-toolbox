@@ -2,7 +2,7 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
-from typing import Any, Tuple
+from typing import Any, Tuple, Optional
 from argparse import Namespace
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
