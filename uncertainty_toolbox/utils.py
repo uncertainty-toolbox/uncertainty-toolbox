@@ -1,16 +1,21 @@
 """
 Util functions for the toolbox.
 """
-from typing import NoReturn, Union
+from typing import Any, NoReturn, Union
 
 import numpy as np
 
 
-def assert_is_flat_same_shape(*args) -> Union[bool, NoReturn]:
+def assert_is_flat_same_shape(
+    *args: Any
+) -> Union[bool, NoReturn]:
     """Check if inputs are all same-length 1d numpy.ndarray.
 
     Args:
-        The numpy arrays to check.
+        args: the numpy arrays to check.
+
+    Returns:
+        True if all arrays are flat and the same shape, or else raises assertion error.
     """
 
     assert isinstance(
@@ -27,11 +32,16 @@ def assert_is_flat_same_shape(*args) -> Union[bool, NoReturn]:
     return True
 
 
-def assert_is_positive(*args) -> Union[bool, NoReturn]:
+def assert_is_positive(
+    *args: Any
+) -> Union[bool, NoReturn]:
     """Assert that all numpy arrays are positive.
 
     Args:
-        The numpy arrays to check.
+        args: the numpy arrays to check.
+
+    Returns:
+        True if all elements in all arrays are positive values, or else raises assertion error.
     """
     for arr in args:
         assert isinstance(

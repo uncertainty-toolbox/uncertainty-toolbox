@@ -47,7 +47,7 @@ def plot_xy(
         ylims: a tuple of y axis plotting bounds, given as (lower, upper).
         xlims: a tuple of x axis plotting bounds, given as (lower, upper).
         num_stds_confidence_bound: width of confidence band, in terms of number of
-        standard deviations.
+            standard deviations.
         leg_loc: location of legend as a str or legend code int.
         ax: matplotlib.axes.Axes object.
 
@@ -123,7 +123,7 @@ def plot_intervals(
         n_subset: Number of points to plot after filtering.
         ylims: a tuple of y axis plotting bounds, given as (lower, upper).
         num_stds_confidence_bound: width of intervals, in terms of number of standard
-        deviations.
+            deviations.
         ax: matplotlib.axes.Axes object.
 
     Returns:
@@ -201,7 +201,7 @@ def plot_intervals_ordered(
         n_subset: Number of points to plot after filtering.
         ylims: a tuple of y axis plotting bounds, given as (lower, upper).
         num_stds_confidence_bound: width of intervals, in terms of number of standard
-        deviations.
+            deviations.
         ax: matplotlib.axes.Axes object.
 
     Returns:
