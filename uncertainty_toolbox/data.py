@@ -11,19 +11,21 @@ def synthetic_arange_random(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Dataset of evenly spaced points and identity function (with some randomization).
 
-    This returns predictions from some hypothetical uncertainty model.
+    This function returns predictions and predictive uncertainties (given as standard
+    deviations) from some hypothetical uncertainty model, along with true input x and
+    output y data points.
 
     Args:
         num_points: The number of data points in the set.
 
     Returns:
-        - The y predictions given by some synthetic model. These are the true
-          values of y but with uniform noise added.
-        - The standard deviation estimation given by some synthetic model. These
-          are the errors between the predictions and the truth plus some unifom
+        - The y predictions given by a hypothetical predictive uncertainty model. These
+          are the true values of y but with uniform noise added.
+        - The standard deviations given by a hypothetical predictive uncertainty model.
+          These are the errors between the predictions and the truth plus some unifom
           noise.
-        - The true y labels.
-        - The x data points.
+        - The true y outputs.
+        - The true x inputs.
     """
     x = np.arange(num_points)
     y_true = np.arange(num_points)
@@ -38,16 +40,17 @@ def synthetic_sine_heteroscedastic(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Return samples from "synthetic sine" heteroscedastic noisy function.
 
-    This returns a synthetic dataset which one could use to train an uncertainty model.
+    This returns a synthetic dataset which can be used to train and assess a predictive
+    uncertainty model.
 
     Args:
         n_points: The number of data points in the set.
 
     Returns:
-        - The true y points of the dataset.
-        - The standard deviation of the noise added.
-        - The observed, noisy y data.
-        - The x data points.
+        - Predicted output points y.
+        - Predictive uncertainties, defined using standard deviation of added noise.
+        - True output points y.
+        - True input points x.
     """
     bounds = [0, 15]
 
