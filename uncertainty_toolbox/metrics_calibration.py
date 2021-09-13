@@ -170,11 +170,9 @@ def adversarial_group_calibration(
         verbose: True to print progress statements.
 
     Returns:
-        A Namespace with:
-
-        - Group size array
-        - Mean of the worst calibration errors for each group size
-        - Standard error of the worst calibration error for each group size
+        A Namespace with an array of the group sizes, the mean of the worst
+        calibration errors for each group size, and the standard error of the
+        worst calibration error for each group size
     """
 
 
