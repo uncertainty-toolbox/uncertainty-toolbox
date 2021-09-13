@@ -24,8 +24,8 @@ def synthetic_arange_random(
         - The standard deviations given by a hypothetical predictive uncertainty model.
           These are the errors between the predictions and the truth plus some unifom
           noise.
-        - The true y outputs.
-        - The true x inputs.
+        - The true outputs y.
+        - The true inputs x.
     """
     x = np.arange(num_points)
     y_true = np.arange(num_points)
@@ -54,7 +54,6 @@ def synthetic_sine_heteroscedastic(
     """
     bounds = [0, 15]
 
-    # x = np.random.uniform(bounds[0], bounds[1], n_points)
     x = np.linspace(bounds[0], bounds[1], n_points)
 
     f = np.sin(x)
