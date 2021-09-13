@@ -8,15 +8,15 @@ calibration, metrics, and visualization.
 <https://github.com/uncertainty-toolbox/uncertainty-toolbox>`_.
 
 .. |github| image:: assets/github.svg
-   :width: 30
-   :alt: github
+  :width: 30
+  :alt: github
 
 
 User Guide
 **********
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
-   installation
-   quick_start
-   api_reference/index
+  installation
+  quick_start
+  api_reference/index
