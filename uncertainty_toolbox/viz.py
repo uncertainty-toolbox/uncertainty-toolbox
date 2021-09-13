@@ -5,6 +5,7 @@ from typing import Union, Tuple, List, Any
 
 import numpy as np
 from scipy import stats
+import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.metrics import (
     mean_absolute_error,
@@ -32,8 +33,8 @@ def plot_xy(
     xlims: Union[Tuple[float, float], None] = None,
     num_stds_confidence_bound: int = 2,
     leg_loc: Union[int, str] = 3,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot one-dimensional inputs with associated predicted values, predictive
     uncertainties, and true values.
 
@@ -51,7 +52,7 @@ def plot_xy(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -111,8 +112,8 @@ def plot_intervals(
     n_subset: Union[int, None] = None,
     ylims: Union[Tuple[float, float], None] = None,
     num_stds_confidence_bound: int = 2,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot predictions and predictive intervals versus true values.
 
     Args:
@@ -126,7 +127,7 @@ def plot_intervals(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -188,8 +189,8 @@ def plot_intervals_ordered(
     n_subset: Union[int, None] = None,
     ylims: Union[Tuple[float, float], None] = None,
     num_stds_confidence_bound: int = 2,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot predictions and predictive intervals versus true values, with points ordered
     by true value along x-axis.
 
@@ -204,7 +205,7 @@ def plot_intervals_ordered(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -268,8 +269,8 @@ def plot_calibration(
     vectorized: bool = True,
     exp_props: Union[np.ndarray, None] = None,
     obs_props: Union[np.ndarray, None] = None,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot the observed proportion vs prediction proportion of outputs falling into a
     range of intervals, and display miscalibration area.
 
@@ -285,7 +286,7 @@ def plot_calibration(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -375,8 +376,8 @@ def plot_adversarial_group_calibration(
     group_size: Union[np.ndarray, None] = None,
     score_mean: Union[np.ndarray, None] = None,
     score_stderr: Union[np.ndarray, None] = None,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot adversarial group calibration plots by varying group size from 0% to 100% of
     dataset size and recording the worst calibration occurred for each group size.
 
@@ -393,7 +394,7 @@ def plot_adversarial_group_calibration(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -453,8 +454,8 @@ def plot_adversarial_group_calibration(
 def plot_sharpness(
     y_std: np.ndarray,
     n_subset: Union[int, None] = None,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot sharpness of the predictive uncertainties.
 
     Args:
@@ -463,7 +464,7 @@ def plot_sharpness(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -515,8 +516,8 @@ def plot_residuals_vs_stds(
     y_std: np.ndarray,
     y_true: np.ndarray,
     n_subset: Union[int, None] = None,
-    ax: Union[plt.Axes, None] = None,
-) -> plt.Axes:
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
     """Plot absolute value of the prediction residuals versus standard deviations of the
     predictive uncertainties.
 
@@ -528,7 +529,7 @@ def plot_residuals_vs_stds(
         ax: matplotlib.axes.Axes object.
 
     Returns:
-        ax: matplotlib.axes.Axes object with plot added.
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
