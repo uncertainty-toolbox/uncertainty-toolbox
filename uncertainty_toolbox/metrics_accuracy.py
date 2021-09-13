@@ -25,12 +25,13 @@ def prediction_error_metrics(
 
     Returns:
         A dictionary with:
-            * Mean average error ('mae')
-            * Root mean squared error ('rmse')
-            * Median absolute error ('mdae')
-            * Mean absolute relative percent difference ('marpd')
-            * r^2 ('r2')
-            * Pearson's correlation coefficient ('corr')
+
+        - Mean average error ('mae')
+        - Root mean squared error ('rmse')
+        - Median absolute error ('mdae')
+        - Mean absolute relative percent difference ('marpd')
+        - r^2 ('r2')
+        - Pearson's correlation coefficient ('corr')
     """
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_true)
