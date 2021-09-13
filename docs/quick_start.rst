@@ -2,14 +2,15 @@
 Quick Start
 ###########
 
-This is a quick start tutorial for Uncertainty Toolbox.
+This is a quick start tutorial for Uncertainty Toolbox. For a longer tutorial, `see here
+<https://uncertainty-toolbox.github.io/tutorial>`_.
 
 ***************
 Minimal example
 ***************
 
-This example computes metrics for a vector of predicted values (`predictions`) and
-associated uncertainties (`predictions_std`, a vector of standard deviations), taken
+This example computes a set of metrics for a vector of predicted values (`predictions`)
+and associated uncertainties (`predictions_std`, a vector of standard deviations), taken
 with respect to a corresponding set of observed values `y`.
 
 .. code-block:: python
