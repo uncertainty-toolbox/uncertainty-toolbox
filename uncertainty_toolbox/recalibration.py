@@ -17,7 +17,7 @@ def get_q_idx(exp_props: np.ndarray, q: float) -> int:
 
     Args:
         exp_props: 1D array of expected probabilities.
-        q: a specified probability float
+        q: a specified probability float.
 
     Returns:
         An index which specifies the (approximate) index of q in exp_props
@@ -49,7 +49,7 @@ def iso_recal(
 
     Args:
         exp_props: 1D array of expected probabilities (values must span [0, 1]).
-        obs_props: 1D array of observed probabilities
+        obs_props: 1D array of observed probabilities.
 
     Returns:
         An sklearn IsotonicRegression recalibration model.

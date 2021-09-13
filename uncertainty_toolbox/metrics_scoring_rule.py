@@ -153,7 +153,7 @@ def interval_score(
     end_p: float = 0.99,
     resolution: int = 99,
 ) -> float:
-    """THe negatively oriented interval score.
+    """The negatively oriented interval score.
 
     Compute the negatively oriented interval score for held out data (y_true)
     given predictive uncertainty with mean (y_pred) and standard-deviation

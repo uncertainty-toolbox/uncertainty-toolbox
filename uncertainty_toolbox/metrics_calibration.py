@@ -164,9 +164,6 @@ def adversarial_group_calibration(
         draw_with_replacement: True to draw subgroups that draw from the dataset with replacement.
         num_trials: number of trials to estimate the worst calibration error per group size.
         num_group_draws: number of subgroups to draw per given group size to measure calibration error on.
-        vectorized: whether to vectorize computation for observed proportions.
-                    (while setting to True is faster, it has much higher memory requirements
-                    and may fail to run for larger datasets).
         verbose: True to print progress statements.
 
     Returns:
@@ -247,8 +244,8 @@ def miscalibration_area(
     recal_model: Any = None,
     prop_type: str = "interval",
 ) -> float:
-    """
-    Return miscalibration area.
+    """Miscalibration area.
+
     This is identical to mean absolute calibration error and ECE, however
     the integration here is taken by tracing the area between curves.
     In the limit of num_bins, miscalibration area and
@@ -313,7 +310,9 @@ def get_proportion_lists_vectorized(
     recal_model: Any = None,
     prop_type: str = "interval"
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Return arrays of expected and observed proportions of points falling into
+    """Arrays of expected and observed proportions
+
+    Returns the expected proportions and observed proportion of points falling into
     intervals corresponding to a range of quantiles.
     Computations here are vectorized for faster execution, but this function is
     not suited when there are memory constraints.
@@ -381,7 +380,9 @@ def get_proportion_lists(
     recal_model: IsotonicRegression = None,
     prop_type: str = "interval"
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Return arrays of expected and observed proportions of points falling into
+    """Arrays of expected and observed proportions
+
+    Return arrays of expected and observed proportions of points falling into
     intervals corresponding to a range of quantiles.
     Computations here are not vectorized, in case there are memory constraints.
 
@@ -435,15 +436,15 @@ def get_proportion_in_interval(
     """For a specified quantile, return the proportion of points falling into
     an interval corresponding to that quantile.
 
-     Args:
-         y_pred: 1D array of the predicted means for the held out dataset.
-         y_std: 1D array of the predicted standard deviations for the held out dataset.
-         y_true: 1D array of the true labels in the held out dataset.
-         quantile: float
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        quantile: a specified quantile level
 
-     Returns:
-         A single scalar which is the proportion of the true labels falling into the
-         prediction interval for the specified quantile.
+    Returns:
+        A single scalar which is the proportion of the true labels falling into the
+        prediction interval for the specified quantile.
      """
 
     # Check that input arrays are flat
