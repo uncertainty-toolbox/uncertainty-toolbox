@@ -1,9 +1,11 @@
 """
 Visualizations for predictive uncertainties and metrics.
 """
+from typing import Union, Tuple, List, Any
 
 import numpy as np
 from scipy import stats
+import matplotlib
 import matplotlib.pyplot as plt
 from sklearn.metrics import (
     mean_absolute_error,
@@ -13,6 +15,7 @@ from sklearn.metrics import (
 )
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
+
 from uncertainty_toolbox.metrics_calibration import (
     get_proportion_lists,
     get_proportion_lists_vectorized,
@@ -21,20 +24,35 @@ from uncertainty_toolbox.metrics_calibration import (
 
 
 def plot_xy(
-    y_pred,
-    y_std,
-    y_true,
-    x,
-    n_subset=None,
-    ylims=None,
-    xlims=None,
-    num_stds_confidence_bound=2,
-    leg_loc=3,
-    ax=None,
-):
-    """
-    Return Axes for plot of 1D input (x) and predicted/true (y_pred/y_true)
-    values.
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    x: np.ndarray,
+    n_subset: Union[int, None] = None,
+    ylims: Union[Tuple[float, float], None] = None,
+    xlims: Union[Tuple[float, float], None] = None,
+    num_stds_confidence_bound: int = 2,
+    leg_loc: Union[int, str] = 3,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot one-dimensional inputs with associated predicted values, predictive
+    uncertainties, and true values.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        x: 1D array of input values for the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        ylims: a tuple of y axis plotting bounds, given as (lower, upper).
+        xlims: a tuple of x axis plotting bounds, given as (lower, upper).
+        num_stds_confidence_bound: width of confidence band, in terms of number of
+            standard deviations.
+        leg_loc: location of legend as a str or legend code int.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -88,17 +106,28 @@ def plot_xy(
 
 
 def plot_intervals(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
-    ax=None,
-):
-    """
-    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    n_subset: Union[int, None] = None,
+    ylims: Union[Tuple[float, float], None] = None,
+    num_stds_confidence_bound: int = 2,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot predictions and predictive intervals versus true values.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        ylims: a tuple of y axis plotting bounds, given as (lower, upper).
+        num_stds_confidence_bound: width of intervals, in terms of number of standard
+            deviations.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -154,17 +183,29 @@ def plot_intervals(
 
 
 def plot_intervals_ordered(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    ylims=None,
-    num_stds_confidence_bound=2,
-    ax=None,
-):
-    """
-    Return Axes for plot of predicted values (y_pred) and intervals (y_std) vs observed
-    values (y_true).
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    n_subset: Union[int, None] = None,
+    ylims: Union[Tuple[float, float], None] = None,
+    num_stds_confidence_bound: int = 2,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot predictions and predictive intervals versus true values, with points ordered
+    by true value along x-axis.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        ylims: a tuple of y axis plotting bounds, given as (lower, upper).
+        num_stds_confidence_bound: width of intervals, in terms of number of standard
+            deviations.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -219,20 +260,33 @@ def plot_intervals_ordered(
 
 
 def plot_calibration(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    curve_label=None,
-    show=False,
-    vectorized=True,
-    exp_props=None,
-    obs_props=None,
-    ax=None,
-):
-    """
-    Make calibration plot using predicted mean values (y_pred), predicted std
-    values (y_std), and observed values (y_true).
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    n_subset: Union[int, None] = None,
+    curve_label: Union[str, None] = None,
+    show: bool = False,
+    vectorized: bool = True,
+    exp_props: Union[np.ndarray, None] = None,
+    obs_props: Union[np.ndarray, None] = None,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot the observed proportion vs prediction proportion of outputs falling into a
+    range of intervals, and display miscalibration area.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        curve_label: legend label str for calibration curve.
+        vectorized: plot using get_proportion_lists_vectorized.
+        exp_props: plot using the given expected proportions.
+        obs_props: plot using the given observed proportions.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -313,21 +367,34 @@ def plot_calibration(
 
 
 def plot_adversarial_group_calibration(
-    y_pred,
-    y_std,
-    y_true,
-    n_subset=None,
-    cali_type="mean_abs",
-    curve_label=None,
-    group_size=None,
-    score_mean=None,
-    score_stderr=None,
-    ax=None,
-):
-    """
-    Plot adversarial group calibration plots by spanning group size
-    between 0% to 100% of dataset size and recording the worst calibration
-    occurred for each group size.
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    n_subset: Union[int, None] = None,
+    cali_type: str = "mean_abs",
+    curve_label: Union[str, None] = None,
+    group_size: Union[np.ndarray, None] = None,
+    score_mean: Union[np.ndarray, None] = None,
+    score_stderr: Union[np.ndarray, None] = None,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot adversarial group calibration plots by varying group size from 0% to 100% of
+    dataset size and recording the worst calibration occurred for each group size.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        cali_type: Calibration type str.
+        curve_label: legend label str for calibration curve.
+        group_size: 1D array of group size ratios in [0, 1].
+        score_mean: 1D array of metric means for group size ratios in group_size.
+        score_stderr: 1D array of metric standard devations for group size ratios in group_size.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -384,9 +451,20 @@ def plot_adversarial_group_calibration(
     return ax
 
 
-def plot_sharpness(y_std, n_subset=None, ax=None):
-    """
-    Make sharpness plot using predicted std values (y_std).
+def plot_sharpness(
+    y_std: np.ndarray,
+    n_subset: Union[int, None] = None,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot sharpness of the predictive uncertainties.
+
+    Args:
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -433,9 +511,25 @@ def plot_sharpness(y_std, n_subset=None, ax=None):
     return ax
 
 
-def plot_residuals_vs_stds(y_pred, y_std, y_true, n_subset=None, ax=None):
-    """
-    Plot absolute value of residuals versus predictive standard deviations.
+def plot_residuals_vs_stds(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    n_subset: Union[int, None] = None,
+    ax: Union[matplotlib.axes.Axes, None] = None,
+) -> matplotlib.axes.Axes:
+    """Plot absolute value of the prediction residuals versus standard deviations of the
+    predictive uncertainties.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        n_subset: Number of points to plot after filtering.
+        ax: matplotlib.axes.Axes object.
+
+    Returns:
+        matplotlib.axes.Axes object with plot added.
     """
     # Create ax if it doesn't exist
     if ax is None:
@@ -477,8 +571,16 @@ def plot_residuals_vs_stds(y_pred, y_std, y_true, n_subset=None, ax=None):
     return ax
 
 
-def filter_subset(input_list, n_subset):
-    """Keep only n_subset random indices from everything in input_list."""
+def filter_subset(input_list: List[List[Any]], n_subset: int) -> List[List[Any]]:
+    """Keep only n_subset random indices from all lists given in input_list.
+
+    Args:
+        input_list: list of lists.
+        n_subset: Number of points to plot after filtering.
+
+    Returns:
+        List of all input lists with sizes reduced to n_subset.
+    """
     assert type(n_subset) is int
     n_total = len(input_list[0])
     idx = np.random.choice(range(n_total), n_subset, replace=False)

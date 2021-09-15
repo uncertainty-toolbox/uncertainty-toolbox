@@ -1,0 +1,111 @@
+body {
+    text-align: justify;
+    font-family: "Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(252, 252, 252);
+}
+
+h1, h2, .rst-content .toctree-wrapper p.caption, h3, h4, h5, h6, legend, p.caption {
+    color: #2a2730;
+    font-weight: 700;
+    font-family: "Lato","Times",serif;
+    clear: both;
+}
+
+a:visited {
+    color: #2980B9;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Literal color */
+.rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal {
+    color: #DB2407;
+}
+
+/* Docs top-left background color */
+.wy-side-nav-search {
+    background-color: #f3f4f7;
+    color: #262626;
+}
+
+.wy-nav-side {
+    background-color: #f3f4f7;
+    float: left;
+}
+
+/* Fixes for mobile */
+.wy-nav-top {
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 0;
+    margin: 0.6em 1em;
+}
+
+.wy-nav-top > a {
+    display: none;
+}
+
+.wy-nav-content {
+    background-color: rgb(252, 252, 252);
+    margin: 0.6em auto 0 auto;
+}
+
+.wy-nav-content-wrap {
+     background: rgb(252, 252, 252);
+}
+
+.wy-menu-vertical a {
+    line-height: 18px;
+    padding: .4045em 1.618em;
+    display: block;
+    position: relative;
+    font-size: 90%;
+    color: #636363;
+}
+
+.wy-menu-vertical a:hover {
+    background-color: rgb(252, 252, 252);
+}
+
+@media screen and (max-width: 768px) {
+    .wy-side-nav-search>a img.logo {
+        height: 60px;
+    }
+}
+
+/* This is needed to ensure that logo above search scales properly */
+.wy-side-nav-search a {
+    display: block;
+    color: #2980B9;
+}
+
+.wy-side-nav-search>div.version {
+    color: #000;
+}
+
+/* For hidden headers that appear in TOC tree */
+/* see http://stackoverflow.com/a/32363545/3343043 */
+.rst-content .hidden-section {
+    display: none;
+}
+
+nav .hidden-section {
+    display: inherit;
+}
+
+h1 {
+    font-size: 270%;
+    font-weight: normal;
+    text-align: center;
+}
+
+.fa-plus-square-o::before, .wy-menu-vertical li span.toctree-expand::before {
+    content: "";
+}
+
+.fa-minus-square-o::before, .wy-menu-vertical li.on a span.toctree-expand::before, .wy-menu-vertical li.current > a span.toctree-expand::before {
+    content: "";
+}
