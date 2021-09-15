@@ -5,28 +5,10 @@ from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from tqdm import tqdm
 
-
-def quantile_sharpness(
-    model,
-    x,
-    recal_model=None,
-    recal_type=None,
-):
-    exp_proportions = np.array([0.025, 0.975])
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
-        exp_proportions=exp_proportions,
-        recal_model=recal_model,
-        recal_type=recal_type,
-    )
-    q_025 = quantile_predictions[:, 0]
-    q_975 = quantile_predictions[:, 1]
-    sharp_metric = np.mean(q_975 - q_025)
-
-    return sharp_metric
+from uncertainty_toolbox.metrics_accuracy import prediction_error_metrics
 
 
+""" Utilities """
 def get_quantile_model_predictions(
     model,
     x,
@@ -52,7 +34,51 @@ def get_quantile_model_predictions(
 
     return quantile_preds_arr
 
+""" Accuracy """
+def quantile_accuracy(
+    model,
+    x,
+    y,
+    recal_model=None,
+    recal_type=None
+):
+    median_quantile = np.array([0.5])
+    quantile_predictions = get_quantile_model_predictions(
+        model=model,
+        x=x,
+        exp_proportions=exp_proportions,
+        recal_model=recal_model,
+        recal_type=recal_type,
+    )
+    q_050 = quantile_predictions[:, 0]
+    import pdb; pdb.set_trace()
 
+    return prediction_error_metrics(y_pred=q_050, y_true=y)
+
+
+""" Sharpness """
+def quantile_sharpness(
+    model,
+    x,
+    recal_model=None,
+    recal_type=None,
+):
+    exp_proportions = np.array([0.025, 0.975])
+    quantile_predictions = get_quantile_model_predictions(
+        model=model,
+        x=x,
+        exp_proportions=exp_proportions,
+        recal_model=recal_model,
+        recal_type=recal_type,
+    )
+    q_025 = quantile_predictions[:, 0]
+    q_975 = quantile_predictions[:, 1]
+    sharp_metric = np.mean(q_975 - q_025)
+
+    return sharp_metric
+
+
+""" Calibration """
 def quantile_root_mean_squared_calibration_error(
     model,
     x,
@@ -220,6 +246,15 @@ def quantile_adversarial_group_calibration(
     return out
 
 
+""" Proper scoring rules """
+def quantile_check_score():
+    pass
+
+def quantile_interval_score():
+    pass
+
+
+### Reference code below
 
 # def test_uq(
 #     model,
