@@ -34,7 +34,10 @@ def get_quantile_model_predictions(
 
     return quantile_preds_arr
 
+
 """ Accuracy """
+
+
 def quantile_accuracy(
     model,
     x,
@@ -46,7 +49,7 @@ def quantile_accuracy(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=exp_proportions,
+        exp_proportions=median_quantile,
         recal_model=recal_model,
         recal_type=recal_type,
     )
@@ -57,6 +60,8 @@ def quantile_accuracy(
 
 
 """ Sharpness """
+
+
 def quantile_sharpness(
     model,
     x,
@@ -79,6 +84,8 @@ def quantile_sharpness(
 
 
 """ Calibration """
+
+
 def quantile_root_mean_squared_calibration_error(
     model,
     x,
@@ -247,11 +254,97 @@ def quantile_adversarial_group_calibration(
 
 
 """ Proper scoring rules """
-def quantile_check_score():
-    pass
+def quantile_check_score(
+    model,
+    x,
+    y,
+    num_bins=99,
+    recal_model=None,
+    recal_type=None,
+):
+    p if not hasattr(args, 'q_list'):
+        raise RuntimeError('args must have q_list for check_loss')
+    q_list = args.q_list
 
-def quantile_interval_score():
-    pass
+    num_pts = y.size(0)
+    num_q = q_list.size(0)
+
+    q_rep = q_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device)
+    y_stacked = y.repeat(num_q, 1)
+
+    # recalibrate if needed
+    if hasattr(args, 'recal_model') and args.recal_model is not None:
+        q_rep = recal_quantiles(args.recal_model, q_rep)
+
+    if X is None:
+        model_in = q_rep
+    else:
+        x_stacked = X.repeat(num_q, 1)
+        model_in = torch.cat([x_stacked, q_rep], dim=1)
+
+    pred_y = model.predict(model_in)
+
+    diff = pred_y - y_stacked
+    mask = (diff.ge(0).float() - q_rep).detach()
+    #TODO: mean or sum?
+    check_loss_score = torch.mean((mask * diff))
+
+def quantile_interval_score(
+    model,
+    x,
+    y,
+    recal_model=None,
+    recal_type=None,
+):
+    """
+    Interval score
+    :param model:
+    :param X: assuming tensor
+    :param y: assuming tensor
+    :param args: optional - alpha_list (assuming tensor)
+    :return:
+    """
+
+    alpha_list = torch.linspace(0.01, 0.99, 99)
+    num_alpha = alpha_list.size(0)
+    assert num_alpha == 99
+
+    num_pts = y.size(0)
+
+    with torch.no_grad():
+        l_list = torch.min(torch.stack([(alpha_list / 2.0), 1 - (alpha_list / 2.0)],
+                                       dim=1), dim=1)[0]
+        u_list = 1.0 - l_list
+
+    # recalibrate if needed
+    if hasattr(args, 'recal_model') and args.recal_model is not None:
+        l_list = recal_quantiles(args.recal_model, l_list)
+        u_list = recal_quantiles(args.recal_model, u_list)
+
+    l_rep = l_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device).float()
+    u_rep = u_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device).float()
+    num_l = l_rep.size(0)
+    num_u = u_rep.size(0)
+
+    if X is None:
+        model_in = torch.cat([l_list, u_list], dim=0)
+    else:
+        x_stacked = X.repeat(num_alpha, 1)
+        l_in = torch.cat([x_stacked, l_rep], dim=1)
+        u_in = torch.cat([x_stacked, u_rep], dim=1)
+        model_in = torch.cat([l_in, u_in], dim=0)
+
+    pred_y = model.predict(model_in)
+    pred_l = pred_y[:num_l].view(num_alpha, num_pts)
+    pred_u = pred_y[num_l:].view(num_alpha, num_pts)
+
+    below_l = (pred_l - y.view(-1)).gt(0)
+    above_u = (y.view(-1) - pred_u).gt(0)
+
+    score_per_alpha = (pred_u - pred_l) + \
+                      (1.0 / l_list).view(-1, 1).to(args.device) * (pred_l - y.view(-1)) * below_l + \
+                      (1.0 / l_list).view(-1, 1).to(args.device) * (y.view(-1) - pred_u) * above_u
+    int_score = torch.mean(score_per_alpha)
 
 
 ### Reference code below
