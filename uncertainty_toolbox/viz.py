@@ -69,9 +69,7 @@ def plot_xy(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset(
-            [y_pred, y_std, y_true, x], n_subset
-        )
+        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
 
     intervals = num_stds_confidence_bound * y_std
 
@@ -135,9 +133,7 @@ def plot_intervals(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute intervals
     intervals = num_stds_confidence_bound * y_std
@@ -213,9 +209,7 @@ def plot_intervals_ordered(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
@@ -294,9 +288,7 @@ def plot_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
@@ -323,9 +315,7 @@ def plot_calibration(
     # Plot
     ax.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
     ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    ax.fill_between(
-        exp_proportions, exp_proportions, obs_proportions, alpha=0.2
-    )
+    ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
 
     # Format plot
     ax.set_xlabel("Predicted Proportion in Interval")
@@ -402,9 +392,7 @@ def plot_adversarial_group_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute group_size, score_mean, score_stderr
     if (group_size is None) or (score_mean is None):
@@ -472,9 +460,7 @@ def plot_sharpness(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Plot sharpness curve
     ax.hist(y_std, edgecolor="#1f77b4", color="#a5c8e1", density=True)
@@ -537,9 +523,7 @@ def plot_residuals_vs_stds(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute residuals
     residuals = y_true - y_pred

@@ -93,7 +93,7 @@ def mean_absolute_calibration_error(
     y_true: np.ndarray,
     num_bins: int = 100,
     vectorized: bool = False,
-    recal_model: IsotonicRegression =None,
+    recal_model: IsotonicRegression = None,
     prop_type: str = "interval",
 ) -> float:
     """Mean absolute calibration error; identical to ECE.
@@ -171,7 +171,6 @@ def adversarial_group_calibration(
         calibration errors for each group size, and the standard error of the
         worst calibration error for each group size
     """
-
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
@@ -308,7 +307,7 @@ def get_proportion_lists_vectorized(
     y_true: np.ndarray,
     num_bins: int = 100,
     recal_model: Any = None,
-    prop_type: str = "interval"
+    prop_type: str = "interval",
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Arrays of expected and observed proportions
 
@@ -347,9 +346,7 @@ def get_proportion_lists_vectorized(
         in_exp_proportions = exp_proportions
 
     residuals = y_pred - y_true
-    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(
-        -1, 1
-    )
+    normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1, 1)
     norm = stats.norm(loc=0, scale=1)
     if prop_type == "interval":
         gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
@@ -359,15 +356,11 @@ def get_proportion_lists_vectorized(
         below_upper = normalized_residuals <= gaussian_upper_bound
 
         within_quantile = above_lower * below_upper
-        obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(
-            residuals
-        )
+        obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(residuals)
     elif prop_type == "quantile":
         gaussian_quantile_bound = norm.ppf(in_exp_proportions)
         below_quantile = normalized_residuals <= gaussian_quantile_bound
-        obs_proportions = np.sum(below_quantile, axis=0).flatten() / len(
-            residuals
-        )
+        obs_proportions = np.sum(below_quantile, axis=0).flatten() / len(residuals)
 
     return exp_proportions, obs_proportions
 
@@ -378,7 +371,7 @@ def get_proportion_lists(
     y_true: np.ndarray,
     num_bins: int = 100,
     recal_model: IsotonicRegression = None,
-    prop_type: str = "interval"
+    prop_type: str = "interval",
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Arrays of expected and observed proportions
 
@@ -428,10 +421,7 @@ def get_proportion_lists(
 
 
 def get_proportion_in_interval(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
-    quantile: float
+    y_pred: np.ndarray, y_std: np.ndarray, y_true: np.ndarray, quantile: float
 ) -> float:
     """For a specified quantile, return the proportion of points falling into
     an interval corresponding to that quantile.
@@ -445,7 +435,7 @@ def get_proportion_in_interval(
     Returns:
         A single scalar which is the proportion of the true labels falling into the
         prediction interval for the specified quantile.
-     """
+    """
 
     # Check that input arrays are flat
     assert_is_flat_same_shape(y_pred, y_std, y_true)
@@ -472,10 +462,10 @@ def get_proportion_in_interval(
 
 
 def get_proportion_under_quantile(
-        y_pred: np.ndarray,
-        y_std: np.ndarray,
-        y_true: np.ndarray,
-        quantile: float,
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    quantile: float,
 ) -> float:
     """Get the proportion of data that are below the predicted quantile.
 
@@ -513,10 +503,10 @@ def get_proportion_under_quantile(
 
 
 def get_prediction_interval(
-        y_pred: np.ndarray,
-        y_std: np.ndarray,
-        quantile: np.ndarray,
-        recal_model: Optional[IsotonicRegression] = None,
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    quantile: np.ndarray,
+    recal_model: Optional[IsotonicRegression] = None,
 ) -> Namespace:
     """Return the centered predictional interval corresponding to a quantile.
 
@@ -567,10 +557,10 @@ def get_prediction_interval(
 
 
 def get_quantile(
-        y_pred: np.ndarray,
-        y_std: np.ndarray,
-        quantile: np.ndarray,
-        recal_model: Optional[IsotonicRegression] = None,
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    quantile: np.ndarray,
+    recal_model: Optional[IsotonicRegression] = None,
 ) -> float:
     """Return the value corresponding with a quantile.
 

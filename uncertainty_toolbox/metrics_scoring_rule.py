@@ -77,9 +77,7 @@ def crps_gaussian(
     y_standardized = (y_true - y_pred) / y_std
     term_1 = 1 / np.sqrt(np.pi)
     term_2 = 2 * stats.norm.pdf(y_standardized, loc=0, scale=1)
-    term_3 = y_standardized * (
-        2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1
-    )
+    term_3 = y_standardized * (2 * stats.norm.cdf(y_standardized, loc=0, scale=1) - 1)
 
     crps_list = -1 * y_std * (term_1 - term_2 - term_3)
     crps = np.sum(crps_list)
