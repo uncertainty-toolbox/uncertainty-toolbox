@@ -10,15 +10,12 @@ lines.linewidth : 2
 lines.antialiased : True
 
 ### Axes settings
-#axes.facecolor : f8f8f8
 axes.facecolor : fafafa
 axes.edgecolor : 777777
 axes.linewidth : 1
 axes.titlesize : medium
 axes.labelsize : medium
-# axes.labelcolor : 111111
 axes.axisbelow : True
-#axes.color_cycle : 348ABD, 7A68A6, A60628, 467821, CF4457, 188487, E24A33
 
 ### Ticks
 xtick.major.size     : 0      # major tick size in points
@@ -47,7 +44,6 @@ legend.fontsize     : Small
 legend.facecolor    : fdfdfd
 
 ### Figure
-#figure.figsize    : 2.5, 2.5
 figure.figsize      : 4.0, 4.0
 figure.facecolor    : 1.0
 figure.edgecolor    : 0.5
