@@ -62,7 +62,7 @@ deviations), taken with respect to a corresponding set of ground truth values `y
 
 **Colab notebook:**
 You can also take a look at [this Colab
-notebook](https://colab.research.google.com/drive/1fg61MFmVmgFYM4CRm_aoiZ_WRdxbIhIe?usp=sharing),
+notebook](https://colab.research.google.com/drive/1lbhwb6MP8FvQh9Q7Jldt4PuPEeSldsG5?usp=sharing),
 which walks through a use case of Uncertainty Toolbox.
 
 
