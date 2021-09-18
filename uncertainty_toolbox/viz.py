@@ -1,7 +1,7 @@
 """
 Visualizations for predictive uncertainties and metrics.
 """
-from typing import Union, Tuple, List, Any
+from typing import Union, Tuple, List, Any, NoReturn
 import pathlib
 
 import numpy as np
@@ -577,14 +577,28 @@ def filter_subset(input_list: List[List[Any]], n_subset: int) -> List[List[Any]]
     return output_list
 
 
-def set_style(style_str='default'):
-    """Set the matplotlib plotting style."""
+def set_style(style_str: str = 'default') -> NoReturn:
+    """Set the matplotlib plotting style.
+
+    Args:
+        style_str: string for style file.
+    """
     if style_str == 'default':
         plt.style.use((pathlib.Path(__file__).parent / 'matplotlibrc').resolve())
 
 
-def save_figure(file_name='figure', ext_list=None, white_background=True):
-    """Save matplotlib figure for all extensions in ext_list."""
+def save_figure(
+    file_name: str = 'figure',
+    ext_list: Union[list, str, None] = None,
+    white_background: bool = True,
+) -> NoReturn:
+    """Save matplotlib figure for all extensions in ext_list.
+
+    Args:
+        file_name: name of saved image file.
+        ext_list: list of strings (or single string) denoting file type.
+        white_background: set background of image to white if True.
+    """
 
     # Default ext_list
     if ext_list is None:
@@ -604,6 +618,11 @@ def save_figure(file_name='figure', ext_list=None, white_background=True):
         print(f'Saved figure {save_str}')
 
 
-def update_rc(key_str, value):
-    """Update matplotlib rc parameters."""
+def update_rc(key_str: str, value: Any) -> NoReturn:
+    """Update matplotlibrc parameters.
+
+    Args:
+        key_str: string for a matplotlibrc parameter.
+        value: associated value to set the matplotlibrc parameter.
+    """
     plt.rcParams.update({key_str: value})
