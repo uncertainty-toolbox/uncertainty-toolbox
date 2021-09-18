@@ -28,19 +28,28 @@ Uncertainty Toolbox contains:
 * [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
 * [Recalibration](#recalibration) methods for improving the calibration of a predictor.
 * [Website](https://uncertainty-toolbox.github.io/) with a [tutorial](https://uncertainty-toolbox.github.io/tutorial/) on how to use Uncertainty Toolbox.
+* [Documentation](https://uncertainty-toolbox.github.io/docs/) and [API reference](https://uncertainty-toolbox.github.io/docs/api_reference/) for Uncertainty Toolbox.
 * [Publications and references](docs/paper_list.md) on relevant methods and metrics.
 
 
 ## Installation
 
-Uncertainty Toolbox requires Python 3.6+. To install, clone and `cd` into this repo, and run:
+Uncertainty Toolbox requires Python 3.6+. For a lightweight installation of the package
+only, run:
 ```bash
-$ pip install -e .
+pip install git+https://github.com/uncertainty-toolbox/uncertainty-toolbox
+```
+
+For a full installation with examples and tests, run:
+```bash
+git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
+cd uncertainty-toolbox
+pip install -e .
 ```
 
 To verify correct installation, you can run the [test suite](tests/) via:
 ```bash
-$ source shell/run_all_tests.sh
+source shell/run_all_tests.sh
 ```
 
 
@@ -61,7 +70,7 @@ deviations), taken with respect to a corresponding set of ground truth values `y
 
 **Colab notebook:**
 You can also take a look at [this Colab
-notebook](https://colab.research.google.com/drive/1fg61MFmVmgFYM4CRm_aoiZ_WRdxbIhIe?usp=sharing),
+notebook](https://colab.research.google.com/drive/1lbhwb6MP8FvQh9Q7Jldt4PuPEeSldsG5?usp=sharing),
 which walks through a use case of Uncertainty Toolbox.
 
 
