@@ -577,18 +577,18 @@ def filter_subset(input_list: List[List[Any]], n_subset: int) -> List[List[Any]]
     return output_list
 
 
-def set_style(style_str: str = 'default') -> NoReturn:
+def set_style(style_str: str = "default") -> NoReturn:
     """Set the matplotlib plotting style.
 
     Args:
         style_str: string for style file.
     """
-    if style_str == 'default':
-        plt.style.use((pathlib.Path(__file__).parent / 'matplotlibrc').resolve())
+    if style_str == "default":
+        plt.style.use((pathlib.Path(__file__).parent / "matplotlibrc").resolve())
 
 
 def save_figure(
-    file_name: str = 'figure',
+    file_name: str = "figure",
     ext_list: Union[list, str, None] = None,
     white_background: bool = True,
 ) -> NoReturn:
@@ -602,20 +602,20 @@ def save_figure(
 
     # Default ext_list
     if ext_list is None:
-        ext_list = ['pdf', 'png']
+        ext_list = ["pdf", "png"]
 
     # If ext_list is a single str
     if isinstance(ext_list, str):
         ext_list = [ext_list]
 
     # Set facecolor and edgecolor
-    (fc, ec) = ('w', 'w') if white_background else ('none', 'none')
+    (fc, ec) = ("w", "w") if white_background else ("none", "none")
 
     # Save each type in ext_list
     for ext in ext_list:
-        save_str = file_name + '.' + ext
-        plt.savefig(save_str, bbox_inches='tight', facecolor=fc, edgecolor=ec)
-        print(f'Saved figure {save_str}')
+        save_str = file_name + "." + ext
+        plt.savefig(save_str, bbox_inches="tight", facecolor=fc, edgecolor=ec)
+        print(f"Saved figure {save_str}")
 
 
 def update_rc(key_str: str, value: Any) -> NoReturn:
