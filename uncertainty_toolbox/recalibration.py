@@ -89,9 +89,7 @@ def iso_recal(
         elif np.sum((within_01 == min_obs_within).astype(float)) == 1:
             beg_idx = int(np.argmin(within_01) + exp_0_idx)
         else:
-            raise RuntimeError(
-                ("Inspect input arrays, " "cannot set beginning index.")
-            )
+            raise RuntimeError("Inspect input arrays. Cannot set beginning index.")
     else:
         beg_idx = exp_0_idx
 
@@ -113,7 +111,7 @@ def iso_recal(
         elif np.sum((within_01 == max_obs_within).astype(float)) == 1:
             end_idx = int(exp_0_idx + np.argmax(within_01) + 1)
         else:
-            raise RuntimeError("Inspect input arrays, cannot set ending index")
+            raise RuntimeError("Inspect input arrays. Cannot set ending index.")
     else:
         end_idx = exp_1_idx + 1
 
@@ -212,9 +210,7 @@ def get_std_recalibrator(
         A function which takes uncalibrated standard deviations as input and
         outputs the recalibrated standard deviations.
     """
-    std_recal_ratio = optimize_recalibration_ratio(
-        y_mean, y_std, y_true, criterion
-    )
+    std_recal_ratio = optimize_recalibration_ratio(y_mean, y_std, y_true, criterion)
 
     def std_recalibrator(std_arr):
         return std_recal_ratio * std_arr

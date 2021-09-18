@@ -2,6 +2,7 @@
 Visualizations for predictive uncertainties and metrics.
 """
 from typing import Union, Tuple, List, Any
+import pathlib
 
 import numpy as np
 from scipy import stats
@@ -69,9 +70,7 @@ def plot_xy(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true, x] = filter_subset(
-            [y_pred, y_std, y_true, x], n_subset
-        )
+        [y_pred, y_std, y_true, x] = filter_subset([y_pred, y_std, y_true, x], n_subset)
 
     intervals = num_stds_confidence_bound * y_std
 
@@ -135,9 +134,7 @@ def plot_intervals(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute intervals
     intervals = num_stds_confidence_bound * y_std
@@ -213,9 +210,7 @@ def plot_intervals_ordered(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     order = np.argsort(y_true.flatten())
     y_pred, y_std, y_true = y_pred[order], y_std[order], y_true[order]
@@ -294,9 +289,7 @@ def plot_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
@@ -323,9 +316,7 @@ def plot_calibration(
     # Plot
     ax.plot([0, 1], [0, 1], "--", label="Ideal", c="#ff7f0e")
     ax.plot(exp_proportions, obs_proportions, label=curve_label, c="#1f77b4")
-    ax.fill_between(
-        exp_proportions, exp_proportions, obs_proportions, alpha=0.2
-    )
+    ax.fill_between(exp_proportions, exp_proportions, obs_proportions, alpha=0.2)
 
     # Format plot
     ax.set_xlabel("Predicted Proportion in Interval")
@@ -402,9 +393,7 @@ def plot_adversarial_group_calibration(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute group_size, score_mean, score_stderr
     if (group_size is None) or (score_mean is None):
@@ -472,9 +461,7 @@ def plot_sharpness(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Plot sharpness curve
     ax.hist(y_std, edgecolor="#1f77b4", color="#a5c8e1", density=True)
@@ -537,9 +524,7 @@ def plot_residuals_vs_stds(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset(
-            [y_pred, y_std, y_true], n_subset
-        )
+        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
 
     # Compute residuals
     residuals = y_true - y_pred
@@ -590,3 +575,35 @@ def filter_subset(input_list: List[List[Any]], n_subset: int) -> List[List[Any]]
         outp = inp[idx]
         output_list.append(outp)
     return output_list
+
+
+def set_style(style_str='default'):
+    """Set the matplotlib plotting style."""
+    if style_str == 'default':
+        plt.style.use((pathlib.Path(__file__).parent / 'matplotlibrc').resolve())
+
+
+def save_figure(file_name='figure', ext_list=None, white_background=True):
+    """Save matplotlib figure for all extensions in ext_list."""
+
+    # Default ext_list
+    if ext_list is None:
+        ext_list = ['pdf', 'png']
+
+    # If ext_list is a single str
+    if isinstance(ext_list, str):
+        ext_list = [ext_list]
+
+    # Set facecolor and edgecolor
+    (fc, ec) = ('w', 'w') if white_background else ('none', 'none')
+
+    # Save each type in ext_list
+    for ext in ext_list:
+        save_str = file_name + '.' + ext
+        plt.savefig(save_str, bbox_inches='tight', facecolor=fc, edgecolor=ec)
+        print(f'Saved figure {save_str}')
+
+
+def update_rc(key_str, value):
+    """Update matplotlib rc parameters."""
+    plt.rcParams.update({key_str: value})

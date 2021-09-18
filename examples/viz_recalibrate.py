@@ -5,15 +5,14 @@ Examples of code for recalibration.
 import numpy as np
 import matplotlib.pyplot as plt
 import uncertainty_toolbox as uct
-import neatplot
 
 
 # Set plot style
-neatplot.set_style()
-neatplot.update_rc("text.usetex", False)  # Set to True for system latex
-neatplot.update_rc("font.size", 14)  # Set font size
-neatplot.update_rc("xtick.labelsize", 14)  # Set font size for xaxis tick labels
-neatplot.update_rc("ytick.labelsize", 14)  # Set font size for yaxis tick labels
+uct.viz.set_style()
+uct.viz.update_rc("text.usetex", False)  # Set to True for system latex
+uct.viz.update_rc("font.size", 14)  # Set font size
+uct.viz.update_rc("xtick.labelsize", 14)  # Set font size for xaxis tick labels
+uct.viz.update_rc("ytick.labelsize", 14)  # Set font size for yaxis tick labels
 
 # Set random seed
 np.random.seed(11)
@@ -71,7 +70,7 @@ for i, pred_mean in enumerate(pred_mean_list):
             ylims=ylims_xy,
         )
 
-        neatplot.save_figure(f"before_recal_{j}", "png")
+        uct.viz.save_figure(f"before_recal_{j}", "png")
 
         # After recalibration
         std_recalibrator = uct.recalibration.get_std_recalibrator(
@@ -80,9 +79,7 @@ for i, pred_mean in enumerate(pred_mean_list):
         pred_std_recal = std_recalibrator(pred_std)
 
         mace = uct.mean_absolute_calibration_error(pred_mean, pred_std_recal, y)
-        rmsce = uct.root_mean_squared_calibration_error(
-            pred_mean, pred_std_recal, y
-        )
+        rmsce = uct.root_mean_squared_calibration_error(pred_mean, pred_std_recal, y)
         ma = uct.miscalibration_area(pred_mean, pred_std_recal, y)
         print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
@@ -103,4 +100,4 @@ for i, pred_mean in enumerate(pred_mean_list):
             ylims=ylims_xy,
         )
 
-        neatplot.save_figure(f"after_recal_{j}", "png")
+        uct.viz.save_figure(f"after_recal_{j}", "png")

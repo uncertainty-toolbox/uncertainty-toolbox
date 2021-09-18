@@ -1,9 +1,0 @@
-### Font
-font.family : Times, Serif
-font.size : 12.0
-
-### Text
-text.usetex : True
-
-### Figure
-figure.dpi : 100

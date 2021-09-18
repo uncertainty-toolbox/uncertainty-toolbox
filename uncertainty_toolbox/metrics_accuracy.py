@@ -14,8 +14,8 @@ from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 
 def prediction_error_metrics(
-        y_pred: np.ndarray,
-        y_true: np.ndarray,
+    y_pred: np.ndarray,
+    y_true: np.ndarray,
 ) -> Dict[str, float]:
     """Get all prediction error metrics.
 
