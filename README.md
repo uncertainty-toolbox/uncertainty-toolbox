@@ -28,6 +28,7 @@ Uncertainty Toolbox contains:
 * [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
 * [Recalibration](#recalibration) methods for improving the calibration of a predictor.
 * [Website](https://uncertainty-toolbox.github.io/) with a [tutorial](https://uncertainty-toolbox.github.io/tutorial/) on how to use Uncertainty Toolbox.
+* [Documentation](https://uncertainty-toolbox.github.io/docs/) and [API reference](https://uncertainty-toolbox.github.io/docs/api_reference/) for Uncertainty Toolbox.
 * [Publications and references](docs/paper_list.md) on relevant methods and metrics.
 
 
