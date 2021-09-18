@@ -45,6 +45,9 @@ def quantile_accuracy(
     recal_model=None,
     recal_type=None
 ):
+    if isinstance(y, torch.Tensor):
+        y = y.detach().cpu().numpy().flatten()
+
     median_quantile = np.array([0.5])
     quantile_predictions = get_quantile_model_predictions(
         model=model,
@@ -54,7 +57,6 @@ def quantile_accuracy(
         recal_type=recal_type,
     )
     q_050 = quantile_predictions[:, 0]
-    import pdb; pdb.set_trace()
 
     return prediction_error_metrics(y_pred=q_050, y_true=y)
 
@@ -78,7 +80,7 @@ def quantile_sharpness(
     )
     q_025 = quantile_predictions[:, 0]
     q_975 = quantile_predictions[:, 1]
-    sharp_metric = np.mean(q_975 - q_025)
+    sharp_metric = np.mean(np.abs(q_975 - q_025))
 
     return sharp_metric
 
@@ -117,8 +119,8 @@ def quantile_root_mean_squared_calibration_error(
 
 def quantile_mean_absolute_calibration_error(
     model,
-    x,
-    y,
+    x,  # shape (N, 1)
+    y,  # shape (N, 1)
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -126,6 +128,7 @@ def quantile_mean_absolute_calibration_error(
 ):
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
+
 
     exp_proportions = np.linspace(0.01, 0.99, num_bins)
     quantile_predictions = get_quantile_model_predictions(
@@ -135,7 +138,6 @@ def quantile_mean_absolute_calibration_error(
         recal_model=recal_model,
         recal_type=recal_type,
     )
-
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
 
@@ -165,7 +167,6 @@ def quantile_miscalibration_area(
         recal_model=recal_model,
         recal_type=recal_type,
     )
-
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
 
@@ -191,7 +192,7 @@ def quantile_adversarial_group_calibration(
     model,
     x,
     y,
-    cali_type,
+    cali_type='mean_abs',
     prop_type="quantile",
     num_bins=99,
     num_group_bins=10,
@@ -262,90 +263,75 @@ def quantile_check_score(
     recal_model=None,
     recal_type=None,
 ):
-    p if not hasattr(args, 'q_list'):
-        raise RuntimeError('args must have q_list for check_loss')
-    q_list = args.q_list
+    if isinstance(y, torch.Tensor):
+        y = y.detach().cpu().numpy()
 
-    num_pts = y.size(0)
-    num_q = q_list.size(0)
+    q_list = np.linspace(0.01, 0.99, num_bins)
 
-    q_rep = q_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device)
-    y_stacked = y.repeat(num_q, 1)
+    quantile_predictions = get_quantile_model_predictions(
+        model=model,
+        x=x,
+        exp_proportions=q_list,
+        recal_model=recal_model,
+        recal_type=recal_type,
+    )
 
-    # recalibrate if needed
-    if hasattr(args, 'recal_model') and args.recal_model is not None:
-        q_rep = recal_quantiles(args.recal_model, q_rep)
+    diff = quantile_predictions - y
+    mask = (diff >= 0).astype(float) - q_list
+    check_score = np.mean((mask * diff))
 
-    if X is None:
-        model_in = q_rep
-    else:
-        x_stacked = X.repeat(num_q, 1)
-        model_in = torch.cat([x_stacked, q_rep], dim=1)
+    return check_score
 
-    pred_y = model.predict(model_in)
-
-    diff = pred_y - y_stacked
-    mask = (diff.ge(0).float() - q_rep).detach()
-    #TODO: mean or sum?
-    check_loss_score = torch.mean((mask * diff))
 
 def quantile_interval_score(
     model,
     x,
     y,
+    num_bins=99,
     recal_model=None,
     recal_type=None,
 ):
-    """
-    Interval score
-    :param model:
-    :param X: assuming tensor
-    :param y: assuming tensor
-    :param args: optional - alpha_list (assuming tensor)
-    :return:
-    """
+    # import pdb; pdb.set_trace()
 
-    alpha_list = torch.linspace(0.01, 0.99, 99)
-    num_alpha = alpha_list.size(0)
-    assert num_alpha == 99
+    if isinstance(y, torch.Tensor):
+        y = y.detach().cpu().numpy()
 
-    num_pts = y.size(0)
+    num_pts = y.shape[0]
 
-    with torch.no_grad():
-        l_list = torch.min(torch.stack([(alpha_list / 2.0), 1 - (alpha_list / 2.0)],
-                                       dim=1), dim=1)[0]
-        u_list = 1.0 - l_list
+    alpha_list = np.linspace(0.01, 0.99, num_bins)
+    l_list = np.min(
+        np.stack([(alpha_list / 2.0), 1 - (alpha_list / 2.0)], axis=1),
+        axis=1
+    )
+    u_list = 1.0 - l_list
 
-    # recalibrate if needed
-    if hasattr(args, 'recal_model') and args.recal_model is not None:
-        l_list = recal_quantiles(args.recal_model, l_list)
-        u_list = recal_quantiles(args.recal_model, u_list)
+    pred_l = get_quantile_model_predictions(
+        model=model,
+        x=x,
+        exp_proportions=l_list,
+        recal_model=recal_model,
+        recal_type=recal_type,
+    )
+    pred_u = get_quantile_model_predictions(
+        model=model,
+        x=x,
+        exp_proportions=u_list,
+        recal_model=recal_model,
+        recal_type=recal_type,
+    )
 
-    l_rep = l_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device).float()
-    u_rep = u_list.view(-1, 1).repeat(1, num_pts).view(-1, 1).to(args.device).float()
-    num_l = l_rep.size(0)
-    num_u = u_rep.size(0)
+    below_l = (pred_l - y) > 0
+    above_u = (y - pred_u) > 0
 
-    if X is None:
-        model_in = torch.cat([l_list, u_list], dim=0)
-    else:
-        x_stacked = X.repeat(num_alpha, 1)
-        l_in = torch.cat([x_stacked, l_rep], dim=1)
-        u_in = torch.cat([x_stacked, u_rep], dim=1)
-        model_in = torch.cat([l_in, u_in], dim=0)
+    score_per_alpha = (
+        (pred_u - pred_l)
+        + (1.0 / l_list) * (pred_l - y) * below_l
+        + (1.0 / l_list) * (y - pred_u) * above_u
+    )
 
-    pred_y = model.predict(model_in)
-    pred_l = pred_y[:num_l].view(num_alpha, num_pts)
-    pred_u = pred_y[num_l:].view(num_alpha, num_pts)
+    int_score = np.mean(score_per_alpha)
 
-    below_l = (pred_l - y.view(-1)).gt(0)
-    above_u = (y.view(-1) - pred_u).gt(0)
-
-    score_per_alpha = (pred_u - pred_l) + \
-                      (1.0 / l_list).view(-1, 1).to(args.device) * (pred_l - y.view(-1)) * below_l + \
-                      (1.0 / l_list).view(-1, 1).to(args.device) * (y.view(-1) - pred_u) * above_u
-    int_score = torch.mean(score_per_alpha)
-
+    return int_score
 
 ### Reference code below
 
