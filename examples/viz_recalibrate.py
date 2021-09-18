@@ -80,9 +80,7 @@ for i, pred_mean in enumerate(pred_mean_list):
         pred_std_recal = std_recalibrator(pred_std)
 
         mace = uct.mean_absolute_calibration_error(pred_mean, pred_std_recal, y)
-        rmsce = uct.root_mean_squared_calibration_error(
-            pred_mean, pred_std_recal, y
-        )
+        rmsce = uct.root_mean_squared_calibration_error(pred_mean, pred_std_recal, y)
         ma = uct.miscalibration_area(pred_mean, pred_std_recal, y)
         print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))

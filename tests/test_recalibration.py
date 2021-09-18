@@ -110,9 +110,7 @@ def test_optimize_recalibration_ratio_mace_criterion(supply_test_set):
     ma_cal_ratio = optimize_recalibration_ratio(
         y_pred, y_std, y_true, criterion="ma_cal"
     )
-    recal_ma_cal = mean_absolute_calibration_error(
-        y_pred, ma_cal_ratio * y_std, y_true
-    )
+    recal_ma_cal = mean_absolute_calibration_error(y_pred, ma_cal_ratio * y_std, y_true)
     recal_rms_cal = root_mean_squared_calibration_error(
         y_pred, ma_cal_ratio * y_std, y_true
     )
@@ -162,9 +160,7 @@ def test_optimize_recalibration_ratio_miscal_area_criterion(supply_test_set):
     miscal_ratio = optimize_recalibration_ratio(
         y_pred, y_std, y_true, criterion="miscal"
     )
-    recal_ma_cal = mean_absolute_calibration_error(
-        y_pred, miscal_ratio * y_std, y_true
-    )
+    recal_ma_cal = mean_absolute_calibration_error(y_pred, miscal_ratio * y_std, y_true)
     recal_rms_cal = root_mean_squared_calibration_error(
         y_pred, miscal_ratio * y_std, y_true
     )
@@ -292,7 +288,4 @@ def test_get_interval_recalibrator(supply_test_set):
         prop_in_interval_recal = (
             (interval_recal.lower <= y_true) * (y_true <= interval_recal.upper)
         ).mean()
-        assert (
-            np.max(np.abs(test_prop_in_interval - prop_in_interval_recal))
-            < 1e-6
-        )
+        assert np.max(np.abs(test_prop_in_interval - prop_in_interval_recal)) < 1e-6

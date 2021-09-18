@@ -7,7 +7,7 @@ import numpy as np
 
 
 def synthetic_arange_random(
-        num_points: int = 10,
+    num_points: int = 10,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Dataset of evenly spaced points and identity function (with some randomization).
 
@@ -36,7 +36,7 @@ def synthetic_arange_random(
 
 
 def synthetic_sine_heteroscedastic(
-        n_points: int = 10,
+    n_points: int = 10,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Return samples from "synthetic sine" heteroscedastic noisy function.
 
