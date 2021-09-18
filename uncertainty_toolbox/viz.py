@@ -578,12 +578,13 @@ def filter_subset(input_list: List[List[Any]], n_subset: int) -> List[List[Any]]
 
 
 def set_style(style_str='default'):
+    """Set the matplotlib plotting style."""
     if style_str == 'default':
         plt.style.use((pathlib.Path(__file__).parent / 'matplotlibrc').resolve())
 
 
 def save_figure(file_name='figure', ext_list=None, white_background=True):
-    """Save figure for all extensions in ext_list."""
+    """Save matplotlib figure for all extensions in ext_list."""
 
     # Default ext_list
     if ext_list is None:
@@ -604,5 +605,5 @@ def save_figure(file_name='figure', ext_list=None, white_background=True):
 
 
 def update_rc(key_str, value):
-    """Update matplotlib rc params."""
+    """Update matplotlib rc parameters."""
     plt.rcParams.update({key_str: value})
