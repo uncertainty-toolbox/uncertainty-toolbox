@@ -73,7 +73,7 @@ many papers in this area.
 * Methods for Comparing Uncertainty Quantifications for Material Property Predictions
   - By Kevin Tran, Willie Neiswanger, Junwoong Yoon, Qingyang Zhang, Eric Xing, Zachary W Ulissi
   - Empirical comparison of UQ methods for regression
-  - [[ArXiv]](https://arxiv.org/pdf/1912.10066.pdf),
+  - [[ArXiv]](https://arxiv.org/pdf/1912.10066.pdf)
 
 * Can You Trust Your Model’s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift
   - By Yaniv Ovadia, Emily Fertig, Jie Ren, Zachary Nado, D. Sculley, Sebastian Nowozin, Joshua Dillon, Balaji Lakshminarayanan, and Jasper Snoek

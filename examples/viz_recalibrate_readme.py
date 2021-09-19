@@ -1,5 +1,7 @@
 """
-Examples of code for recalibration.
+This script produces the recalibration figures that appear in the README Recalibration
+section:
+https://github.com/uncertainty-toolbox/uncertainty-toolbox/blob/recal/README.md#recalibration
 """
 
 import numpy as np
@@ -9,7 +11,7 @@ import uncertainty_toolbox as uct
 
 # Set plot style
 uct.viz.set_style()
-uct.viz.update_rc("text.usetex", False)  # Set to True for system latex
+uct.viz.update_rc("text.usetex", True)  # Set to True for system latex
 uct.viz.update_rc("font.size", 14)  # Set font size
 uct.viz.update_rc("xtick.labelsize", 14)  # Set font size for xaxis tick labels
 uct.viz.update_rc("ytick.labelsize", 14)  # Set font size for yaxis tick labels
@@ -26,13 +28,11 @@ savefig = True
 
 # List of predictive means and standard deviations
 pred_mean_list = [f]
+
 pred_std_list = [
     std * 0.5,  # overconfident
     std * 2.0,  # underconfident
 ]
-
-# ylims for xy plot
-ylims_xy = (-2.51, 3.31)
 
 # Loop through, make plots, and compute metrics
 for i, pred_mean in enumerate(pred_mean_list):
@@ -52,52 +52,39 @@ for i, pred_mean in enumerate(pred_mean_list):
         print("Before Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        fig, axes = plt.subplots(1, 2, figsize=(11, 5))
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         uct.plot_calibration(
             pred_mean,
             pred_std,
             y,
             exp_props=exp_props,
             obs_props=obs_props,
-            ax=axes.flatten()[0],
+            ax=ax,
         )
-        uct.plot_xy(
-            pred_mean,
-            pred_std,
-            y,
-            x,
-            ax=axes.flatten()[1],
-            ylims=ylims_xy,
-        )
-
-        uct.viz.save_figure(f"before_recal_{j}", "png")
+        uct.viz.save_figure(f"before_recal_{j}", "svg")
 
         # After recalibration
-        std_recalibrator = uct.recalibration.get_std_recalibrator(
-            pred_mean, pred_std, y
+        recal_model = uct.iso_recal(exp_props, obs_props)
+        recal_exp_props, recal_obs_props = uct.get_proportion_lists_vectorized(
+            pred_mean, pred_std, y, recal_model=recal_model
         )
-        pred_std_recal = std_recalibrator(pred_std)
-
-        mace = uct.mean_absolute_calibration_error(pred_mean, pred_std_recal, y)
-        rmsce = uct.root_mean_squared_calibration_error(pred_mean, pred_std_recal, y)
-        ma = uct.miscalibration_area(pred_mean, pred_std_recal, y)
+        mace = uct.mean_absolute_calibration_error(
+            pred_mean, pred_std, y, recal_model=recal_model
+        )
+        rmsce = uct.root_mean_squared_calibration_error(
+            pred_mean, pred_std, y, recal_model=recal_model
+        )
+        ma = uct.miscalibration_area(pred_mean, pred_std, y, recal_model=recal_model)
         print("After Recalibration:  ", end="")
         print("MACE: {:.5f}, RMSCE: {:.5f}, MA: {:.5f}".format(mace, rmsce, ma))
 
-        fig, axes = plt.subplots(1, 2, figsize=(11, 5))
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         uct.plot_calibration(
             pred_mean,
-            pred_std_recal,
+            pred_std,
             y,
-            ax=axes.flatten()[0],
+            exp_props=recal_exp_props,
+            obs_props=recal_obs_props,
+            ax=ax,
         )
-        uct.plot_xy(
-            pred_mean,
-            pred_std_recal,
-            y,
-            x,
-            ax=axes.flatten()[1],
-            ylims=ylims_xy,
-        )
-
-        uct.viz.save_figure(f"after_recal_{j}", "png")
+        uct.viz.save_figure(f"after_recal_{j}", "svg")

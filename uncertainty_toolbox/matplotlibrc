@@ -1,0 +1,57 @@
+### Font
+font.family : Times, Serif
+font.size : 12.0
+
+### Text
+text.usetex : True
+
+### Lines
+lines.linewidth : 2
+lines.antialiased : True
+
+### Axes settings
+axes.facecolor : fafafa
+axes.edgecolor : 777777
+axes.linewidth : 1
+axes.titlesize : medium
+axes.labelsize : medium
+axes.axisbelow : True
+
+### Ticks
+xtick.major.size     : 0      # major tick size in points
+xtick.minor.size     : 0      # minor tick size in points
+xtick.major.pad      : 6      # distance to major tick label in points
+xtick.minor.pad      : 6      # distance to the minor tick label in points
+xtick.color          : 333333 # color of the tick labels
+xtick.labelsize      : medium # fontsize of the tick labels
+xtick.direction      : in     # direction: in or out
+ytick.major.size     : 0      # major tick size in points
+ytick.minor.size     : 0      # minor tick size in points
+ytick.major.pad      : 6      # distance to major tick label in points
+ytick.minor.pad      : 6      # distance to the minor tick label in points
+ytick.color          : 333333 # color of the tick labels
+ytick.labelsize      : medium # fontsize of the tick labels
+ytick.direction      : in     # direction: in or out
+
+### Grid settings
+axes.grid : True
+grid.alpha : 0.3
+grid.linewidth : 1
+
+### Legend
+legend.fancybox     : True
+legend.fontsize     : Small
+legend.facecolor    : fdfdfd
+
+### Figure
+figure.figsize      : 4.0, 4.0
+figure.facecolor    : 1.0
+figure.edgecolor    : 0.5
+figure.dpi          : 200
+
+### Bar plots
+hatch.linewidth : 0.1
+
+### Animation
+animation.writer : html
+animation.html : html5

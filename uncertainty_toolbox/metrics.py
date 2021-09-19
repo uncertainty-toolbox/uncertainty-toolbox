@@ -1,6 +1,7 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
+from typing import Any, Dict
 
 import numpy as np
 
@@ -18,6 +19,7 @@ from uncertainty_toolbox.metrics_scoring_rule import (
     check_score,
     interval_score,
 )
+
 
 METRIC_NAMES = {
     "mae": "MAE",
@@ -39,8 +41,21 @@ METRIC_NAMES = {
 }
 
 
-def get_all_accuracy_metrics(y_pred, y_true, verbose=True):
+def get_all_accuracy_metrics(
+    y_pred: np.ndarray,
+    y_true: np.ndarray,
+    verbose: bool = True,
+) -> Dict[str, float]:
+    """Compute all accuracy metrics.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        verbose: Activate verbose mode.
+
+    Returns:
+        The evaluations for all accuracy related metrics.
+    """
     if verbose:
         print(" (1/n) Calculating accuracy metrics")
 
@@ -48,8 +63,25 @@ def get_all_accuracy_metrics(y_pred, y_true, verbose=True):
     return acc_metrics
 
 
-def get_all_average_calibration(y_pred, y_std, y_true, num_bins, verbose=True):
+def get_all_average_calibration(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int,
+    verbose: bool = True,
+) -> Dict[str, float]:
+    """Compute all metrics for average calibration.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: The number of bins to use for discretization in some metrics.
+        verbose: Activate verbose mode.
+
+    Returns:
+        The evaluations for all metrics relating to average calibration.
+    """
     if verbose:
         print(" (2/n) Calculating average calibration metrics")
 
@@ -68,9 +100,26 @@ def get_all_average_calibration(y_pred, y_std, y_true, num_bins, verbose=True):
 
 
 def get_all_adversarial_group_calibration(
-    y_pred, y_std, y_true, num_bins, verbose=True
-):
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int,
+    verbose: bool = True,
+) -> Dict[str, Dict[str, np.ndarray]]:
+    """Compute all metrics for adversarial group calibration.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: The number of bins to use for discretization in some metrics.
+        verbose: Activate verbose mode.
+
+    Returns:
+        The evaluations for all metrics relating to adverarial group calibration.
+        Each inner dictionary contains the size of each group and the metrics
+        computed for each group.
+    """
     adv_group_cali_metrics = {}
     if verbose:
         print(" (3/n) Calculating adversarial group calibration metrics")
@@ -116,8 +165,19 @@ def get_all_adversarial_group_calibration(
     return adv_group_cali_metrics
 
 
-def get_all_sharpness_metrics(y_std, verbose=True):
+def get_all_sharpness_metrics(
+    y_std: np.ndarray,
+    verbose: bool = True,
+) -> Dict[str, float]:
+    """Compute all sharpness metrics
 
+    Args:
+        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        verbose: Activate verbose mode.
+
+    Returns:
+        The evaluations for all sharpness metrics.
+    """
     if verbose:
         print(" (4/n) Calculating sharpness metrics")
 
@@ -128,9 +188,26 @@ def get_all_sharpness_metrics(y_std, verbose=True):
 
 
 def get_all_scoring_rule_metrics(
-    y_pred, y_std, y_true, resolution, scaled, verbose=True
-):
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    resolution: int,
+    scaled: bool,
+    verbose: bool = True,
+) -> Dict[str, float]:
+    """Compute all scoring rule metrics
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        resolution: The number of quantiles to use for computation.
+        scaled: Whether to scale the score by size of held out set.
+        verbose: Activate verbose mode.
+
+    Returns:
+        The computed scoring rule metrics.
+    """
     if verbose:
         print(" (n/n) Calculating proper scoring rule metrics")
 
@@ -163,9 +240,28 @@ def _print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3
 
 
 def get_all_metrics(
-    y_pred, y_std, y_true, num_bins=100, resolution=99, scaled=True, verbose=True
-):
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    resolution: int = 99,
+    scaled: bool = True,
+    verbose: bool = True,
+) -> Dict[str, Any]:
+    """Compute all metrics.
 
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of he predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: The number of bins to use for discretization in some metrics.
+        resolution: The number of quantiles to use for computation.
+        scaled: Whether to scale the score by size of held out set.
+        verbose: Activate verbose mode.
+
+    Returns:
+        Dictionary containing all metrics.
+    """
     # Accuracy
     accuracy_metrics = get_all_accuracy_metrics(y_pred, y_true, verbose)
 

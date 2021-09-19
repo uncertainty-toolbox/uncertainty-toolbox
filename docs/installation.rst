@@ -1,0 +1,23 @@
+Installation
+============
+
+Uncertainty Toolbox requires Python 3.6+. For a lightweight installation of the package
+only, run:
+
+.. code-block:: console
+
+  pip install git+https://github.com/uncertainty-toolbox/uncertainty-toolbox
+
+For a full installation with examples and tests, run:
+
+.. code-block:: console
+
+  git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
+  cd uncertainty-toolbox
+  pip install -e .
+
+To verify correct installation, you can run the test suite via:
+
+.. code-block:: console
+
+  source shell/run_all_tests.sh
