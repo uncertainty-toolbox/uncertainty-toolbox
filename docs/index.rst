@@ -7,11 +7,15 @@ calibration, metrics, and visualization.
 |github| The code for Uncertainty Toolbox is `on github
 <https://github.com/uncertainty-toolbox/uncertainty-toolbox>`_.
 
-See the website for Uncertainty Toolbox `here <https://uncertainty-toolbox.github.io/>`_.
+|homepage| Return to the website `homepage <https://uncertainty-toolbox.github.io/>`_.
 
 .. |github| image:: assets/github.svg
-  :width: 25
+  :width: 23
   :alt: github
+
+.. |homepage| image:: assets/homepage.svg
+  :width: 23
+  :alt: homepage
 
 
 User Guide
