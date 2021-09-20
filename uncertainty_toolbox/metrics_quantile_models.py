@@ -1,34 +1,54 @@
 from argparse import Namespace
+from tqdm import tqdm
 import numpy as np
 import torch
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
-from tqdm import tqdm
 
 from uncertainty_toolbox.metrics_accuracy import prediction_error_metrics
 
 
 """ Utilities """
+
+
 def get_quantile_model_predictions(
     model,
     x,
-    exp_proportions,
+    quantile_levels,
     recal_model=None,
-    recal_type=None,
+    prop_type=None,
 ):
+    """
+    Returns the quantile predictions for a torch model.
+
+    Given a torch model, the inputs X (a NxD tensor or array),
+    a flat array of K quantile levels, return a NxK array of quantile predictions
+
+    Args:
+        model: a Pytorch model that takes in a (D+1) dimensional input and returns a
+        1 dimensional output.
+        x: the covariates (input)
+        quantile_levels: a flat array of quantile levels, each value within (0, 1)
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+
+    Returns: a NxK array
+
+    """
     if isinstance(x, np.ndarray):
         x = torch.from_numpy(x).to(model.device)
-    if isinstance(exp_proportions, np.ndarray):
-        exp_proportions = torch.from_numpy(exp_proportions).to(model.device)
+    if isinstance(quantile_levels, np.ndarray):
+        quantile_levels = torch.from_numpy(quantile_levels).to(model.device)
 
     assert isinstance(x, torch.Tensor)
-    assert isinstance(exp_proportions, torch.Tensor)
+    assert isinstance(quantile_levels, torch.Tensor)
 
     quantile_preds = model.forward(
         x=x,
-        q_list=exp_proportions,
+        q_list=quantile_levels,
         recal_model=recal_model,
-        recal_type=recal_type,
+        recal_type=prop_type,
     )  # of shape (num_x, num_q)
     quantile_preds_arr = quantile_preds.detach().cpu().numpy()
 
@@ -52,9 +72,9 @@ def quantile_accuracy(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=median_quantile,
+        quantile_levels=median_quantile,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     q_050 = quantile_predictions[:, 0]
 
@@ -74,9 +94,9 @@ def quantile_sharpness(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=exp_proportions,
+        quantile_levels=exp_proportions,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     q_025 = quantile_predictions[:, 0]
     q_975 = quantile_predictions[:, 1]
@@ -104,9 +124,9 @@ def quantile_root_mean_squared_calibration_error(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=exp_proportions,
+        quantile_levels=exp_proportions,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
@@ -134,9 +154,9 @@ def quantile_mean_absolute_calibration_error(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=exp_proportions,
+        quantile_levels=exp_proportions,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
@@ -163,9 +183,9 @@ def quantile_miscalibration_area(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=exp_proportions,
+        quantile_levels=exp_proportions,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
@@ -271,9 +291,9 @@ def quantile_check_score(
     quantile_predictions = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=q_list,
+        quantile_levels=q_list,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
 
     diff = quantile_predictions - y
@@ -307,16 +327,16 @@ def quantile_interval_score(
     pred_l = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=l_list,
+        quantile_levels=l_list,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
     pred_u = get_quantile_model_predictions(
         model=model,
         x=x,
-        exp_proportions=u_list,
+        quantile_levels=u_list,
         recal_model=recal_model,
-        recal_type=recal_type,
+        prop_type=recal_type,
     )
 
     below_l = (pred_l - y) > 0
