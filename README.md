@@ -1,5 +1,12 @@
 <p align="center"><img src="docs/images/logo.svg" width=730 /></p>
 
+<p align="center">
+    <a href="https://uncertainty-toolbox.github.io/">Website</a>,
+    <a href="https://uncertainty-toolbox.github.io/tutorial/">Tutorials</a>, and
+    <a href="https://uncertainty-toolbox.github.io/docs/">Docs</a>
+    &emsp;&emsp;&nbsp;
+</p>
+
 
 **Uncertainty Toolbox**
 > A python toolbox for predictive uncertainty quantification, calibration,
@@ -27,9 +34,7 @@ Uncertainty Toolbox contains:
 * [Metrics](#metrics) for assessing quality of predictive uncertainty estimates.
 * [Visualizations](#visualizations) for predictive uncertainty estimates and metrics.
 * [Recalibration](#recalibration) methods for improving the calibration of a predictor.
-* [Website](https://uncertainty-toolbox.github.io/) with a [tutorial](https://uncertainty-toolbox.github.io/tutorial/) on how to use Uncertainty Toolbox.
-* [Documentation](https://uncertainty-toolbox.github.io/docs/) and [API reference](https://uncertainty-toolbox.github.io/docs/api_reference/) for Uncertainty Toolbox.
-* [Publications and references](docs/paper_list.md) on relevant methods and metrics.
+* [Paper list](docs/paper_list.md): publications and references on relevant methods and metrics.
 
 
 ## Installation
@@ -79,11 +84,11 @@ which walks through a use case of Uncertainty Toolbox.
 Uncertainty Toolbox provides a number of [metrics](uncertainty_toolbox/metrics.py) to
 quantify and compare predictive uncertainty estimates. For example, the
 [`get_all_metrics`](uncertainty_toolbox/metrics.py#L165) function will return:
-1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area_
-2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error_
-3. __sharpness__: _expected standard deviation_
-4. __proper scoring rules__: _negative log-likelihood, continuous ranked probability score, check score, interval score_
-5. __accuracy__: _mean absolute error, root mean squared error, median absolute error, coefficient of determination, correlation_
+1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area._
+2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error._
+3. __sharpness__: _expected standard deviation._
+4. __proper scoring rules__: _negative log-likelihood, continuous ranked probability score, check score, interval score._
+5. __accuracy__: _mean absolute error, root mean squared error, median absolute error, coefficient of determination, correlation._
 
 
 ## Visualizations
@@ -158,8 +163,17 @@ our [contributing guidelines](CONTRIBUTING.md) for details on how to help out.
 
 ## Citation
 
-If you use this toolbox, please consider citing one of the papers that led to its
-development:
+If you found this toolbox helpful, please cite:
+```
+@article{chung2021uncertainty,
+  title={Uncertainty Toolbox},
+  author={Chung, Youngseog and Char, Ian and Guo, Han and Schneider, Jeff and Neiswanger, Willie},
+  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  year={2021}
+}
+```
+
+Additionally, here are papers that led to the development of the toolbox:
 ```
 @article{chung2020beyond,
   title={Beyond Pinball Loss: Quantile Methods for Calibrated Uncertainty Quantification},
