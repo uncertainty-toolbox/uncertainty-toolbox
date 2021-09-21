@@ -50,7 +50,7 @@ give an example use case of how the feature would be used.
 
 If you have any questions, feel free to reach out to the maintainers:
 
-* [Willie Neiswanger](https://github.com/willieneis) (neiswanger (at) cs.stanford.edu)
 * [Youngseog Chung](https://github.com/YoungseogChung) (youngsec (at) cs.cmu.edu)
+* [Willie Neiswanger](https://github.com/willieneis) (neiswanger (at) cs.stanford.edu)
 * [Ian Char](https://github.com/IanChar) (ichar (at) cs.cmu.edu)
 * [Han Guo](https://github.com/HanGuo97) (hanguo (at) cs.cmu.edu)

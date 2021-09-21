@@ -83,7 +83,7 @@ which walks through a use case of Uncertainty Toolbox.
 
 Uncertainty Toolbox provides a number of [metrics](uncertainty_toolbox/metrics.py) to
 quantify and compare predictive uncertainty estimates. For example, the
-[`get_all_metrics`](uncertainty_toolbox/metrics.py#L165) function will return:
+[`get_all_metrics`](uncertainty_toolbox/metrics.py#L242) function will return:
 1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area._
 2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error._
 3. __sharpness__: _expected standard deviation._
@@ -163,7 +163,8 @@ our [contributing guidelines](CONTRIBUTING.md) for details on how to help out.
 
 ## Citation
 
-If you found this toolbox helpful, please cite:
+If you found this toolbox helpful, please cite the [following
+paper](https://arxiv.org/abs/XXXX.XXXXX):
 ```
 @article{chung2021uncertainty,
   title={Uncertainty Toolbox},
