@@ -129,7 +129,7 @@ Toolbox, which transforms a set of predictive uncertainties to improve average
 calibration. The algorithm is based on isotonic regression, as proposed by [Kuleshov et
 al](docs/paper_list.md#calibration-sharpness-and-recalibration-in-deep-learning).
 
-See [this example](examples/viz_recalibrate.py) for code to reproduce these plots.
+See [this example](examples/viz_recalibrate_readme.py) for code to reproduce these plots.
 
 **Recalibrating overconfident predictions**
 <p align="center">
