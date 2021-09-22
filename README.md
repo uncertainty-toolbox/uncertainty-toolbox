@@ -164,12 +164,12 @@ our [contributing guidelines](CONTRIBUTING.md) for details on how to help out.
 ## Citation
 
 If you found this toolbox helpful, please cite the [following
-paper](https://arxiv.org/abs/XXXX.XXXXX):
+paper](https://arxiv.org/abs/2109.10254):
 ```
 @article{chung2021uncertainty,
-  title={Uncertainty Toolbox},
+  title={Uncertainty Toolbox: an Open-Source Library for Assessing, Visualizing, and Improving Uncertainty Quantification},
   author={Chung, Youngseog and Char, Ian and Guo, Han and Schneider, Jeff and Neiswanger, Willie},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  journal={arXiv preprint arXiv:2109.10254},
   year={2021}
 }
 ```
