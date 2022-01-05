@@ -5,7 +5,15 @@ Tests for quantile metrics.
 import pytest
 import numpy as np
 
-from uncertainty_toolbox.metrics_quantile_models import *
+from uncertainty_toolbox.metrics_quantile_models import (
+    quantile_accuracy,
+    quantile_sharpness,
+    quantile_root_mean_squared_calibration_error,
+    quantile_mean_absolute_calibration_error,
+    quantile_miscalibration_area,
+    quantile_check_score,
+    quantile_interval_score
+)
 
 
 @pytest.fixture
