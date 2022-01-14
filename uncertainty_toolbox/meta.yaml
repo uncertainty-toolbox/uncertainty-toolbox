@@ -1,0 +1,50 @@
+{% set name = "uncertainty_toolbox" %}
+{% set version = "0.1.0" %}
+
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/uncertainty_toolbox-{{ version }}.tar.gz
+  sha256: e1a84ff0aba101d29535c80541de1d8a1827a12e48925b68c4bbb759d1be15f3
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+
+requirements:
+  host:
+    - pip
+    - python >=3.6
+    - flit
+  run:
+    - black >=19.10b0
+    - matplotlib-base >=3.2.2
+    - numpy >=1.19.0
+    - pytest >=5.4.3
+    - python >=3.6
+    - scikit-learn >=0.23.1
+    - scipy >=1.5.0
+    - shapely >=1.6.4.post2
+    - tqdm >=4.54.0
+
+test:
+  imports:
+    - uncertainty_toolbox
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/uncertainty-toolbox/uncertainty-toolbox
+  summary: A python toolbox for predictive uncertainty quantification, calibration, metrics, and visualization.
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - sgbaird
