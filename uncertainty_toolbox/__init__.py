@@ -1,4 +1,4 @@
-"""Code for the Uncertainty Toolbox"""
+"""A python toolbox for predictive uncertainty quantification, calibration, metrics, and visualization."""
 __version__ = "0.1.0"
 
 from .data import (
