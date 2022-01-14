@@ -1,6 +1,5 @@
-"""
-Code for the Uncertainty Toolbox
-"""
+"""Code for the Uncertainty Toolbox"""
+__version__ = "0.1.0"
 
 from .data import (
     synthetic_arange_random,
