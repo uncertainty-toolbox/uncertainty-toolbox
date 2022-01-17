@@ -55,27 +55,115 @@ def get_quantile_model_predictions(
     return quantile_preds_arr
 
 
+
+def get_quantile_predictions_by_interpolation(
+    initial_quantile_predictions,
+    initial_quantile_levels,
+    quantile_levels,
+):
+    """
+    Returns the quantile predictions, using linear interpolation, given an initial set of externally obtained predicitions.
+
+    Args:
+        initial_quantile_predictions: a NxK' representing the quantile values for each of N samples and K' quantile levels
+        initial_quantile_levels: the K' initial quantiles levels, each value within (0, 1)
+        quantile_levels: a flat array of quantile levels, each value within (0, 1)
+
+    Returns: a NxK array
+
+    """
+    
+    if not isinstance(initial_quantile_predictions, np.ndarray):
+        raise TypeError("initial_quantile_predictions must be ndarray")
+    if not isinstance(initial_quantile_levels, np.ndarray):
+        raise TypeError("initial_quantile_levels must be ndarray")
+    if not isinstance(quantile_levels, np.ndarray):
+        raise TypeError("quantile_levels must be ndarray")
+
+    if (initial_quantile_predictions.shape[1] != len(initial_quantile_levels)):
+        raise ValueError("The number of columns in the initial predictions have to be equal to the number of quantile levels")
+    if (np.all(np.diff(initial_quantile_levels) > 0) != True):
+        raise ValueError("The quantile levels should increase monotonosly")
+
+    quantile_preds_arr = np.concatenate([np.interp(quantile_levels, initial_quantile_levels, initial_quantile_predictions[i]) for i in range(len(initial_quantile_predictions))])
+    quantile_preds_arr = np.reshape(quantile_preds_arr, (len(initial_quantile_predictions), len(quantile_levels)))
+
+    return quantile_preds_arr
+
+
+def arg_checker(method, initial_quantile_predictions, initial_quantile_levels, x, model):
+
+    if method != 'predictions' and method != 'model':
+       raise ValueError('Method must be either predictions or model')
+
+    if method == 'predictions' and (initial_quantile_predictions is None or initial_quantile_levels is None):
+        raise RuntimeError('Using from predictions requires both initial_quantile_predictions and initial_quantile_levels')
+    elif method == 'model' and (x is None or model is None):
+        raise RuntimeError('Using from model requires both x and model')
+
+
+def get_quantile_predictions (
+    method,
+    quantile_levels = None,
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
+    recal_model=None,
+    recal_type=None
+):
+
+    arg_checker(method, initial_quantile_predictions, initial_quantile_levels, x, model)
+
+    if method == 'model':
+        quantile_predictions = get_quantile_model_predictions(
+            model=model,
+            x=x,
+            quantile_levels=quantile_levels,
+            recal_model=recal_model,
+            prop_type=recal_type,
+        )
+    elif method == 'predictions':
+        quantile_predictions = get_quantile_predictions_by_interpolation(
+            initial_quantile_predictions = initial_quantile_predictions,
+            initial_quantile_levels = initial_quantile_levels,
+            quantile_levels = quantile_levels,
+        )
+    
+    return quantile_predictions
+
+
+
 """ Accuracy """
 
 
 def quantile_accuracy(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     recal_model=None,
     recal_type=None
 ):
+
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy().flatten()
 
     median_quantile = np.array([0.5])
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=median_quantile,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
+
     q_050 = quantile_predictions[:, 0]
 
     return prediction_error_metrics(y_pred=q_050, y_true=y)
@@ -85,19 +173,28 @@ def quantile_accuracy(
 
 
 def quantile_sharpness(
-    model,
-    x,
+    y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     recal_model=None,
     recal_type=None,
 ):
     exp_proportions = np.array([0.025, 0.975])
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=exp_proportions,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
+    
     q_025 = quantile_predictions[:, 0]
     q_975 = quantile_predictions[:, 1]
     sharp_metric = np.mean(np.abs(q_975 - q_025))
@@ -109,9 +206,12 @@ def quantile_sharpness(
 
 
 def quantile_root_mean_squared_calibration_error(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -120,14 +220,21 @@ def quantile_root_mean_squared_calibration_error(
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
 
+    y = np.reshape(y, (-1, 1))
+
     exp_proportions = np.linspace(0.01, 0.99, num_bins)
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=exp_proportions,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
+
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
 
@@ -138,9 +245,12 @@ def quantile_root_mean_squared_calibration_error(
 
 
 def quantile_mean_absolute_calibration_error(
-    model,
-    x,  # shape (N, 1)
-    y,  # shape (N, 1)
+    y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -149,15 +259,21 @@ def quantile_mean_absolute_calibration_error(
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
 
+    y = np.reshape(y, (-1, 1))
 
     exp_proportions = np.linspace(0.01, 0.99, num_bins)
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=exp_proportions,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
+
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
 
@@ -168,9 +284,12 @@ def quantile_mean_absolute_calibration_error(
 
 
 def quantile_miscalibration_area(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -179,14 +298,21 @@ def quantile_miscalibration_area(
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
 
+    y = np.reshape(y, (-1, 1))
+
     exp_proportions = np.linspace(0.01, 0.99, num_bins)
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+    
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=exp_proportions,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
+
     obs_proportions = np.mean((quantile_predictions >= y).astype(float), axis=0).flatten()
     assert exp_proportions.shape == obs_proportions.shape
 
@@ -209,9 +335,12 @@ def quantile_miscalibration_area(
 
 
 def quantile_adversarial_group_calibration(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     cali_type='mean_abs',
     prop_type="quantile",
     num_bins=99,
@@ -226,6 +355,9 @@ def quantile_adversarial_group_calibration(
         cali_fn = quantile_mean_absolute_calibration_error
     elif cali_type == "root_mean_sq":
         cali_fn = quantile_root_mean_squared_calibration_error
+
+    arg_checker(method, initial_quantile_predictions, initial_quantile_levels, x, model)
+    y = np.reshape(y, (-1, 1))
 
     num_pts = y.shape[0]
     ratio_arr = np.linspace(0, 1, num_group_bins)
@@ -248,15 +380,24 @@ def quantile_adversarial_group_calibration(
                 rand_idx = np.random.choice(
                     num_pts, group_size, replace=draw_with_replacement
                 )
-                group_x = x[rand_idx]
                 group_y = y[rand_idx]
+                group_x = None
+                group_quantile_predictions = None
+                if method == 'model':
+                    group_x = x[rand_idx]
+                elif method == 'predictions':
+                    group_quantile_predictions = initial_quantile_predictions[rand_idx]
                 group_miscal = cali_fn(
-                    model,
-                    group_x,
-                    group_y,
-                    num_bins=num_bins,
-                    prop_type=prop_type,
-                )
+                        y = group_y,
+                        method = method,
+                        model = model,
+                        x = group_x,
+                        initial_quantile_predictions = group_quantile_predictions,
+                        initial_quantile_levels = initial_quantile_levels,
+                        num_bins=num_bins,
+                        prop_type=prop_type,
+                    )
+
                 group_miscal_scores.append(group_miscal)
             max_miscal_score = np.max(group_miscal_scores)
             score_per_trial.append(max_miscal_score)
@@ -276,9 +417,12 @@ def quantile_adversarial_group_calibration(
 
 """ Proper scoring rules """
 def quantile_check_score(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -286,14 +430,19 @@ def quantile_check_score(
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
 
+    y = np.reshape(y, (-1, 1))
+
     q_list = np.linspace(0.01, 0.99, num_bins)
 
-    quantile_predictions = get_quantile_model_predictions(
-        model=model,
-        x=x,
+    quantile_predictions = get_quantile_predictions(
+        method=method, 
         quantile_levels=q_list,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
 
     diff = quantile_predictions - y
@@ -304,9 +453,12 @@ def quantile_check_score(
 
 
 def quantile_interval_score(
-    model,
-    x,
     y,
+    method = 'predictions',
+    model = None,
+    x = None,
+    initial_quantile_predictions = None,
+    initial_quantile_levels = None,
     num_bins=99,
     recal_model=None,
     recal_type=None,
@@ -315,7 +467,7 @@ def quantile_interval_score(
     if isinstance(y, torch.Tensor):
         y = y.detach().cpu().numpy()
 
-    num_pts = y.shape[0]
+    y = np.reshape(y, (-1, 1))
 
     alpha_list = np.linspace(0.01, 0.99, num_bins)
     l_list = np.min(
@@ -324,19 +476,26 @@ def quantile_interval_score(
     )
     u_list = 1.0 - l_list
 
-    pred_l = get_quantile_model_predictions(
-        model=model,
-        x=x,
+    pred_l = get_quantile_predictions(
+        method=method, 
         quantile_levels=l_list,
-        recal_model=recal_model,
-        prop_type=recal_type,
-    )
-    pred_u = get_quantile_model_predictions(
         model=model,
-        x=x,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
+    )
+
+    pred_u = get_quantile_predictions(
+        method=method, 
         quantile_levels=u_list,
-        recal_model=recal_model,
-        prop_type=recal_type,
+        model=model,
+        x=x, 
+        initial_quantile_predictions=initial_quantile_predictions,
+        initial_quantile_levels=initial_quantile_levels,
+        recal_model=recal_model, 
+        recal_type=recal_type
     )
 
     below_l = (pred_l - y) > 0
@@ -351,4 +510,3 @@ def quantile_interval_score(
     int_score = np.mean(score_per_alpha)
 
     return int_score
-
