@@ -108,7 +108,7 @@ with 50% chance"_, and if your prediction was correct for roughly 15 out of 30 d
 > property of the forecasts only 
 > [(Gneiting et al.)](./paper_list.md#seminal-works-on-probabilistic-forecasting-and-uq-metrics)
 
-Sharpness is a measure of how narrow, concentrated, or peaked the predictive distribtion
+Sharpness is a measure of how narrow, concentrated, or peaked the predictive distribution
 is.  Sharpness is evaluated *solely* based on the predictive distribution, and neither
 the datapoint nor the ground truth distribution are considered when measuring sharpness.
 As an example, a Gaussian distributional prediction with mean 1 and variance 0.5 is
