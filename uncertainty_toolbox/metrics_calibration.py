@@ -2,18 +2,20 @@
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
 
+import numpy as np
+
 from typing import Any, Tuple, Optional
 from argparse import Namespace
-import numpy as np
-from sklearn.isotonic import IsotonicRegression
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from sklearn.isotonic import IsotonicRegression
 from tqdm import tqdm
+
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
     assert_is_positive,
+    trapezium_area,
 )
 
 
@@ -234,7 +236,48 @@ def adversarial_group_calibration(
     return out
 
 
-def miscalibration_area(
+def miscalibration_area(y_pred: np.ndarray,
+                        y_std: np.ndarray,
+                        y_true: np.ndarray,
+                        num_bins: int = 100):
+    """Miscalibration area.
+
+    This is identical to mean absolute calibration error and ECE, however
+    the integration here is taken by tracing the area between curves.
+    In the limit of num_bins, miscalibration area and
+    mean absolute calibration error will converge to the same value.
+
+    Args:
+        y_pred: 1D array of the predicted means for the held out dataset.
+        y_std: 1D array of the predicted standard deviations for the held out dataset.
+        y_true: 1D array of the true labels in the held out dataset.
+        num_bins: number of discretizations for the probability space [0, 1].
+
+    Returns:
+        A single scalar which calculates the miscalibration area.
+    """
+
+    # Bin edges in square
+    edges = np.linspace(0, 1, num_bins + 1)
+
+    # Get the inverse of the CDF at each of these.
+    normal = stats.norm(0, 1)
+    expected_sd_multiples = normal.ppf(0.5 + edges / 2.0)
+
+    # For each bin edge, see how many of our data points deviate less
+    # than the corresponding sd multiple.
+    abs_res = np.abs(y_true - y_pred)
+    sd_multiples = abs_res / y_std
+    sd_percs = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).sum(0) / len(sd_multiples)
+
+    # Now calculate the area between these and the line y=x.
+    areas = trapezium_area(edges[:-1], edges[:-1], sd_percs[:-1],
+                          edges[1:], edges[1:], sd_percs[1:], absolute=True)
+
+    return areas.sum()
+
+
+def miscalibration_area_orig(
     y_pred: np.ndarray,
     y_std: np.ndarray,
     y_true: np.ndarray,
