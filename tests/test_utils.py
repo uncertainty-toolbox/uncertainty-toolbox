@@ -5,10 +5,7 @@ Test for util functions.
 import pytest
 import numpy as np
 
-from uncertainty_toolbox.utils import (
-    assert_is_flat_same_shape,
-    assert_is_positive
-)
+from uncertainty_toolbox.utils import assert_is_flat_same_shape, assert_is_positive
 
 
 def test_is_flat_same_shape_wrong_type():
@@ -81,17 +78,17 @@ def test_assert_is_positive_with_negative_inputs():
 
 
 def test_assert_is_positive_correct_many_inputs():
-    inputs = [np.arange(1,9) for _ in range(5)]
+    inputs = [np.arange(1, 9) for _ in range(5)]
     assert_is_positive(*inputs)
 
 
 def test_assert_is_positive_correct_single_input():
-    input = np.arange(1,9)
+    input = np.arange(1, 9)
     assert_is_positive(input)
 
 
 def test_assert_is_positive_correct_2D_input():
-    input = np.arange(1,10).reshape(3,3)
+    input = np.arange(1, 10).reshape(3, 3)
     assert_is_positive(input)
 
 
