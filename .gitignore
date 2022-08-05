@@ -133,5 +133,3 @@ dmypy.json
 
 # Vim files
 *.sw*
-scratch/LICENSE
-scratch/meta.yaml
