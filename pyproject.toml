@@ -3,19 +3,21 @@ requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "uncertainty_toolbox"
+name = "uncertainty-toolbox"
 authors = [
-    {name = "Willie Neiswanger", email = "willie.neiswanger@gmail.com"},
+    {name = "Willie Neiswanger"},
     {name = "Youngseog Chung"},
     {name = "Ian Char"},
     {name = "Han Guo"},
-    ]
+    {email = "willie.neiswanger@gmail.com"},
+]
 readme = "README.md"
+license = {file = "LICENSE"}
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    ]
+]
 dynamic = ["version", "description"]
 
 requires-python = ">=3.6"
@@ -31,5 +33,10 @@ dependencies = [
     "black>=19.10b0",
 ]
 
+[tool.flit.module]
+name = "uncertainty_toolbox"
+
 [project.urls]
-Home = "https://github.com/uncertainty-toolbox/uncertainty-toolbox"
+Home = "https://uncertainty-toolbox.github.io/"
+Github = "https://github.com/uncertainty-toolbox/uncertainty-toolbox"
+Documentation = "https://uncertainty-toolbox.github.io/docs/"
