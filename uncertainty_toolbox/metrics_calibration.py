@@ -32,7 +32,7 @@ def sharpness(y_std: np.ndarray) -> float:
     assert_is_positive(y_std)
 
     # Compute sharpness
-    sharp_metric = np.sqrt(np.mean(y_std ** 2))
+    sharp_metric = np.sqrt(np.mean(y_std**2))
 
     return sharp_metric
 
