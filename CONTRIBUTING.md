@@ -13,12 +13,18 @@ help make the Uncertainty Toolbox even better by either
 To create a PR:
 
 1. If applicable, make sure to write unit tests that exhaustively test your
-   added code. Run all unit tests and ensure that there are no failures.
-2. Submit a PR to the [dev branch](https://github.com/uncertainty-toolbox/uncertainty-toolbox/tree/dev).
+   added code. Run all unit tests, using
+   `source shell/run_all_tests.sh`, and ensure that there are no failures.
+2. Please add docstrings (following the [Google style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)) 
+   and type hinting ([example here](https://github.com/uncertainty-toolbox/uncertainty-toolbox/blob/946433b2bca9eb93b06b144cffdb32faf0a9c64f/uncertainty_toolbox/metrics.py#L242)).
+   Also, format all code using the [black format](https://black.readthedocs.io/en/stable/) 
+   by running `source shell/format_black.sh`.
+3. Submit a PR to the [main branch](https://github.com/uncertainty-toolbox/uncertainty-toolbox/tree/main).
    If your PR fixes a bug, detail what the problem was and how it was fixed.
    If your PR adds code, include justification for why this code should be added.
-3. The maintainers will discuss your PR and merge it into the dev branch if
-   accepted. The dev branch will be periodically merged into the master branch.
+4. Please allow maintainers to edit your pull request by following [these instructions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork).
+5. The maintainers will discuss your PR and merge it into the main branch if
+   accepted.
 
 ### What kind of additional features are we looking for?
 
@@ -31,9 +37,9 @@ other types of features, ask yourself:
 * Does this change make the codebase more confusing or difficult to deal with?
 * Does this change add heavy or niche dependencies?
 
-Feel free to [submit an issue](#request-a-feature) before making the
-feature to see if your feature is something that the maintainers or other users
-would want.
+Feel free to [submit an issue](https://github.com/uncertainty-toolbox/uncertainty-toolbox/issues) 
+before making the feature to see if your feature is something that the 
+maintainers or other users would want.
 
 # Report a Bug
 
