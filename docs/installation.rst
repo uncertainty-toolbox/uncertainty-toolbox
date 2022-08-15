@@ -6,9 +6,9 @@ only, run:
 
 .. code-block:: console
 
-  pip install git+https://github.com/uncertainty-toolbox/uncertainty-toolbox
+  pip install uncertainty-toolbox
 
-For a full installation with examples and tests, run:
+For a full installation with examples, tests, and the latest updates, run:
 
 .. code-block:: console
 
