@@ -8,7 +8,7 @@ only, run:
 
   pip install uncertainty-toolbox
 
-For a full installation with examples and tests, run:
+For a full installation with latest updates, examples, and tests, run:
 
 .. code-block:: console
 
