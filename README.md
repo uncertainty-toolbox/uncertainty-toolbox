@@ -42,7 +42,7 @@ Uncertainty Toolbox contains:
 Uncertainty Toolbox requires Python 3.6+. For a lightweight installation of the package
 only, run:
 ```bash
-pip install git+https://github.com/uncertainty-toolbox/uncertainty-toolbox
+pip install uncertainty-toolbox
 ```
 
 For a full installation with examples and tests, run:
