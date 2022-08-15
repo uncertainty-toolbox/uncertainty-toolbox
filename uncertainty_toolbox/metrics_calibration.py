@@ -32,7 +32,7 @@ def sharpness(y_std: np.ndarray) -> float:
     assert_is_positive(y_std)
 
     # Compute sharpness
-    sharp_metric = np.sqrt(np.mean(y_std ** 2))
+    sharp_metric = np.sqrt(np.mean(y_std**2))
 
     return sharp_metric
 
@@ -56,7 +56,7 @@ def root_mean_squared_calibration_error(
         vectorized: whether to vectorize computation for observed proportions.
                     (while setting to True is faster, it has much higher memory requirements
                     and may fail to run for larger datasets).
-        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        recal_model: an sklearn isotonic regression model which recalibrates the predictions.
         prop_type: "interval" to measure observed proportions for centered prediction intervals,
                    and "quantile" for observed proportions below a predicted quantile.
 
@@ -106,7 +106,7 @@ def mean_absolute_calibration_error(
         vectorized: whether to vectorize computation for observed proportions.
                     (while setting to True is faster, it has much higher memory requirements
                     and may fail to run for larger datasets).
-        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        recal_model: an sklearn isotonic regression model which recalibrates the predictions.
         prop_type: "interval" to measure observed proportions for centered prediction intervals,
                    and "quantile" for observed proportions below a predicted quantile.
 
@@ -258,7 +258,7 @@ def miscalibration_area(
         vectorized: whether to vectorize computation for observed proportions.
                     (while setting to True is faster, it has much higher memory requirements
                     and may fail to run for larger datasets).
-        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        recal_model: an sklearn isotonic regression model which recalibrates the predictions.
         prop_type: "interval" to measure observed proportions for centered prediction intervals,
                    and "quantile" for observed proportions below a predicted quantile.
 
@@ -321,7 +321,7 @@ def get_proportion_lists_vectorized(
         y_std: 1D array of the predicted standard deviations for the held out dataset.
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: number of discretizations for the probability space [0, 1].
-        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        recal_model: an sklearn isotonic regression model which recalibrates the predictions.
         prop_type: "interval" to measure observed proportions for centered prediction intervals,
                    and "quantile" for observed proportions below a predicted quantile.
 
@@ -384,7 +384,7 @@ def get_proportion_lists(
         y_std: 1D array of the predicted standard deviations for the held out dataset.
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: number of discretizations for the probability space [0, 1].
-        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        recal_model: an sklearn isotonic regression model which recalibrates the predictions.
         prop_type: "interval" to measure observed proportions for centered prediction intervals,
                    and "quantile" for observed proportions below a predicted quantile.
 
