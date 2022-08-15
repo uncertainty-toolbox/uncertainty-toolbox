@@ -45,7 +45,7 @@ only, run:
 pip install uncertainty-toolbox
 ```
 
-For a full installation with latest updates, examples, and tests, run:
+For a full installation with examples, tests, and the latest updates, run:
 ```bash
 git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
 cd uncertainty-toolbox
