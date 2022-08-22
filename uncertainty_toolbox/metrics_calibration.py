@@ -34,7 +34,7 @@ def sharpness(y_std: np.ndarray) -> float:
     assert_is_positive(y_std)
 
     # Compute sharpness
-    sharp_metric = np.sqrt(np.mean(y_std ** 2))
+    sharp_metric = np.sqrt(np.mean(y_std**2))
 
     return sharp_metric
 
@@ -236,10 +236,9 @@ def adversarial_group_calibration(
     return out
 
 
-def miscalibration_area(y_pred: np.ndarray,
-                        y_std: np.ndarray,
-                        y_true: np.ndarray,
-                        num_bins: int = 100):
+def miscalibration_area(
+    y_pred: np.ndarray, y_std: np.ndarray, y_true: np.ndarray, num_bins: int = 100
+):
     """Miscalibration area.
 
     This is identical to mean absolute calibration error and ECE, however
@@ -268,11 +267,20 @@ def miscalibration_area(y_pred: np.ndarray,
     # than the corresponding sd multiple.
     abs_res = np.abs(y_true - y_pred)
     sd_multiples = abs_res / y_std
-    sd_percs = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).sum(0) / len(sd_multiples)
+    sd_percs = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).sum(0) / len(
+        sd_multiples
+    )
 
     # Now calculate the area between these and the line y=x.
-    areas = trapezium_area(edges[:-1], edges[:-1], sd_percs[:-1],
-                          edges[1:], edges[1:], sd_percs[1:], absolute=True)
+    areas = trapezium_area(
+        edges[:-1],
+        edges[:-1],
+        sd_percs[:-1],
+        edges[1:],
+        edges[1:],
+        sd_percs[1:],
+        absolute=True,
+    )
 
     return areas.sum()
 

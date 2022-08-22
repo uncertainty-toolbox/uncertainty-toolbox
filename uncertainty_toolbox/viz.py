@@ -476,7 +476,7 @@ def plot_sharpness(
     ax.set_yticks([])
 
     # Calculate and report sharpness
-    sharpness = np.sqrt(np.mean(y_std ** 2))
+    sharpness = np.sqrt(np.mean(y_std**2))
     ax.axvline(x=sharpness, label="sharpness", color="k", linewidth=2, ls="--")
 
     if sharpness < (xlim[0] + xlim[1]) / 2:

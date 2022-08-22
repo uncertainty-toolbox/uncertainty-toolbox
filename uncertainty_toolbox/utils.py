@@ -44,13 +44,15 @@ def assert_is_positive(*args: Any) -> Union[bool, NoReturn]:
     return True
 
 
-def trapezium_area(xl: np.ndarray,
-                  al: np.ndarray,
-                  bl: np.ndarray,
-                  xr: np.ndarray,
-                  ar: np.ndarray,
-                  br: np.ndarray,
-                  absolute=True):
+def trapezium_area(
+    xl: np.ndarray,
+    al: np.ndarray,
+    bl: np.ndarray,
+    xr: np.ndarray,
+    ar: np.ndarray,
+    br: np.ndarray,
+    absolute=True,
+):
     """
     Calculate the area of a vertical-sided trapezium, formed connecting the following points:
         (xl, al) - (xl, bl) - (xr, br) - (xr, ar) - (xl, al)
@@ -76,7 +78,7 @@ def trapezium_area(xl: np.ndarray,
     dr = br - ar
 
     # The ordering is the same for both iff they do not cross.
-    cross = (dl * dr < 0)
+    cross = dl * dr < 0
 
     # Treat the degenerate case as a trapezium
     cross = cross * (1 - ((dl == 0) * (dr == 0)))
@@ -89,7 +91,7 @@ def trapezium_area(xl: np.ndarray,
     # Hourglass for crossing lines.
     # NaNs should only appear in the degenerate and parallel cases.
     # Those NaNs won't get through the final multiplication so it's ok.
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         x_intersect = intersection((xl, bl), (xr, br), (xl, al), (xr, ar))[0]
     tl_area = 0.5 * (bl - al) * (x_intersect - xl)
     tr_area = 0.5 * (br - ar) * (xr - x_intersect)
@@ -102,10 +104,12 @@ def trapezium_area(xl: np.ndarray,
     return (1 - cross) * area_trapezium + cross * np.nan_to_num(area_hourglass)
 
 
-def intersection(p1: Tuple[Numeric, Numeric],
-                p2: Tuple[Numeric, Numeric],
-                p3: Tuple[Numeric, Numeric],
-                p4: Tuple[Numeric, Numeric]):
+def intersection(
+    p1: Tuple[Numeric, Numeric],
+    p2: Tuple[Numeric, Numeric],
+    p3: Tuple[Numeric, Numeric],
+    p4: Tuple[Numeric, Numeric],
+):
     """
     Calculate the intersection of two lines between four points, as defined in
     https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection.
