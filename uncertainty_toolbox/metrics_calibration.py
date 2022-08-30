@@ -15,7 +15,7 @@ from tqdm import tqdm
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
     assert_is_positive,
-    trapezium_area,
+    trapezoid_area,
 )
 
 
@@ -272,7 +272,7 @@ def miscalibration_area(
     )
 
     # Now calculate the area between these and the line y=x.
-    areas = trapezium_area(
+    areas = trapezoid_area(
         edges[:-1],
         edges[:-1],
         sd_percs[:-1],
