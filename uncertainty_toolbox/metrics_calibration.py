@@ -236,10 +236,15 @@ def adversarial_group_calibration(
     return out
 
 
-def miscalibration_area(y_pred: np.ndarray,
-                        y_std: np.ndarray,
-                        y_true: np.ndarray,
-                        num_bins: int = 100):
+def miscalibration_area(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 100,
+    vectorized: bool = False,
+    recal_model: Any = None,
+    prop_type: str = "interval",
+) -> float:
     """Miscalibration area.
 
     This is identical to mean absolute calibration error and ECE, however
@@ -252,27 +257,46 @@ def miscalibration_area(y_pred: np.ndarray,
         y_std: 1D array of the predicted standard deviations for the held out dataset.
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: number of discretizations for the probability space [0, 1].
+        vectorized: whether to vectorize computation for observed proportions.
+                    (while setting to True is faster, it has much higher memory requirements
+                    and may fail to run for larger datasets).
+        recal_model: an sklearn isotonoic regression model which recalibrates the predictions.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
 
     Returns:
         A single scalar which calculates the miscalibration area.
     """
+    # Compute the expected proportions and the residuals.
+    exp_proportions = np.linspace(0, 1, num_bins + 1)
+    if recal_model is not None:
+        exp_proportions = recal_model.predict(exp_proportions)
+    residuals = y_pred - y_true
 
-    # Bin edges in square
-    edges = np.linspace(0, 1, num_bins + 1)
+    # Get the inverse of the CDF at each of these depending on the prop_type.
+    if prop_type == 'interval':
+        expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + exp_proportions / 2.0)
+        sd_multiples = np.abs(residuals) / y_std
+    elif prop_type == 'quantile':
+        expected_sd_multiples = stats.norm(0, 1).ppf(exp_proportions)
+        sd_multiples = residuals / y_std
+    else:
+        raise ValueError(f'Unknown prop_type {prop_type}')
 
-    # Get the inverse of the CDF at each of these.
-    normal = stats.norm(0, 1)
-    expected_sd_multiples = normal.ppf(0.5 + edges / 2.0)
-
-    # For each bin edge, see how many of our data points deviate less
-    # than the corresponding sd multiple.
-    abs_res = np.abs(y_true - y_pred)
-    sd_multiples = abs_res / y_std
-    sd_percs = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).sum(0) / len(sd_multiples)
+    # For each bin edge, see how many of our data points deviate less than the
+    # corresponding sd multiple.
+    if vectorized:
+        obs_proportions = (sd_multiples.reshape(-1, 1)
+                           <= expected_sd_multiples).mean(0)
+    else:
+        obs_proportions = np.array([np.mean(sd_multiples <= expected_sd_multiples[i])
+                                    for i in range(len(expected_sd_multiples))])
 
     # Now calculate the area between these and the line y=x.
-    areas = trapezium_area(edges[:-1], edges[:-1], sd_percs[:-1],
-                          edges[1:], edges[1:], sd_percs[1:], absolute=True)
+    areas = trapezium_area(
+            exp_proportions[:-1], exp_proportions[:-1], obs_proportions[:-1],
+            exp_proportions[1:], exp_proportions[1:], obs_proportions[1:],
+            absolute=True)
 
     return areas.sum()
 
