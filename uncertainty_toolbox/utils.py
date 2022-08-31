@@ -44,30 +44,32 @@ def assert_is_positive(*args: Any) -> Union[bool, NoReturn]:
     return True
 
 
-def trapezium_area(xl: np.ndarray,
-                  al: np.ndarray,
-                  bl: np.ndarray,
-                  xr: np.ndarray,
-                  ar: np.ndarray,
-                  br: np.ndarray,
-                  absolute=True):
+def trapezoid_area(
+    xl: np.ndarray,
+    al: np.ndarray,
+    bl: np.ndarray,
+    xr: np.ndarray,
+    ar: np.ndarray,
+    br: np.ndarray,
+    absolute=True,
+):
     """
-    Calculate the area of a vertical-sided trapezium, formed connecting the following points:
+    Calculate the area of a vertical-sided trapezoid, formed connecting the following points:
         (xl, al) - (xl, bl) - (xr, br) - (xr, ar) - (xl, al)
 
-    This function considers the case that the edges of the trapezium might cross,
+    This function considers the case that the edges of the trapezoid might cross,
     and explicitly accounts for this.
 
     Args:
-        xl: The x coordinate of the left-hand points of the trapezium
-        al: The y coordinate of the first left-hand point of the trapezium
-        bl: The y coordinate of the second left-hand point of the trapezium
-        xr: The x coordinate of the right-hand points of the trapezium
-        ar: The y coordinate of the first right-hand point of the trapezium
-        br: The y coordinate of the second right-hand point of the trapezium
+        xl: The x coordinate of the left-hand points of the trapezoid
+        al: The y coordinate of the first left-hand point of the trapezoid
+        bl: The y coordinate of the second left-hand point of the trapezoid
+        xr: The x coordinate of the right-hand points of the trapezoid
+        ar: The y coordinate of the first right-hand point of the trapezoid
+        br: The y coordinate of the second right-hand point of the trapezoid
         absolute: Whether to calculate the absolute area, or allow a negative area (e.g. if a and b are swapped)
 
-    Returns: The area of the given trapezium.
+    Returns: The area of the given trapezoid.
 
     """
 
@@ -76,20 +78,20 @@ def trapezium_area(xl: np.ndarray,
     dr = br - ar
 
     # The ordering is the same for both iff they do not cross.
-    cross = (dl * dr < 0)
+    cross = dl * dr < 0
 
-    # Treat the degenerate case as a trapezium
+    # Treat the degenerate case as a trapezoid
     cross = cross * (1 - ((dl == 0) * (dr == 0)))
 
-    # Trapezium for non-crossing lines
-    area_trapezium = (xr - xl) * 0.5 * ((bl - al) + (br - ar))
+    # trapezoid for non-crossing lines
+    area_trapezoid = (xr - xl) * 0.5 * ((bl - al) + (br - ar))
     if absolute:
-        area_trapezium = np.abs(area_trapezium)
+        area_trapezoid = np.abs(area_trapezoid)
 
     # Hourglass for crossing lines.
     # NaNs should only appear in the degenerate and parallel cases.
     # Those NaNs won't get through the final multiplication so it's ok.
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         x_intersect = intersection((xl, bl), (xr, br), (xl, al), (xr, ar))[0]
     tl_area = 0.5 * (bl - al) * (x_intersect - xl)
     tr_area = 0.5 * (br - ar) * (xr - x_intersect)
@@ -99,13 +101,15 @@ def trapezium_area(xl: np.ndarray,
         area_hourglass = tl_area + tr_area
 
     # The nan_to_num function allows us to do 0 * nan = 0
-    return (1 - cross) * area_trapezium + cross * np.nan_to_num(area_hourglass)
+    return (1 - cross) * area_trapezoid + cross * np.nan_to_num(area_hourglass)
 
 
-def intersection(p1: Tuple[Numeric, Numeric],
-                p2: Tuple[Numeric, Numeric],
-                p3: Tuple[Numeric, Numeric],
-                p4: Tuple[Numeric, Numeric]):
+def intersection(
+    p1: Tuple[Numeric, Numeric],
+    p2: Tuple[Numeric, Numeric],
+    p3: Tuple[Numeric, Numeric],
+    p4: Tuple[Numeric, Numeric],
+):
     """
     Calculate the intersection of two lines between four points, as defined in
     https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection.

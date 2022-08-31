@@ -15,7 +15,7 @@ from tqdm import tqdm
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
     assert_is_positive,
-    trapezium_area,
+    trapezoid_area,
 )
 
 
@@ -34,7 +34,7 @@ def sharpness(y_std: np.ndarray) -> float:
     assert_is_positive(y_std)
 
     # Compute sharpness
-    sharp_metric = np.sqrt(np.mean(y_std ** 2))
+    sharp_metric = np.sqrt(np.mean(y_std**2))
 
     return sharp_metric
 
@@ -293,11 +293,15 @@ def miscalibration_area(
                                     for i in range(len(expected_sd_multiples))])
 
     # Now calculate the area between these and the line y=x.
-    areas = trapezium_area(
-            exp_proportions[:-1], exp_proportions[:-1], obs_proportions[:-1],
-            exp_proportions[1:], exp_proportions[1:], obs_proportions[1:],
-            absolute=True)
-
+    areas = trapezoid_area(
+        exp_proportions[:-1],
+        exp_proportions[:-1],
+        obs_proportions[:-1],
+        exp_proportions[1:],
+        exp_proportions[1:],
+        obs_proportions[1:],
+        absolute=True,
+    )
     return areas.sum()
 
 
