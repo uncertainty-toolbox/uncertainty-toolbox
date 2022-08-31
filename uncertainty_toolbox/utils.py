@@ -44,7 +44,7 @@ def assert_is_positive(*args: Any) -> Union[bool, NoReturn]:
     return True
 
 
-def trapezium_area(
+def trapezoid_area(
     xl: np.ndarray,
     al: np.ndarray,
     bl: np.ndarray,
@@ -54,22 +54,22 @@ def trapezium_area(
     absolute=True,
 ):
     """
-    Calculate the area of a vertical-sided trapezium, formed connecting the following points:
+    Calculate the area of a vertical-sided trapezoid, formed connecting the following points:
         (xl, al) - (xl, bl) - (xr, br) - (xr, ar) - (xl, al)
 
-    This function considers the case that the edges of the trapezium might cross,
+    This function considers the case that the edges of the trapezoid might cross,
     and explicitly accounts for this.
 
     Args:
-        xl: The x coordinate of the left-hand points of the trapezium
-        al: The y coordinate of the first left-hand point of the trapezium
-        bl: The y coordinate of the second left-hand point of the trapezium
-        xr: The x coordinate of the right-hand points of the trapezium
-        ar: The y coordinate of the first right-hand point of the trapezium
-        br: The y coordinate of the second right-hand point of the trapezium
+        xl: The x coordinate of the left-hand points of the trapezoid
+        al: The y coordinate of the first left-hand point of the trapezoid
+        bl: The y coordinate of the second left-hand point of the trapezoid
+        xr: The x coordinate of the right-hand points of the trapezoid
+        ar: The y coordinate of the first right-hand point of the trapezoid
+        br: The y coordinate of the second right-hand point of the trapezoid
         absolute: Whether to calculate the absolute area, or allow a negative area (e.g. if a and b are swapped)
 
-    Returns: The area of the given trapezium.
+    Returns: The area of the given trapezoid.
 
     """
 
@@ -80,13 +80,13 @@ def trapezium_area(
     # The ordering is the same for both iff they do not cross.
     cross = dl * dr < 0
 
-    # Treat the degenerate case as a trapezium
+    # Treat the degenerate case as a trapezoid
     cross = cross * (1 - ((dl == 0) * (dr == 0)))
 
-    # Trapezium for non-crossing lines
-    area_trapezium = (xr - xl) * 0.5 * ((bl - al) + (br - ar))
+    # trapezoid for non-crossing lines
+    area_trapezoid = (xr - xl) * 0.5 * ((bl - al) + (br - ar))
     if absolute:
-        area_trapezium = np.abs(area_trapezium)
+        area_trapezoid = np.abs(area_trapezoid)
 
     # Hourglass for crossing lines.
     # NaNs should only appear in the degenerate and parallel cases.
@@ -101,7 +101,7 @@ def trapezium_area(
         area_hourglass = tl_area + tr_area
 
     # The nan_to_num function allows us to do 0 * nan = 0
-    return (1 - cross) * area_trapezium + cross * np.nan_to_num(area_hourglass)
+    return (1 - cross) * area_trapezoid + cross * np.nan_to_num(area_hourglass)
 
 
 def intersection(
