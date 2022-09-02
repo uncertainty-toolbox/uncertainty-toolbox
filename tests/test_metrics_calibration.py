@@ -177,7 +177,7 @@ def test_miscalibration_area_on_test_set(supply_test_set):
         )
         < 1e-6
     )
-    assert np.abs(test_miscal_area_vectorized_interval - 0.37710437710437716) < 1e-6
+    assert np.abs(test_miscal_area_vectorized_interval - 0.37833333333333335) < 1e-6
 
     test_miscal_area_nonvectorized_quantile = miscalibration_area(
         *supply_test_set,
@@ -200,7 +200,7 @@ def test_miscalibration_area_on_test_set(supply_test_set):
         )
         < 1e-6
     )
-    assert np.abs(test_miscal_area_vectorized_quantile - 0.23916245791245788) < 1e-6
+    assert np.abs(test_miscal_area_vectorized_quantile - 0.23930698739977088) < 1e-6
 
 
 def test_vectorization_for_proportion_list_on_test_set(supply_test_set):

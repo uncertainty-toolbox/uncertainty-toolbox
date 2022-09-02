@@ -274,23 +274,26 @@ def miscalibration_area(
     residuals = y_pred - y_true
 
     # Get the inverse of the CDF at each of these depending on the prop_type.
-    if prop_type == 'interval':
+    if prop_type == "interval":
         expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + exp_proportions / 2.0)
         sd_multiples = np.abs(residuals) / y_std
-    elif prop_type == 'quantile':
+    elif prop_type == "quantile":
         expected_sd_multiples = stats.norm(0, 1).ppf(exp_proportions)
         sd_multiples = residuals / y_std
     else:
-        raise ValueError(f'Unknown prop_type {prop_type}')
+        raise ValueError(f"Unknown prop_type {prop_type}")
 
     # For each bin edge, see how many of our data points deviate less than the
     # corresponding sd multiple.
     if vectorized:
-        obs_proportions = (sd_multiples.reshape(-1, 1)
-                           <= expected_sd_multiples).mean(0)
+        obs_proportions = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).mean(0)
     else:
-        obs_proportions = np.array([np.mean(sd_multiples <= expected_sd_multiples[i])
-                                    for i in range(len(expected_sd_multiples))])
+        obs_proportions = np.array(
+            [
+                np.mean(sd_multiples <= expected_sd_multiples[i])
+                for i in range(len(expected_sd_multiples))
+            ]
+        )
 
     # Now calculate the area between these and the line y=x.
     areas = trapezoid_area(
