@@ -44,7 +44,7 @@ def iso_recal(
     """Recalibration algorithm based on isotonic regression.
 
     Fits and outputs an isotonic recalibration model that maps observed
-    probabilities to expected probabilities. This mapping proivdes
+    probabilities to expected probabilities. This mapping provides
     the necessary adjustments to produce better calibrated outputs.
 
     Args:

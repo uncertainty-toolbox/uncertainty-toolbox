@@ -39,7 +39,7 @@ def test_is_flat_same_shape_not_all_same():
         assert_is_flat_same_shape(first, wrong)
 
 
-def test_is_flat_same_shape_correct():
+def test_is_flat_same_shape_correct_many_inputs():
     inputs = [np.arange(5) for _ in range(5)]
     assert_is_flat_same_shape(*inputs)
 
@@ -124,3 +124,61 @@ def test_trapezoid_area():
     area_arr = trapezoid_area(xl, al, bl, xr, ar, br)
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(9.999991773687205, abs=1e-6)
+
+
+def test_is_flat_same_shape_correct_single_input():
+    input = np.arange(5)
+    assert_is_flat_same_shape(input)
+
+
+def test_is_flat_same_shape_correct_many_empty_inputs():
+    inputs = [np.arange(0) for _ in range(5)]
+    assert_is_flat_same_shape(*inputs)
+
+
+def test_is_flat_same_shape_correct_single_empty_input():
+    input = np.arange(0)
+    assert_is_flat_same_shape(input)
+
+
+def test_is_flat_same_shape_empty_call():
+    with pytest.raises(AssertionError):
+        assert_is_flat_same_shape()
+
+
+def test_assert_is_positive_wrong_type():
+    wrong = [1, 2, 3]
+    with pytest.raises(AssertionError):
+        assert_is_positive(wrong)
+
+
+def test_assert_is_positive_with_zero_as_input():
+    wrong = np.arange(9)
+    with pytest.raises(AssertionError):
+        assert_is_positive(wrong)
+
+
+def test_assert_is_positive_with_negative_inputs():
+    wrong = np.arange(-9, 9, 2)
+    with pytest.raises(AssertionError):
+        assert_is_positive(wrong)
+
+
+def test_assert_is_positive_correct_many_inputs():
+    inputs = [np.arange(1, 9) for _ in range(5)]
+    assert_is_positive(*inputs)
+
+
+def test_assert_is_positive_correct_single_input():
+    input = np.arange(1, 9)
+    assert_is_positive(input)
+
+
+def test_assert_is_positive_correct_2D_input():
+    input = np.arange(1, 10).reshape(3, 3)
+    assert_is_positive(input)
+
+
+def test_assert_is_positive_empty_call():
+    with pytest.raises(AssertionError):
+        assert_is_positive()

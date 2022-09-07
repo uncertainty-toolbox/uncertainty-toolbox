@@ -116,7 +116,7 @@ def get_all_adversarial_group_calibration(
         verbose: Activate verbose mode.
 
     Returns:
-        The evaluations for all metrics relating to adverarial group calibration.
+        The evaluations for all metrics relating to adversarial group calibration.
         Each inner dictionary contains the size of each group and the metrics
         computed for each group.
     """

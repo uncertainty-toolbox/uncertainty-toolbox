@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/logo.svg" width=730 /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/logo.svg" width=730 /></p>
 
 <p align="center">
     <a href="https://uncertainty-toolbox.github.io/">Website</a>,
@@ -42,10 +42,10 @@ Uncertainty Toolbox contains:
 Uncertainty Toolbox requires Python 3.6+. For a lightweight installation of the package
 only, run:
 ```bash
-pip install git+https://github.com/uncertainty-toolbox/uncertainty-toolbox
+pip install uncertainty-toolbox
 ```
 
-For a full installation with examples and tests, run:
+For a full installation with examples, tests, and the latest updates, run:
 ```bash
 git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
 cd uncertainty-toolbox
@@ -99,17 +99,17 @@ to reproduce these plots.
 
 **Overconfident** (_too little uncertainty_)
 <p align="center">
-    <img src="docs/images/row_1.svg" alt="" width="100%" align="top">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/row_1.svg" alt="" width="100%" align="top">
 </p>
 
 **Underconfident** (_too much uncertainty_)
 <p align="center">
-    <img src="docs/images/row_2.svg" alt="" width="100%" align="top">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/row_2.svg" alt="" width="100%" align="top">
 </p>
 
 **Well calibrated**
 <p align="center">
-    <img src="docs/images/row_3.svg" alt="" width="100%" align="top">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/row_3.svg" alt="" width="100%" align="top">
 </p>
 
 And here are a few of the calibration metrics for the above three cases:
@@ -133,9 +133,9 @@ See [this example](examples/viz_recalibrate_readme.py) for code to reproduce the
 
 **Recalibrating overconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_0.svg" alt="" width="32%" align="top">
-<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
-<img src="docs/images/after_recal_0.svg" alt="" width="32%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/before_recal_0.svg" alt="" width="32%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/after_recal_0.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
@@ -145,9 +145,9 @@ See [this example](examples/viz_recalibrate_readme.py) for code to reproduce the
 
 **Recalibrating underconfident predictions**
 <p align="center">
-<img src="docs/images/before_recal_1.svg" alt="" width="32%" align="top">
-<img src="docs/images/recal_arrow.svg" alt="" width="22%" align="top">
-<img src="docs/images/after_recal_1.svg" alt="" width="32%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/before_recal_1.svg" alt="" width="32%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/recal_arrow.svg" alt="" width="22%" align="top">
+<img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/images/after_recal_1.svg" alt="" width="32%" align="top">
 </p>
 
 |              | Mean absolute calibration error (MACE) | Root mean squared calibration error (RMSCE) | Miscalibration area (MA) |
@@ -200,17 +200,17 @@ Additionally, here are papers that led to the development of the toolbox:
 
 Development of Uncertainty Toolbox is [supported by](docs/acknowledgments.md) the following organizations.
 <p align="top">
-    <img src="docs/assets/acks_aws.svg" width="7%">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/assets/acks_aws.svg" width="7%">
     &nbsp; &nbsp;
-    <img src="docs/assets/acks_doe.png" width="8%">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/assets/acks_doe.png" width="8%">
     &nbsp; &nbsp;
-    <img src="docs/assets/acks_nsf.png" width="9%">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/assets/acks_nsf.png" width="9%">
     &nbsp; &nbsp;
-    <img src="docs/assets/cmu_logo.png" width="35%">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/assets/cmu_logo.png" width="35%">
     &nbsp; &nbsp;
 </p>
 
 <p>
-    <img src="docs/assets/stanford_logo.png" width="20%">
+    <img src="https://raw.githubusercontent.com/uncertainty-toolbox/uncertainty-toolbox/master/docs/assets/stanford_logo.png" width="20%">
     &nbsp; &nbsp;
 </p>
