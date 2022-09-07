@@ -4,7 +4,6 @@ Test for util functions.
 
 import pytest
 import numpy as np
-from scipy.stats import norm
 
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
@@ -44,31 +43,6 @@ def test_is_flat_same_shape_correct_many_inputs():
     assert_is_flat_same_shape(*inputs)
 
 
-def test_is_positive():
-    _MAX_NUM_ARRAYS = 10
-    _MAX_ARR_SIZE = 10
-
-    rand_num_arrays = np.random.randint(1, _MAX_NUM_ARRAYS)
-    pos_arrays = [
-        np.random.uniform(low=1e-10, size=np.random.randint(1, _MAX_ARR_SIZE))
-        for _ in range(rand_num_arrays)
-    ]
-    assert_is_positive(*pos_arrays)
-
-    _MAX_ARR_SIZE = 5
-    _PROB_NEGATIVE = 0.1
-    rand_array_is_positive = []
-    for _ in range(10000):
-        rand_array = np.random.normal(loc=-norm.ppf(_PROB_NEGATIVE), size=_MAX_ARR_SIZE)
-        try:
-            assert_is_positive(rand_array)
-            rand_array_is_positive.append(True)
-        except AssertionError:
-            rand_array_is_positive.append(False)
-    prob_success = (1 - _PROB_NEGATIVE) ** _MAX_ARR_SIZE
-    np.testing.assert_allclose(np.mean(rand_array_is_positive), prob_success, atol=0.03)
-
-
 def test_trapezoid_area():
     # convex trapezoid
     _X = np.array([0, 1, 2, 3])
@@ -100,7 +74,7 @@ def test_trapezoid_area():
     xr, ar, br = _X[1:], _A[1:], _B[1:]
     area_arr = trapezoid_area(xl, al, bl, xr, ar, br)
     assert area_arr.shape == (len(_X) - 1,)
-    assert np.sum(area_arr) == pytest.approx(3.9999868141847434, abs=1e-6)
+    assert np.sum(area_arr) == pytest.approx(4, abs=1e-4)
 
     # sine wave, 5 periods, crossed trapezoid, 45 deg rotated base
     _NUM_DISCRETIZATION = 10000
@@ -123,7 +97,7 @@ def test_trapezoid_area():
     xr, ar, br = x[1:], a[1:], b[1:]
     area_arr = trapezoid_area(xl, al, bl, xr, ar, br)
     assert area_arr.shape == (len(_X) - 1,)
-    assert np.sum(area_arr) == pytest.approx(9.999991773687205, abs=1e-6)
+    assert np.sum(area_arr) == pytest.approx(10, abs=1e-4)
 
 
 def test_is_flat_same_shape_correct_single_input():
