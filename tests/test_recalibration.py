@@ -93,7 +93,7 @@ def test_recal_model_miscal_area_criterion_on_test_set(supply_test_set):
     recal_exp_props = recal_model.predict(test_obs_props)
 
     assert np.abs(test_miscal_area - 0.24426139657444004) < 1e-3
-    assert np.abs(recal_test_miscal_area - 0.00040000000000000994) < 1e-3
+    assert np.abs(recal_test_miscal_area - 0.0029569160997732244) < 1e-3
     for idx in range(1, recal_exp_props.shape[0]):
         assert recal_exp_props[idx - 1] <= recal_exp_props[idx]
 
@@ -166,9 +166,9 @@ def test_optimize_recalibration_ratio_miscal_area_criterion(supply_test_set):
     )
     recal_miscal = miscalibration_area(y_pred, miscal_ratio * y_std, y_true)
 
-    assert np.abs(miscal_ratio - 0.3249608157077672) < 1e-3
+    assert np.abs(miscal_ratio - 0.3321912522557988) < 1e-3
     assert np.abs(recal_ma_cal - 0.06821616161616162) < 1e-3
-    assert np.abs(recal_rms_cal - 0.09000132808597361) < 1e-3
+    assert np.abs(recal_rms_cal - 0.08800130087804929) < 1e-3
     assert np.abs(recal_miscal - 0.06886262626262629) < 1e-3
 
 

@@ -268,7 +268,7 @@ def miscalibration_area(
         A single scalar which calculates the miscalibration area.
     """
     # Compute the expected proportions and the residuals.
-    exp_proportions = np.linspace(0, 1, num_bins + 1)
+    exp_proportions = np.linspace(0, 1, num_bins)
     if recal_model is not None:
         in_exp_proportions = recal_model.predict(exp_proportions)
     else:
