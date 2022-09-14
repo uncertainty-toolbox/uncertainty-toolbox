@@ -54,6 +54,7 @@ def test_trapezoid_area_convex():
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(3.0, abs=1e-10)
 
+
 def test_trapezoid_area_crossed():
     # crossed trapezoid
     _X = np.array([0, 1, 2, 3])
@@ -64,6 +65,7 @@ def test_trapezoid_area_crossed():
     area_arr = trapezoid_area(xl, al, bl, xr, ar, br)
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(1.5, abs=1e-10)
+
 
 def test_trapezoid_area_sine_crossed():
     # sine wave, 1 period, crossed trapezoid
@@ -77,6 +79,7 @@ def test_trapezoid_area_sine_crossed():
     area_arr = trapezoid_area(xl, al, bl, xr, ar, br)
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(4, abs=1e-4)
+
 
 def test_trapezoid_area_sine_crossed_rotated():
     # sine wave, 5 periods, crossed trapezoid, 45 deg rotated base
