@@ -270,15 +270,17 @@ def miscalibration_area(
     # Compute the expected proportions and the residuals.
     exp_proportions = np.linspace(0, 1, num_bins + 1)
     if recal_model is not None:
-        exp_proportions = recal_model.predict(exp_proportions)
+        in_exp_proportions = recal_model.predict(exp_proportions)
+    else:
+        in_exp_proportions = exp_proportions
     residuals = y_pred - y_true
 
     # Get the inverse of the CDF at each of these depending on the prop_type.
     if prop_type == "interval":
-        expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + exp_proportions / 2.0)
+        expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + in_exp_proportions / 2.0)
         sd_multiples = np.abs(residuals) / y_std
     elif prop_type == "quantile":
-        expected_sd_multiples = stats.norm(0, 1).ppf(exp_proportions)
+        expected_sd_multiples = stats.norm(0, 1).ppf(in_exp_proportions)
         sd_multiples = residuals / y_std
     else:
         raise ValueError(f"Unknown prop_type {prop_type}")
