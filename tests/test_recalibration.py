@@ -1,9 +1,11 @@
 """
 Tests for recalibration procedures.
 """
+import random
+
 import numpy as np
 import pytest
-import random
+
 
 from uncertainty_toolbox.recalibration import (
     iso_recal,

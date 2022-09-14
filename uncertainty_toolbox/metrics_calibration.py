@@ -1,11 +1,10 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-
-import numpy as np
-
 from typing import Any, Tuple, Optional
 from argparse import Namespace
+
+import numpy as np
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union

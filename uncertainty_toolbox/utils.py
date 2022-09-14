@@ -1,9 +1,9 @@
 """
 Util functions for the toolbox.
 """
-import numpy as np
-
 from typing import Any, NoReturn, Tuple, Union
+
+import numpy as np
 
 Numeric = Union[int, float, np.ndarray]
 
