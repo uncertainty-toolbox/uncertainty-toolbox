@@ -43,7 +43,7 @@ def test_is_flat_same_shape_correct_many_inputs():
     assert_is_flat_same_shape(*inputs)
 
 
-def test_trapezoid_area():
+def test_trapezoid_area_convex():
     # convex trapezoid
     _X = np.array([0, 1, 2, 3])
     _A = np.array([0, 0, 0, 0])
@@ -54,6 +54,7 @@ def test_trapezoid_area():
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(3.0, abs=1e-10)
 
+def test_trapezoid_area_crossed():
     # crossed trapezoid
     _X = np.array([0, 1, 2, 3])
     _A = np.array([0, 0, 0, 0])
@@ -64,6 +65,7 @@ def test_trapezoid_area():
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(1.5, abs=1e-10)
 
+def test_trapezoid_area_sine_crossed():
     # sine wave, 1 period, crossed trapezoid
     _NUM_DISCRETIZATION = 1000
     _X = np.linspace(0, 2 * np.pi, _NUM_DISCRETIZATION)
@@ -76,6 +78,7 @@ def test_trapezoid_area():
     assert area_arr.shape == (len(_X) - 1,)
     assert np.sum(area_arr) == pytest.approx(4, abs=1e-4)
 
+def test_trapezoid_area_sine_crossed_rotated():
     # sine wave, 5 periods, crossed trapezoid, 45 deg rotated base
     _NUM_DISCRETIZATION = 10000
     _ROT_DEG = -np.pi / 4
