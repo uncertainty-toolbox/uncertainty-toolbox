@@ -1,19 +1,20 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-
 from typing import Any, Tuple, Optional
 from argparse import Namespace
+
 import numpy as np
-from sklearn.isotonic import IsotonicRegression
 from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from sklearn.isotonic import IsotonicRegression
 from tqdm import tqdm
+
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
     assert_is_positive,
+    trapezoid_area,
 )
 
 
@@ -265,40 +266,47 @@ def miscalibration_area(
     Returns:
         A single scalar which calculates the miscalibration area.
     """
-
-    # Check that input arrays are flat
-    assert_is_flat_same_shape(y_pred, y_std, y_true)
-    # Check that input std is positive
-    assert_is_positive(y_std)
-    # Check that prop_type is one of 'interval' or 'quantile'
-    assert prop_type in ["interval", "quantile"]
-
-    # Get lists of expected and observed proportions for a range of quantiles
-    if vectorized:
-        (exp_proportions, obs_proportions) = get_proportion_lists_vectorized(
-            y_pred, y_std, y_true, num_bins, recal_model, prop_type=prop_type
-        )
+    # Compute the expected proportions and the residuals.
+    exp_proportions = np.linspace(0, 1, num_bins)
+    if recal_model is not None:
+        in_exp_proportions = recal_model.predict(exp_proportions)
     else:
-        (exp_proportions, obs_proportions) = get_proportion_lists(
-            y_pred, y_std, y_true, num_bins, recal_model, prop_type=prop_type
+        in_exp_proportions = exp_proportions
+    residuals = y_pred - y_true
+
+    # Get the inverse of the CDF at each of these depending on the prop_type.
+    if prop_type == "interval":
+        expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + in_exp_proportions / 2.0)
+        sd_multiples = np.abs(residuals) / y_std
+    elif prop_type == "quantile":
+        expected_sd_multiples = stats.norm(0, 1).ppf(in_exp_proportions)
+        sd_multiples = residuals / y_std
+    else:
+        raise ValueError(f"Unknown prop_type {prop_type}")
+
+    # For each bin edge, see how many of our data points deviate less than the
+    # corresponding sd multiple.
+    if vectorized:
+        obs_proportions = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).mean(0)
+    else:
+        obs_proportions = np.array(
+            [
+                np.mean(sd_multiples <= expected_sd_multiples[i])
+                for i in range(len(expected_sd_multiples))
+            ]
         )
 
-    # Compute approximation to area between curves
-    polygon_points = []
-    for point in zip(exp_proportions, obs_proportions):
-        polygon_points.append(point)
-    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
-        polygon_points.append(point)
-    polygon_points.append((exp_proportions[0], obs_proportions[0]))
-    polygon = Polygon(polygon_points)
-    x, y = polygon.exterior.xy
-    ls = LineString(np.c_[x, y])
-    lr = LineString(ls.coords[:] + ls.coords[0:1])
-    mls = unary_union(lr)
-    polygon_area_list = [poly.area for poly in polygonize(mls)]
-    miscalibration_area = np.asarray(polygon_area_list).sum()
-
-    return miscalibration_area
+    # Now calculate the area between these and the line y=x.
+    areas = trapezoid_area(
+        exp_proportions[:-1],
+        exp_proportions[:-1],
+        obs_proportions[:-1],
+        exp_proportions[1:],
+        exp_proportions[1:],
+        obs_proportions[1:],
+        absolute=True,
+    )
+    return areas.sum()
 
 
 def get_proportion_lists_vectorized(
