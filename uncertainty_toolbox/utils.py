@@ -52,8 +52,8 @@ def trapezoid_area(
     xr: np.ndarray,
     ar: np.ndarray,
     br: np.ndarray,
-    absolute=True,
-):
+    absolute: bool = True,
+) -> Numeric:
     """
     Calculate the area of a vertical-sided trapezoid, formed connecting the following points:
         (xl, al) - (xl, bl) - (xr, br) - (xr, ar) - (xl, al)
@@ -110,7 +110,7 @@ def intersection(
     p2: Tuple[Numeric, Numeric],
     p3: Tuple[Numeric, Numeric],
     p4: Tuple[Numeric, Numeric],
-):
+) -> Tuple[Numeric, Numeric]:
     """
     Calculate the intersection of two lines between four points, as defined in
     https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection.
