@@ -1,7 +1,7 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
-from typing import Any, Tuple, Optional
+from typing import Any, Tuple, Optional, Union
 from argparse import Namespace
 
 import numpy as np
@@ -9,16 +9,23 @@ from scipy import stats
 from shapely.geometry import Polygon, LineString
 from shapely.ops import polygonize, unary_union
 from sklearn.isotonic import IsotonicRegression
+import torch
+from torch.distributions import Normal
 from tqdm import tqdm
 
 from uncertainty_toolbox.utils import (
     assert_is_flat_same_shape,
     assert_is_positive,
     trapezoid_area,
+    mean_fn,
+    sqrt_fn,
+    abs_fn,
+    sum_fn,
+    to_np_array,
 )
 
 
-def sharpness(y_std: np.ndarray) -> float:
+def sharpness(y_std: Union[np.ndarray, torch.Tensor]) -> float:
     """Return sharpness (a single measure of the overall confidence).
 
     Args:
@@ -33,17 +40,17 @@ def sharpness(y_std: np.ndarray) -> float:
     assert_is_positive(y_std)
 
     # Compute sharpness
-    sharp_metric = np.sqrt(np.mean(y_std**2))
+    sharp_metric = sqrt_fn(mean_fn(y_std**2)).item()
 
     return sharp_metric
 
 
 def root_mean_squared_calibration_error(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     num_bins: int = 100,
-    vectorized: bool = False,
+    vectorized: bool = True,
     recal_model: IsotonicRegression = None,
     prop_type: str = "interval",
 ) -> float:
@@ -82,18 +89,18 @@ def root_mean_squared_calibration_error(
             y_pred, y_std, y_true, num_bins, recal_model, prop_type
         )
 
-    squared_diff_proportions = np.square(exp_proportions - obs_proportions)
-    rmsce = np.sqrt(np.mean(squared_diff_proportions))
+    squared_diff_proportions = (exp_proportions - obs_proportions) ** 2
+    rmsce = sqrt_fn(mean_fn(squared_diff_proportions))
 
     return rmsce
 
 
 def mean_absolute_calibration_error(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     num_bins: int = 100,
-    vectorized: bool = False,
+    vectorized: bool = True,
     recal_model: IsotonicRegression = None,
     prop_type: str = "interval",
 ) -> float:
@@ -132,16 +139,16 @@ def mean_absolute_calibration_error(
             y_pred, y_std, y_true, num_bins, recal_model, prop_type
         )
 
-    abs_diff_proportions = np.abs(exp_proportions - obs_proportions)
-    mace = np.mean(abs_diff_proportions)
+    abs_diff_proportions = abs_fn(exp_proportions - obs_proportions)
+    mace = mean_fn(abs_diff_proportions)
 
     return mace
 
 
 def adversarial_group_calibration(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     cali_type: str,
     prop_type: str = "interval",
     num_bins: int = 100,
@@ -222,7 +229,7 @@ def adversarial_group_calibration(
                 group_miscal_scores.append(group_miscal)
             max_miscal_score = np.max(group_miscal_scores)
             score_per_trial.append(max_miscal_score)
-        score_mean_across_trials = np.mean(score_per_trial)
+        score_mean_across_trials = mean_fn(score_per_trial)
         score_stderr_across_trials = np.std(score_per_trial, ddof=1)
         score_mean_per_ratio.append(score_mean_across_trials)
         score_stderr_per_ratio.append(score_stderr_across_trials)
@@ -236,11 +243,11 @@ def adversarial_group_calibration(
 
 
 def miscalibration_area(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     num_bins: int = 100,
-    vectorized: bool = False,
+    vectorized: bool = True,
     recal_model: Any = None,
     prop_type: str = "interval",
 ) -> float:
@@ -277,7 +284,7 @@ def miscalibration_area(
     # Get the inverse of the CDF at each of these depending on the prop_type.
     if prop_type == "interval":
         expected_sd_multiples = stats.norm(0, 1).ppf(0.5 + in_exp_proportions / 2.0)
-        sd_multiples = np.abs(residuals) / y_std
+        sd_multiples = abs_fn(residuals) / y_std
     elif prop_type == "quantile":
         expected_sd_multiples = stats.norm(0, 1).ppf(in_exp_proportions)
         sd_multiples = residuals / y_std
@@ -287,11 +294,11 @@ def miscalibration_area(
     # For each bin edge, see how many of our data points deviate less than the
     # corresponding sd multiple.
     if vectorized:
-        obs_proportions = (sd_multiples.reshape(-1, 1) <= expected_sd_multiples).mean(0)
+        obs_proportions = (to_np_array(sd_multiples).reshape(-1, 1) <= expected_sd_multiples).mean(0)
     else:
         obs_proportions = np.array(
             [
-                np.mean(sd_multiples <= expected_sd_multiples[i])
+                mean_fn(sd_multiples <= expected_sd_multiples[i])
                 for i in range(len(expected_sd_multiples))
             ]
         )
@@ -310,9 +317,9 @@ def miscalibration_area(
 
 
 def get_proportion_lists_vectorized(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     num_bins: int = 100,
     recal_model: Any = None,
     prop_type: str = "interval",
@@ -346,10 +353,17 @@ def get_proportion_lists_vectorized(
     assert prop_type in ["interval", "quantile"]
 
     # Compute proportions
-    exp_proportions = np.linspace(0, 1, num_bins)
+    if isinstance(y_pred, torch.Tensor):
+        device = y_pred.device
+        dtype = y_pred.dtype
+        exp_proportions = torch.linspace(0, 1, num_bins, device=device)
+    else:
+        exp_proportions = np.linspace(0, 1, num_bins)
     # If we are recalibrating, input proportions are recalibrated proportions
     if recal_model is not None:
         in_exp_proportions = recal_model.predict(exp_proportions)
+        if isinstance(y_pred, torch.Tensor):
+            in_exp_proportions = torch.tensor(in_exp_proportions, dtype=dtype, device=device)
     else:
         in_exp_proportions = exp_proportions
 
@@ -357,26 +371,39 @@ def get_proportion_lists_vectorized(
     normalized_residuals = (residuals.flatten() / y_std.flatten()).reshape(-1, 1)
     norm = stats.norm(loc=0, scale=1)
     if prop_type == "interval":
-        gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
-        gaussian_upper_bound = norm.ppf(0.5 + in_exp_proportions / 2.0)
+        if isinstance(y_pred, torch.Tensor):
+            dist = Normal(loc=torch.tensor(0., dtype=y_pred.dtype, device=y_pred.device),
+                          scale=torch.tensor(1., dtype=y_pred.dtype, device=y_pred.device))
+            gaussian_lower_bound = dist.icdf(0.5 - in_exp_proportions / 2.0)
+            gaussian_upper_bound = dist.icdf(0.5 + in_exp_proportions / 2.0)
+        else:
+            gaussian_lower_bound = norm.ppf(0.5 - in_exp_proportions / 2.0)
+            gaussian_upper_bound = norm.ppf(0.5 + in_exp_proportions / 2.0)
 
         above_lower = normalized_residuals >= gaussian_lower_bound
         below_upper = normalized_residuals <= gaussian_upper_bound
 
         within_quantile = above_lower * below_upper
-        obs_proportions = np.sum(within_quantile, axis=0).flatten() / len(residuals)
+        obs_proportions = sum_fn(within_quantile, axis=0).flatten() / len(residuals)
     elif prop_type == "quantile":
-        gaussian_quantile_bound = norm.ppf(in_exp_proportions)
-        below_quantile = normalized_residuals <= gaussian_quantile_bound
-        obs_proportions = np.sum(below_quantile, axis=0).flatten() / len(residuals)
+        if isinstance(y_pred, torch.Tensor):
+            dist = Normal(loc=torch.tensor(0., dtype=y_pred.dtype, device=y_pred.device),
+                          scale=torch.tensor(1., dtype=y_pred.dtype, device=y_pred.device))
+            gaussian_quantile_bound = dist.icdf(in_exp_proportions)
+            below_quantile = normalized_residuals <= gaussian_quantile_bound
+            obs_proportions = sum_fn(below_quantile, axis=0).flatten() / len(residuals)
+        else:
+            gaussian_quantile_bound = norm.ppf(in_exp_proportions)
+            below_quantile = normalized_residuals <= gaussian_quantile_bound
+            obs_proportions = sum_fn(below_quantile, axis=0).flatten() / len(residuals)
 
-    return exp_proportions, obs_proportions
+    return to_np_array(exp_proportions), to_np_array(obs_proportions)
 
 
 def get_proportion_lists(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     num_bins: int = 100,
     recal_model: IsotonicRegression = None,
     prop_type: str = "interval",
@@ -429,7 +456,10 @@ def get_proportion_lists(
 
 
 def get_proportion_in_interval(
-    y_pred: np.ndarray, y_std: np.ndarray, y_true: np.ndarray, quantile: float
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
+    quantile: float
 ) -> float:
     """For a specified quantile, return the proportion of points falling into
     an interval corresponding to that quantile.
@@ -451,9 +481,17 @@ def get_proportion_in_interval(
     assert_is_positive(y_std)
 
     # Computer lower and upper bound for quantile
-    norm = stats.norm(loc=0, scale=1)
-    lower_bound = norm.ppf(0.5 - quantile / 2)
-    upper_bound = norm.ppf(0.5 + quantile / 2)
+    if isinstance(y_pred, torch.Tensor):
+        dtype = y_pred.dtype
+        device = y_pred.device
+        dist = Normal(loc=torch.tensor(0., dtype=dtype, device=device),
+                      scale=torch.tensor(1., dtype=dtype, device=device))
+        lower_bound = dist.icdf(torch.tensor(0.5 - quantile / 2, dtype=dtype, device=device))
+        upper_bound = dist.icdf(torch.tensor(0.5 + quantile / 2, dtype=dtype, device=device))
+    else:
+        norm = stats.norm(loc=0, scale=1)
+        lower_bound = norm.ppf(0.5 - quantile / 2)
+        upper_bound = norm.ppf(0.5 + quantile / 2)
 
     # Compute proportion of normalized residuals within lower to upper bound
     residuals = y_pred - y_true
@@ -470,9 +508,9 @@ def get_proportion_in_interval(
 
 
 def get_proportion_under_quantile(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    y_true: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    y_true: Union[np.ndarray, torch.Tensor],
     quantile: float,
 ) -> float:
     """Get the proportion of data that are below the predicted quantile.
@@ -511,9 +549,9 @@ def get_proportion_under_quantile(
 
 
 def get_prediction_interval(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    quantile: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    quantile: Union[np.ndarray, torch.Tensor],
     recal_model: Optional[IsotonicRegression] = None,
 ) -> Namespace:
     """Return the centered predictional interval corresponding to a quantile.
@@ -565,9 +603,9 @@ def get_prediction_interval(
 
 
 def get_quantile(
-    y_pred: np.ndarray,
-    y_std: np.ndarray,
-    quantile: np.ndarray,
+    y_pred: Union[np.ndarray, torch.Tensor],
+    y_std: Union[np.ndarray, torch.Tensor],
+    quantile: Union[np.ndarray, torch.Tensor],
     recal_model: Optional[IsotonicRegression] = None,
 ) -> float:
     """Return the value corresponding with a quantile.

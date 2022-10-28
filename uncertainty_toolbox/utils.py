@@ -3,7 +3,9 @@ Util functions for the toolbox.
 """
 from typing import Any, NoReturn, Tuple, Union
 
+from numbers import Number
 import numpy as np
+import torch
 
 Numeric = Union[int, float, np.ndarray]
 
@@ -18,11 +20,11 @@ def assert_is_flat_same_shape(*args: Any) -> Union[bool, NoReturn]:
         True if all arrays are flat and the same shape, or else raises assertion error.
     """
     assert len(args) > 0
-    assert isinstance(args[0], np.ndarray), "All inputs must be of type numpy.ndarray"
+    assert isinstance(args[0], np.ndarray) or isinstance(args[0], torch.Tensor), "All inputs must be of type numpy.ndarray or torch.Tensor"
     first_shape = args[0].shape
     for arr in args:
-        assert isinstance(arr, np.ndarray), "All inputs must be of type numpy.ndarray"
-        assert len(arr.shape) == 1, "All inputs must be 1d numpy.ndarray"
+        assert isinstance(arr, np.ndarray) or isinstance(arr, torch.Tensor), "All inputs must be of type numpy.ndarray or torch.Tensor"
+        assert len(arr.shape) == 1, "All inputs must be 1d numpy.ndarray or torch.Tensor"
         assert arr.shape == first_shape, "All inputs must have the same length"
 
     return True
@@ -39,10 +41,16 @@ def assert_is_positive(*args: Any) -> Union[bool, NoReturn]:
     """
     assert len(args) > 0
     for arr in args:
-        assert isinstance(arr, np.ndarray), "All inputs must be of type numpy.ndarray"
-        assert np.all(arr > 0.0)
+        assert isinstance(arr, np.ndarray) or isinstance(arr, torch.Tensor), "All inputs must be of type numpy.ndarray or torch.Tensor"
+        if isinstance(arr, np.ndarray):
+            assert np.all(arr > 0.0)
+        else:
+            assert (arr > 0.0).all()
 
     return True
+
+
+
 
 
 def trapezoid_area(
@@ -139,3 +147,69 @@ def intersection(
     y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / D
 
     return x, y
+
+
+def mean_fn(tensor, axis=None):
+    if isinstance(tensor, torch.Tensor):
+        if isinstance(tensor, torch.BoolTensor):
+            tensor = tensor.float()
+        if axis is None:
+            return tensor.mean()
+        else:
+            return tensor.mean(dim=axis)
+    else:
+        return np.mean(tensor, axis=axis)
+
+
+def sum_fn(tensor, axis=None):
+    if isinstance(tensor, torch.Tensor):
+        if isinstance(tensor, torch.BoolTensor):
+            tensor = tensor.float()
+        if axis is None:
+            return tensor.sum()
+        else:
+            return tensor.sum(dim=axis)
+    else:
+        return np.sum(tensor, axis=axis)
+
+
+def sqrt_fn(tensor):
+    if isinstance(tensor, torch.Tensor):
+        return tensor.sqrt()
+    else:
+        return np.sqrt(tensor)
+
+
+def abs_fn(tensor):
+    if isinstance(tensor, torch.Tensor):
+        return tensor.abs()
+    else:
+        return np.abs(tensor)
+
+
+def to_np_array(*arrays, **kwargs):
+    array_list = []
+    for array in arrays:
+        if array is None:
+            array_list.append(array)
+            continue
+        if isinstance(array, torch.autograd.Variable):
+            if array.is_cuda:
+                array = array.cpu()
+            array = array.data
+        if isinstance(array, torch.Tensor) or isinstance(array, torch.FloatTensor) or isinstance(array, torch.LongTensor) or isinstance(array, torch.ByteTensor) or \
+           isinstance(array, torch.cuda.FloatTensor) or isinstance(array, torch.cuda.LongTensor) or isinstance(array, torch.cuda.ByteTensor):
+            if array.is_cuda:
+                array = array.cpu()
+            array = array.numpy()
+        if isinstance(array, Number):
+            pass
+        elif isinstance(array, list) or isinstance(array, tuple):
+            array = np.array(array)
+        elif array.shape == ():
+            array = array.tolist()
+        array_list.append(array)
+    if len(array_list) == 1:
+        if not ("keep_list" in kwargs and kwargs["keep_list"]):
+            array_list = array_list[0]
+    return array_list

@@ -10,6 +10,7 @@ from sklearn.metrics import (
     r2_score,
     median_absolute_error,
 )
+import torch
 from uncertainty_toolbox.utils import assert_is_flat_same_shape
 
 
@@ -33,13 +34,22 @@ def prediction_error_metrics(
     assert_is_flat_same_shape(y_pred, y_true)
 
     # Compute metrics
-    mae = mean_absolute_error(y_true, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
-    mdae = median_absolute_error(y_true, y_pred)
-    residuals = y_true - y_pred
-    marpd = np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
-    r2 = r2_score(y_true, y_pred)
-    corr = np.corrcoef(y_true, y_pred)[0, 1]
+    if isinstance(y_pred, torch.Tensor):
+        mae = (y_true - y_pred).abs().mean().item()
+        rmse = (y_pred - y_true).square().mean().sqrt().item()
+        mdae = (y_true - y_pred).abs().median().item()
+        residuals = y_true - y_pred
+        marpd = torch.abs(2 * residuals / (torch.abs(y_pred) + torch.abs(y_true))).mean().item() * 100
+        r2 = r2_score(y_true.cpu(), y_pred.cpu())
+        corr = torch.corrcoef(torch.stack([y_true, y_pred]))[0, 1].item()
+    else:
+        mae = mean_absolute_error(y_true, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+        mdae = median_absolute_error(y_true, y_pred)
+        residuals = y_true - y_pred
+        marpd = np.abs(2 * residuals / (np.abs(y_pred) + np.abs(y_true))).mean() * 100
+        r2 = r2_score(y_true, y_pred)
+        corr = np.corrcoef(y_true, y_pred)[0, 1]
     prediction_metrics = {
         "mae": mae,
         "rmse": rmse,
