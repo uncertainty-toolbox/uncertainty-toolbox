@@ -142,9 +142,9 @@ def test_interval_score_on_one_pt_torch():
     distribution and intervals one standard deviation and two standard
     deviations away, should return ((1 std) * 2 + (2 std) * 2) / 2 = 3.
     """
-    y_pred = torch.tensor([0])
-    y_true = torch.tensor([0])
-    y_std = torch.tensor([1])
+    y_pred = torch.tensor([0.])
+    y_true = torch.tensor([0.])
+    y_std = torch.tensor([1.])
     score = interval_score(
         y_pred=y_pred,
         y_std=y_std,
