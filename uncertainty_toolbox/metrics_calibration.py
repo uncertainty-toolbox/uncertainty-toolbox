@@ -306,9 +306,9 @@ def miscalibration_area_from_proportions(
     """Miscalibration area from expected and observed proportions lists.
 
     This function returns the same output as `miscalibration_area` directly from a list
-    of expected proportions (the proportion of observations that you expect to see
-    within prediction intervals) and a list of observed proportions (the proportion data
-    that you observe within a prediction interval).
+    of expected proportions (the proportion of data that you expect to observe within
+    prediction intervals) and a list of observed proportions (the proportion data that
+    you observe within prediction intervals).
 
     Args:
         exp_proportions: expected proportion of data within prediction intervals.
