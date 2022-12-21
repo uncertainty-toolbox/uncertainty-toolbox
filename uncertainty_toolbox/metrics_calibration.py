@@ -262,7 +262,7 @@ def miscalibration_area(
                    and "quantile" for observed proportions below a predicted quantile.
 
     Returns:
-        A single scalar which calculates the miscalibration area.
+        A single scalar that contains the miscalibration area.
     """
     # Compute the expected proportions and the residuals.
     exp_proportions = np.linspace(0, 1, num_bins)
@@ -294,7 +294,29 @@ def miscalibration_area(
             ]
         )
 
-    # Now calculate the area between these and the line y=x.
+    # Calculate and return the area between these and the line y=x.
+    miscal_area = miscalibration_area_from_proportions(exp_proportions, obs_proportions)
+
+    return miscal_area
+
+
+def miscalibration_area_from_proportions(
+    exp_proportions: np.ndarray, obs_proportions: np.ndarray
+) -> float:
+    """Miscalibration area from expected and observed proportions lists.
+
+    This function returns the same output as `miscalibration_area` directly from a list
+    of expected proportions (the proportion of observations that you expect to see
+    within prediction intervals) and a list of observed proportions (the proportion data
+    that you observe within a prediction interval).
+
+    Args:
+        exp_proportions: expected proportion of data within prediction intervals.
+        obs_proportions: observed proportion of data within prediction intervals.
+
+    Returns:
+        A single scalar that contains the miscalibration area.
+    """
     areas = trapezoid_area(
         exp_proportions[:-1],
         exp_proportions[:-1],
