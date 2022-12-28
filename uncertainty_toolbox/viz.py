@@ -447,7 +447,7 @@ def plot_sharpness(
 
     # Optionally select a subset
     if n_subset is not None:
-        [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], n_subset)
+        y_std = filter_subset([y_std], n_subset)[0]
 
     # Plot sharpness curve
     ax.hist(y_std, edgecolor="#1f77b4", color="#a5c8e1", density=True)

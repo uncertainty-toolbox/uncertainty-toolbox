@@ -15,6 +15,7 @@ from uncertainty_toolbox.viz import (
     plot_adversarial_group_calibration,
     plot_sharpness,
     plot_residuals_vs_stds,
+    filter_subset,
 )
 
 
@@ -81,9 +82,28 @@ def test_plot_sharpness_returns(get_test_set, get_fig_ax):
     assert isinstance(ax, matplotlib.axes.Axes)
 
 
+def test_plot_sharpness_nsubset_returns(get_test_set, get_fig_ax):
+    """Test if plot_adversarial_group_calibration returns correct type."""
+    _, y_std, _, _ = get_test_set
+    fig, ax = get_fig_ax
+    _test_n_subset = 2
+    ax = plot_sharpness(y_std, n_subset=_test_n_subset, ax=ax)
+    assert isinstance(ax, matplotlib.axes.Axes)
+
+
 def test_plot_residuals_vs_stds_returns(get_test_set, get_fig_ax):
     """Test if plot_residuals_vs_stds returns correct type."""
     y_pred, y_std, y_true, _ = get_test_set
     fig, ax = get_fig_ax
     ax = plot_residuals_vs_stds(y_pred, y_std, y_true, ax=ax)
     assert isinstance(ax, matplotlib.axes.Axes)
+
+
+def test_filter_subset(get_test_set):
+    """Test if filter_subset returns correct number of subset elements."""
+    y_pred, y_std, y_true, _ = get_test_set
+    _test_n_subset = 2
+    [y_pred, y_std, y_true] = filter_subset([y_pred, y_std, y_true], _test_n_subset)
+    assert len(y_pred) == _test_n_subset
+    assert len(y_std) == _test_n_subset
+    assert len(y_true) == _test_n_subset
