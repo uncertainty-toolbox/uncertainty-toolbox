@@ -8,19 +8,13 @@ import numpy as np
 from scipy import stats
 import matplotlib
 import matplotlib.pyplot as plt
-from sklearn.metrics import (
-    mean_absolute_error,
-    mean_squared_error,
-    r2_score,
-    median_absolute_error,
-)
-from shapely.geometry import Polygon, LineString
-from shapely.ops import polygonize, unary_union
 
 from uncertainty_toolbox.metrics_calibration import (
     get_proportion_lists,
     get_proportion_lists_vectorized,
     adversarial_group_calibration,
+    miscalibration_area,
+    miscalibration_area_from_proportions,
 )
 
 
@@ -260,11 +254,11 @@ def plot_calibration(
     y_true: np.ndarray,
     n_subset: Union[int, None] = None,
     curve_label: Union[str, None] = None,
-    show: bool = False,
     vectorized: bool = True,
     exp_props: Union[np.ndarray, None] = None,
     obs_props: Union[np.ndarray, None] = None,
     ax: Union[matplotlib.axes.Axes, None] = None,
+    prop_type: str = "interval",
 ) -> matplotlib.axes.Axes:
     """Plot the observed proportion vs prediction proportion of outputs falling into a
     range of intervals, and display miscalibration area.
@@ -279,6 +273,9 @@ def plot_calibration(
         exp_props: plot using the given expected proportions.
         obs_props: plot using the given observed proportions.
         ax: matplotlib.axes.Axes object.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
+                   Ignored if exp_props and obs_props are provided as inputs.
 
     Returns:
         matplotlib.axes.Axes object with plot added.
@@ -294,13 +291,12 @@ def plot_calibration(
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
         if vectorized:
-            (
-                exp_proportions,
-                obs_proportions,
-            ) = get_proportion_lists_vectorized(y_pred, y_std, y_true)
+            (exp_proportions, obs_proportions,) = get_proportion_lists_vectorized(
+                y_pred, y_std, y_true, prop_type=prop_type
+            )
         else:
             (exp_proportions, obs_proportions) = get_proportion_lists(
-                y_pred, y_std, y_true
+                y_pred, y_std, y_true, prop_type=prop_type
             )
     else:
         # If expected and observed proportions are given
@@ -330,19 +326,9 @@ def plot_calibration(
     ax.set_title("Average Calibration")
 
     # Compute miscalibration area
-    polygon_points = []
-    for point in zip(exp_proportions, obs_proportions):
-        polygon_points.append(point)
-    for point in zip(reversed(exp_proportions), reversed(exp_proportions)):
-        polygon_points.append(point)
-    polygon_points.append((exp_proportions[0], obs_proportions[0]))
-    polygon = Polygon(polygon_points)
-    x, y = polygon.exterior.xy  # original data
-    ls = LineString(np.c_[x, y])  # closed, non-simple
-    lr = LineString(ls.coords[:] + ls.coords[0:1])
-    mls = unary_union(lr)
-    polygon_area_list = [poly.area for poly in polygonize(mls)]
-    miscalibration_area = np.asarray(polygon_area_list).sum()
+    miscalibration_area = miscalibration_area_from_proportions(
+        exp_proportions=exp_proportions, obs_proportions=obs_proportions
+    )
 
     # Annotate plot with the miscalibration area
     ax.text(
