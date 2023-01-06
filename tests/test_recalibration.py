@@ -196,7 +196,7 @@ def test_get_prediction_interval_recalibrated(supply_test_set):
         (0.99, 0.97, 0.97),
     ]
 
-    for (q, test_orig_prop, test_recal_prop) in test_quantile_prop_list:
+    for q, test_orig_prop, test_recal_prop in test_quantile_prop_list:
         orig_bounds = get_prediction_interval(y_pred, y_std, q, None)
         recal_bounds = get_prediction_interval(y_pred, y_std, q, recal_model)
 
@@ -230,7 +230,7 @@ def test_get_std_recalibrator(supply_test_set):
 
     std_recalibrator = get_std_recalibrator(y_pred, y_std, y_true)
 
-    for (q, test_prop_in_pi, test_prop_under_q) in test_quantile_prop_list:
+    for q, test_prop_in_pi, test_prop_under_q in test_quantile_prop_list:
         y_std_recal = std_recalibrator(y_std)
         pi = get_prediction_interval(y_pred, y_std_recal, q)
         prop_in_pi = ((pi.lower <= y_true) * (y_true <= pi.upper)).mean()
@@ -259,7 +259,7 @@ def test_get_quantile_recalibrator(supply_test_set):
 
     quantile_recalibrator = get_quantile_recalibrator(y_pred, y_std, y_true)
 
-    for (q, test_prop_under_q) in test_quantile_prop_list:
+    for q, test_prop_under_q in test_quantile_prop_list:
         quantile_bound_recal = quantile_recalibrator(y_pred, y_std, q)
         assert all(np.isfinite(quantile_bound_recal))
         prop_under_q_recal = (quantile_bound_recal >= y_true).mean()
@@ -285,7 +285,7 @@ def test_get_interval_recalibrator(supply_test_set):
 
     interval_recalibrator = get_interval_recalibrator(y_pred, y_std, y_true)
 
-    for (q, test_prop_in_interval) in test_quantile_prop_list:
+    for q, test_prop_in_interval in test_quantile_prop_list:
         interval_recal = interval_recalibrator(y_pred, y_std, q)
         prop_in_interval_recal = (
             (interval_recal.lower <= y_true) * (y_true <= interval_recal.upper)

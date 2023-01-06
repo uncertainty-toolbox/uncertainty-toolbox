@@ -163,7 +163,6 @@ def optimize_recalibration_ratio(
         raise RuntimeError("Wrong criterion option")
 
     def obj(ratio):
-
         # If ratio is 0, return worst-possible calibration metric
         if ratio == 0:
             return worst_cal

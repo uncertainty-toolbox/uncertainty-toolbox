@@ -291,7 +291,10 @@ def plot_calibration(
     if (exp_props is None) or (obs_props is None):
         # Compute exp_proportions and obs_proportions
         if vectorized:
-            (exp_proportions, obs_proportions,) = get_proportion_lists_vectorized(
+            (
+                exp_proportions,
+                obs_proportions,
+            ) = get_proportion_lists_vectorized(
                 y_pred, y_std, y_true, prop_type=prop_type
             )
         else:

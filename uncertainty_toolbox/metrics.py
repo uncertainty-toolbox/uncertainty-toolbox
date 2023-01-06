@@ -225,7 +225,6 @@ def get_all_scoring_rule_metrics(
 
 
 def _print_adversarial_group_calibration(adv_group_metric_dic, print_group_num=3):
-
     for a_group_cali_type, a_group_cali_dic in adv_group_metric_dic.items():
         num_groups = a_group_cali_dic["group_sizes"].shape[0]
         print_idxs = [int(x) for x in np.linspace(1, num_groups - 1, print_group_num)]
