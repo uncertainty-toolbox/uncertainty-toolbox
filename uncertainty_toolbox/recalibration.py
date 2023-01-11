@@ -2,7 +2,7 @@
 Recalibrating uncertainty estimates.
 """
 
-from typing import Callable, Union
+from typing import Callable, Tuple, Union
 import numpy as np
 from sklearn.isotonic import IsotonicRegression
 from scipy.optimize import minimize_scalar
@@ -134,6 +134,7 @@ def optimize_recalibration_ratio(
     y_std: np.ndarray,
     y_true: np.ndarray,
     criterion: str = "ma_cal",
+    optimizer_bounds: Tuple[float, float] = (1e-2, 1e2),
 ) -> float:
     """Scale factor which uniformly recalibrates predicted standard deviations.
 
@@ -146,6 +147,7 @@ def optimize_recalibration_ratio(
         y_std: 1D array of the predicted standard deviations for the recalibration dataset.
         y_true: 1D array of the true means for the recalibration dataset.
         criterion: calibration metric to optimize for during recalibration; must be one of {"ma_cal", "rms_cal", "miscal"}.
+        optimizer_bounds: The bounds for the ratio given to the optimizer.
 
     Returns:
         A single scalar which optimally recalibrates the predicted standard deviations.
@@ -170,8 +172,7 @@ def optimize_recalibration_ratio(
         curr_cal = cal_fn(y_mean, ratio * y_std, y_true)
         return curr_cal
 
-    bounds = (1e-3, 1e3)
-    result = minimize_scalar(fun=obj, bounds=bounds)
+    result = minimize_scalar(fun=obj, bounds=optimizer_bounds)
     opt_ratio = result.x
 
     if not result.success:
@@ -192,6 +193,7 @@ def get_std_recalibrator(
     y_std: np.ndarray,
     y_true: np.ndarray,
     criterion: str = "ma_cal",
+    optimizer_bounds: Tuple[float, float] = (1e-1, 1e1),
 ) -> Callable[[np.ndarray], np.ndarray]:
     """Standard deviation recalibrator.
 
@@ -204,12 +206,14 @@ def get_std_recalibrator(
         y_std: 1D array of the predicted standard deviations for the recalibration dataset.
         y_true: 1D array of the true means for the recalibration dataset.
         criterion: calibration metric to optimize for during recalibration; must be one of {"ma_cal", "rms_cal", "miscal"}.
+        optimizer_bounds: The bounds for the ratio given to the optimizer.
 
     Returns:
         A function which takes uncalibrated standard deviations as input and
         outputs the recalibrated standard deviations.
     """
-    std_recal_ratio = optimize_recalibration_ratio(y_mean, y_std, y_true, criterion)
+    std_recal_ratio = optimize_recalibration_ratio(y_mean, y_std, y_true, criterion,
+                                                   optimizer_bounds=optimizer_bounds)
 
     def std_recalibrator(std_arr):
         return std_recal_ratio * std_arr
