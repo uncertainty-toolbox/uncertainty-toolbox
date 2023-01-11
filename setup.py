@@ -8,7 +8,7 @@ with open('requirements/requirements.txt', 'r') as f:
 
 setuptools.setup(
     name="uncertainty_toolbox",
-    version="0.1.1rc2",
+    version="0.1.1rc3",
     author="Willie Neiswanger, Youngseog Chung, Ian Char, Han Guo",
     author_email="willie.neiswanger@gmail.com",
     description=("A python toolbox for predictive uncertainty quantification,"
