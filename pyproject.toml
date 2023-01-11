@@ -18,12 +18,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dynamic = ["version", "description", "dependencies"]
+dynamic = ["version", "description"]
 
 requires-python = ">=3.6"
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements/requirements.txt"]}
+dependencies = [
+    "numpy>=1.19.0",
+    "scipy>=1.5.0",
+    "matplotlib>=3.2.2",
+    "scikit-learn>=0.23.1",
+    "tqdm>=4.54.0",
+]
 
 [tool.flit.module]
 name = "uncertainty_toolbox"
