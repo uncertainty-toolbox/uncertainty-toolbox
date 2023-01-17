@@ -193,7 +193,7 @@ def get_std_recalibrator(
     y_std: np.ndarray,
     y_true: np.ndarray,
     criterion: str = "ma_cal",
-    optimizer_bounds: Tuple[float, float] = (1e-1, 1e1),
+    optimizer_bounds: Tuple[float, float] = (1e-2, 1e2),
 ) -> Callable[[np.ndarray], np.ndarray]:
     """Standard deviation recalibrator.
 
