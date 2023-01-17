@@ -9,7 +9,7 @@
 
 &nbsp;\
 **Uncertainty Toolbox**
-> A python toolbox for predictive uncertainty quantification, calibration,
+> A Python toolbox for predictive uncertainty quantification, calibration,
 > [metrics, and visualization](#metrics).\
 > Also: a [glossary of useful terms](docs/glossary.md) and a collection
 > of [relevant papers and references](docs/paper_list.md).
@@ -39,8 +39,8 @@ Uncertainty Toolbox contains:
 
 ## Installation
 
-Uncertainty Toolbox requires Python 3.6+. For a lightweight installation of the package
-only, run:
+Uncertainty Toolbox requires Python 3.6+ and pip ≥ 21.3. For a lightweight installation
+of the package only, run:
 ```bash
 pip install uncertainty-toolbox
 ```

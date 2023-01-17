@@ -14,7 +14,7 @@ For a full installation with examples, tests, and the latest updates, run:
 
   git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
   cd uncertainty-toolbox
-  pip install -e .
+  pip install -e . -r requirements/requirements_dev.txt
 
 To verify correct installation, you can run the test suite via:
 
