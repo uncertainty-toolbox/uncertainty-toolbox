@@ -212,8 +212,9 @@ def get_std_recalibrator(
         A function which takes uncalibrated standard deviations as input and
         outputs the recalibrated standard deviations.
     """
-    std_recal_ratio = optimize_recalibration_ratio(y_mean, y_std, y_true, criterion,
-                                                   optimizer_bounds=optimizer_bounds)
+    std_recal_ratio = optimize_recalibration_ratio(
+        y_mean, y_std, y_true, criterion, optimizer_bounds=optimizer_bounds
+    )
 
     def std_recalibrator(std_arr):
         return std_recal_ratio * std_arr
