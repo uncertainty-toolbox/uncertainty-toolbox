@@ -1,6 +1,6 @@
 """Uncertainty Toolbox: a python toolbox for predictive uncertainty quantification, calibration, metrics, and visualization."""
 
-__version__ = "0.1.1rc4"
+__version__ = "0.1.1rc5"
 
 from .data import (
     synthetic_arange_random,
