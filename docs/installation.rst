@@ -16,6 +16,8 @@ For a full installation with examples, tests, and the latest updates, run:
   cd uncertainty-toolbox
   pip install -e . -r requirements/requirements_dev.txt
 
+Note that the previous command requires pip ≥ 21.3.
+
 To verify correct installation, you can run the test suite via:
 
 .. code-block:: console
