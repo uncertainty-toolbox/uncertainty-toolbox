@@ -9,7 +9,7 @@
 
 &nbsp;\
 **Uncertainty Toolbox**
-> A python toolbox for predictive uncertainty quantification, calibration,
+> A Python toolbox for predictive uncertainty quantification, calibration,
 > [metrics, and visualization](#metrics).\
 > Also: a [glossary of useful terms](docs/glossary.md) and a collection
 > of [relevant papers and references](docs/paper_list.md).
@@ -49,8 +49,9 @@ For a full installation with examples, tests, and the latest updates, run:
 ```bash
 git clone https://github.com/uncertainty-toolbox/uncertainty-toolbox.git
 cd uncertainty-toolbox
-pip install -e .
+pip install -e . -r requirements/requirements_dev.txt
 ```
+Note that the previous command requires pip ≥ 21.3.
 
 To verify correct installation, you can run the [test suite](tests/) via:
 ```bash

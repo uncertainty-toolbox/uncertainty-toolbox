@@ -343,7 +343,7 @@ def test_get_proportion_in_interval_on_test_set(supply_test_set):
         (0.75, 0.3333333333333333),
         (1.0, 1.0),
     ]
-    for (test_q, test_val) in test_quantile_value_list:
+    for test_q, test_val in test_quantile_value_list:
         assert (
             np.abs(
                 get_proportion_in_interval(*supply_test_set, quantile=test_q) - test_val
@@ -361,7 +361,7 @@ def test_get_proportion_under_quantile_on_test_set(supply_test_set):
         (0.75, 0.6666666666666666),
         (1.0, 1.0),
     ]
-    for (test_q, test_val) in test_quantile_value_list:
+    for test_q, test_val in test_quantile_value_list:
         assert (
             np.abs(
                 get_proportion_under_quantile(*supply_test_set, quantile=test_q)
@@ -409,7 +409,7 @@ def test_get_prediction_interval_on_test_set(supply_test_set):
     with pytest.raises(Exception):
         bounds = get_prediction_interval(y_pred, y_std, quantile=1.0, recal_model=None)
 
-    for (test_q, test_upper, test_lower) in test_quantile_value_list:
+    for test_q, test_upper, test_lower in test_quantile_value_list:
         bounds = get_prediction_interval(
             y_pred, y_std, quantile=test_q, recal_model=None
         )
@@ -449,7 +449,7 @@ def test_get_quantile_on_test_set(supply_test_set):
     with pytest.raises(Exception):
         bound = get_quantile(y_pred, y_std, quantile=1.0, recal_model=None)
 
-    for (test_q, test_bound) in test_quantile_value_list:
+    for test_q, test_bound in test_quantile_value_list:
         bound = get_quantile(y_pred, y_std, quantile=test_q, recal_model=None)
 
         assert np.max(np.abs(bound - test_bound)) < 1e-6

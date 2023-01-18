@@ -37,7 +37,6 @@ pred_std_list = [
 # Loop through, make plots, and compute metrics
 for i, pred_mean in enumerate(pred_mean_list):
     for j, pred_std in enumerate(pred_std_list):
-
         # Before recalibration
         exp_props, obs_props = uct.get_proportion_lists_vectorized(
             pred_mean, pred_std, y

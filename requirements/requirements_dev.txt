@@ -1,5 +1,5 @@
--r requirements.txt
-
+pytest>=5.4.3
+black>=19.10b0
 sphinx>=2.4.3
 sphinx-rtd-theme>=0.5.2
 sphinx-autodoc-typehints>=1.12.0
