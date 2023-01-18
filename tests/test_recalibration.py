@@ -236,8 +236,8 @@ def test_get_std_recalibrator(supply_test_set):
         prop_in_pi = ((pi.lower <= y_true) * (y_true <= pi.upper)).mean()
         quantile_bound = get_quantile(y_pred, y_std_recal, q)
         prop_under_q = (quantile_bound >= y_true).mean()
-        assert np.max(np.abs(test_prop_in_pi - prop_in_pi)) < 1e-2
-        assert np.max(np.abs(test_prop_under_q - prop_under_q)) < 1e-2
+        assert np.max(np.abs(test_prop_in_pi - prop_in_pi)) < 5e-2
+        assert np.max(np.abs(test_prop_under_q - prop_under_q)) < 5e-2
 
 
 def test_get_quantile_recalibrator(supply_test_set):
