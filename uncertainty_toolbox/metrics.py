@@ -69,6 +69,7 @@ def get_all_average_calibration(
     y_true: np.ndarray,
     num_bins: int,
     verbose: bool = True,
+    recal_model: IsotonicRegression = None,
 ) -> Dict[str, float]:
     """Compute all metrics for average calibration.
 
@@ -78,6 +79,7 @@ def get_all_average_calibration(
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
+        recal_model: The trained recalibration model to use.
 
     Returns:
         The evaluations for all metrics relating to average calibration.
@@ -87,13 +89,13 @@ def get_all_average_calibration(
 
     cali_metrics = {}
     cali_metrics["rms_cal"] = root_mean_squared_calibration_error(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, recal_model=recal_model
     )
     cali_metrics["ma_cal"] = mean_absolute_calibration_error(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, recal_model=recal_model
     )
     cali_metrics["miscal_area"] = miscalibration_area(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, recal_model=recal_model
     )
 
     return cali_metrics
@@ -246,6 +248,7 @@ def get_all_metrics(
     resolution: int = 99,
     scaled: bool = True,
     verbose: bool = True,
+    recal_model: IsotonicRegression = None,
 ) -> Dict[str, Any]:
     """Compute all metrics.
 
@@ -257,6 +260,7 @@ def get_all_metrics(
         resolution: The number of quantiles to use for computation.
         scaled: Whether to scale the score by size of held out set.
         verbose: Activate verbose mode.
+        recal_model: The trained recalibration model to use.
 
     Returns:
         Dictionary containing all metrics.
@@ -266,7 +270,7 @@ def get_all_metrics(
 
     # Calibration
     calibration_metrics = get_all_average_calibration(
-        y_pred, y_std, y_true, num_bins, verbose
+        y_pred, y_std, y_true, num_bins, verbose, recal_model
     )
 
     # Adversarial Group Calibration
