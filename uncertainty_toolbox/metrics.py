@@ -1,6 +1,7 @@
 """
 Metrics for assessing the quality of predictive uncertainty quantification.
 """
+
 from typing import Any, Dict
 
 import numpy as np
@@ -69,6 +70,7 @@ def get_all_average_calibration(
     y_true: np.ndarray,
     num_bins: int,
     verbose: bool = True,
+    prop_type: str = "interval",
 ) -> Dict[str, float]:
     """Compute all metrics for average calibration.
 
@@ -78,6 +80,8 @@ def get_all_average_calibration(
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
 
     Returns:
         The evaluations for all metrics relating to average calibration.
@@ -87,13 +91,13 @@ def get_all_average_calibration(
 
     cali_metrics = {}
     cali_metrics["rms_cal"] = root_mean_squared_calibration_error(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, prop_type=prop_type
     )
     cali_metrics["ma_cal"] = mean_absolute_calibration_error(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, prop_type=prop_type
     )
     cali_metrics["miscal_area"] = miscalibration_area(
-        y_pred, y_std, y_true, num_bins=num_bins
+        y_pred, y_std, y_true, num_bins=num_bins, prop_type=prop_type
     )
 
     return cali_metrics
@@ -105,6 +109,7 @@ def get_all_adversarial_group_calibration(
     y_true: np.ndarray,
     num_bins: int,
     verbose: bool = True,
+    prop_type: str = "interval",
 ) -> Dict[str, Dict[str, np.ndarray]]:
     """Compute all metrics for adversarial group calibration.
 
@@ -114,7 +119,8 @@ def get_all_adversarial_group_calibration(
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
-
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
     Returns:
         The evaluations for all metrics relating to adversarial group calibration.
         Each inner dictionary contains the size of each group and the metrics
@@ -132,6 +138,7 @@ def get_all_adversarial_group_calibration(
         cali_type="mean_abs",
         num_bins=num_bins,
         verbose=verbose,
+        prop_type=prop_type,
     )
     ma_adv_group_size = ma_adv_group_cali.group_size
     ma_adv_group_cali_score_mean = ma_adv_group_cali.score_mean
@@ -152,6 +159,7 @@ def get_all_adversarial_group_calibration(
         cali_type="root_mean_sq",
         num_bins=num_bins,
         verbose=verbose,
+        prop_type=prop_type,
     )
     rms_adv_group_size = rms_adv_group_cali.group_size
     rms_adv_group_cali_score_mean = rms_adv_group_cali.score_mean
@@ -246,6 +254,7 @@ def get_all_metrics(
     resolution: int = 99,
     scaled: bool = True,
     verbose: bool = True,
+    prop_type: str = "interval",
 ) -> Dict[str, Any]:
     """Compute all metrics.
 
@@ -257,7 +266,8 @@ def get_all_metrics(
         resolution: The number of quantiles to use for computation.
         scaled: Whether to scale the score by size of held out set.
         verbose: Activate verbose mode.
-
+        prop_type: "interval" to measure observed proportions for centered prediction intervals,
+                   and "quantile" for observed proportions below a predicted quantile.
     Returns:
         Dictionary containing all metrics.
     """
@@ -266,12 +276,12 @@ def get_all_metrics(
 
     # Calibration
     calibration_metrics = get_all_average_calibration(
-        y_pred, y_std, y_true, num_bins, verbose
+        y_pred, y_std, y_true, num_bins, verbose, prop_type
     )
 
     # Adversarial Group Calibration
     adv_group_cali_metrics = get_all_adversarial_group_calibration(
-        y_pred, y_std, y_true, num_bins, verbose
+        y_pred, y_std, y_true, num_bins, verbose, prop_type
     )
 
     # Sharpness
