@@ -627,3 +627,73 @@ def get_quantile(
     quantile_prediction = norm.ppf(quantile).flatten()
 
     return quantile_prediction
+
+
+def expected_normalized_calibration_error(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 10,
+) -> float:
+    """
+    Compute the Expected Normalized Calibration Error (ENCE).
+    Reference: https://arxiv.org/pdf/1905.11659
+
+    ENCE = (1/N) * sum_{j=1 to N} [ |RMV(j) - RMSE(j)| / RMV(j) ],
+    where each bin j is a slice of the data with similar predicted std.
+
+    Args:
+        y_pred: 1D array of the predicted means.
+        y_std: 1D array of the predicted standard deviations.
+        y_true: 1D array of the ground-truth labels.
+        num_bins: Number of bins used to segment the data by y_std.
+
+    Returns:
+        A single scalar representing the ENCE across all bins.
+    """
+    # Basic shape checks
+    if not (y_pred.shape == y_std.shape == y_true.shape):
+        raise ValueError("y_pred, y_std, and y_true must be the same shape.")
+    if np.any(y_std <= 0):
+        raise ValueError("All predicted standard deviations must be > 0.")
+    n = len(y_pred)
+    if num_bins > n:
+        raise ValueError("num_bins cannot exceed the number of data points.")
+
+    # Sort by increasing predicted std
+    sorted_indices = np.argsort(y_std)
+    y_pred_sorted = y_pred[sorted_indices]
+    y_std_sorted = y_std[sorted_indices]
+    y_true_sorted = y_true[sorted_indices]
+
+    # Determine bin edges (equal-sized bins by count)
+    bin_edges = np.linspace(0, n, num_bins + 1, dtype=int)
+
+    ence_per_bin = []
+    for j in range(num_bins):
+        start_idx = bin_edges[j]
+        end_idx = bin_edges[j + 1]
+
+        # Extract the bin slice
+        bin_pred = y_pred_sorted[start_idx:end_idx]
+        bin_std = y_std_sorted[start_idx:end_idx]
+        bin_true = y_true_sorted[start_idx:end_idx]
+
+        # Skip empty bins
+        if len(bin_pred) == 0:
+            continue
+
+        # Root of mean variance (RMV): sqrt(mean(std^2))
+        rmv = np.sqrt(np.mean(bin_std ** 2))
+
+        # Root mean squared error (RMSE)
+        rmse = np.sqrt(np.mean((bin_pred - bin_true) ** 2))
+
+        # Normalized difference
+        # Guard if rmv == 0 is possible (though we checked y_std>0, corner cases could happen).
+        diff = abs(rmv - rmse) / (rmv + 1e-12)
+        ence_per_bin.append(diff)
+
+    # ENCE is just the mean of per-bin errors
+    ence = float(np.mean(ence_per_bin)) if len(ence_per_bin) > 0 else 0.0
+    return ence

@@ -8,6 +8,7 @@ from uncertainty_toolbox.metrics_calibration import (
     sharpness,
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
+    expected_normalized_calibration_error,
     adversarial_group_calibration,
     miscalibration_area,
     get_proportion_lists_vectorized,
@@ -453,3 +454,117 @@ def test_get_quantile_on_test_set(supply_test_set):
         bound = get_quantile(y_pred, y_std, quantile=test_q, recal_model=None)
 
         assert np.max(np.abs(bound - test_bound)) < 1e-6
+
+@pytest.fixture
+def perfect_prediction():
+    """
+    Returns y_pred, y_std, y_true in a scenario where the model predictions
+    are exactly correct and the same predicted std. 
+    We expect the RMSE=0 in every bin, so ENCE should be > 0 if std != 0 
+    but let's check with a variety of patterns.
+    """
+    y_pred = np.array([0.0, 5.0, 10.0])
+    y_true = np.array([0.0, 5.0, 10.0])
+    y_std = np.array([1.0, 1.0, 1.0])   # Nonzero but identical std
+    return y_pred, y_std, y_true
+
+
+@pytest.fixture
+def good_calibration():
+    """
+    Returns y_pred, y_std, y_true in a scenario where the predicted
+    standard deviation aligns perfectly with the actual RMSE across bins.
+    
+    If we artificially make bin1's RMSE=0.5 and predicted std=0.5,
+    bin2's RMSE=1.0 and predicted std=1.0, we expect ENCE near zero.
+    """
+    y_pred = np.array([0.0, 0.0, 2.0, 2.0])
+    y_true = np.array([0.5, -0.5, 3.0, 1.0])  # so errors are 0.5, 0.5, 1.0, 1.0
+    # predicted std matches the actual errors:
+    y_std = np.array([0.5, 0.5, 1.0, 1.0])
+    return y_pred, y_std, y_true
+
+
+@pytest.fixture
+def overconfident_prediction():
+    """
+    Returns y_pred, y_std, y_true in a scenario where the standard deviations
+    are underestimates (overconfident). We expect a nonzero ENCE.
+    """
+    y_pred = np.array([1.0, 2.0, 3.0])
+    y_true = np.array([1.5, 3.0, 2.0])  # errors are 0.5, 1.0, 1.0
+    y_std = np.array([0.1, 0.1, 0.1])   # too small => mismatch
+    return y_pred, y_std, y_true
+
+
+def test_ence_perfect_prediction(perfect_prediction):
+    """
+    Even though predictions are perfect (error=0), if predicted std is not zero,
+    each bin's difference is:
+       rmv - rmse = rmv - 0 => diff / rmv = 1.0
+    so we expect an ENCE around 1.0 if there's only one bin. If more bins,
+    the result might vary. We'll check it doesn't crash and yields a sensible value.
+    """
+    y_pred, y_std, y_true = perfect_prediction
+    ence = expected_normalized_calibration_error(y_pred, y_std, y_true, num_bins=1)
+    # If bin=1 => rmv=1.0, rmse=0 => diff=1 => ence=1
+    assert abs(ence - 1.0) < 1e-6, f"Expected ENCE ~ 1.0, got {ence}"
+
+
+def test_ence_good_calibration(good_calibration):
+    """
+    Here the predicted std equals the actual RMSE bin by bin.
+    We expect the ENCE to be near zero because there's near-perfect calibration.
+    """
+    y_pred, y_std, y_true = good_calibration
+    # Two distinct std levels => let's do 2 bins
+    ence = expected_normalized_calibration_error(y_pred, y_std, y_true, num_bins=2)
+    # Ideally, if bin1: RMSE=0.5, RMV=0.5 => diff=0 => 0 error
+    #        bin2: RMSE=1.0, RMV=1.0 => diff=0 => 0 error
+    # ENCE => 0
+    assert abs(ence) < 1e-7, f"Expected near zero ENCE, got {ence}"
+
+
+def test_ence_overconfident(overconfident_prediction):
+    """
+    Overconfident scenario => we expect ENCE > 0
+    """
+    y_pred, y_std, y_true = overconfident_prediction
+    ence = expected_normalized_calibration_error(y_pred, y_std, y_true, num_bins=3)
+    # Since rmse is around ~0.83 (avg), but predicted std is 0.1, there's a big mismatch
+    # We just check that it's definitely > 0
+    assert ence > 0.01, f"Expected a noticeably positive ENCE, got {ence}"
+
+
+def test_ence_raises_for_mismatched_shapes():
+    """
+    If shapes don't match, should raise ValueError
+    """
+    y_pred = np.array([1.0, 2.0])
+    y_std = np.array([0.1])
+    y_true = np.array([1.5, 3.0])
+    with pytest.raises(ValueError):
+        _ = expected_normalized_calibration_error(y_pred, y_std, y_true)
+
+
+def test_ence_raises_for_nonpositive_std():
+    """
+    If any std <= 0, should raise ValueError
+    """
+    y_pred = np.array([1.0, 2.0, 3.0])
+    y_true = np.array([1.5, 2.5, 3.5])
+    # Negative std
+    y_std = np.array([0.1, -0.1, 0.0])
+    with pytest.raises(ValueError):
+        _ = expected_normalized_calibration_error(y_pred, y_std, y_true)
+
+
+def test_ence_raises_for_too_many_bins():
+    """
+    If num_bins > number_of_points, should raise ValueError
+    """
+    y_pred = np.array([1.0, 2.0, 3.0])
+    y_true = np.array([1.1, 2.5, 3.5])
+    y_std = np.array([0.5, 0.5, 0.5])
+    with pytest.raises(ValueError):
+        _ = expected_normalized_calibration_error(y_pred, y_std, y_true, num_bins=5)
