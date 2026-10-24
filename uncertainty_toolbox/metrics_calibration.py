@@ -627,3 +627,85 @@ def get_quantile(
     quantile_prediction = norm.ppf(quantile).flatten()
 
     return quantile_prediction
+
+
+def expected_normalized_calibration_error(
+    y_pred: np.ndarray,
+    y_std: np.ndarray,
+    y_true: np.ndarray,
+    num_bins: int = 10,
+) -> float:
+    """Compute the expected normalized calibration error (ENCE).
+
+    ENCE compares the root mean variance (RMV) with the root mean squared
+    error (RMSE) in bins formed by sorting predictions by their estimated
+    standard deviation. For ``M`` equal-frequency bins, it is defined as
+
+    .. math::
+
+        \\operatorname{ENCE} = \\frac{1}{M} \\sum_{m=1}^{M}
+        \\frac{|\\operatorname{RMV}_m - \\operatorname{RMSE}_m|}
+        {\\operatorname{RMV}_m}.
+
+    This follows Levi et al., *Evaluating and Calibrating Uncertainty
+    Prediction in Regression Tasks* (2019),
+    https://arxiv.org/abs/1905.11659.
+
+    Args:
+        y_pred: 1D array of predicted means.
+        y_std: 1D array of predicted standard deviations. Values must be
+            finite and strictly positive.
+        y_true: 1D array of observed target values.
+        num_bins: Number of equal-frequency bins. It must be an integer in
+            ``[1, len(y_pred)]``.
+
+    Returns:
+        The mean normalized RMV/RMSE discrepancy across bins.
+
+    Raises:
+        TypeError: If an input is non-numeric or ``num_bins`` is not an
+            integer.
+        ValueError: If the arrays are not finite, one-dimensional, equally
+            shaped, non-empty, or if ``y_std`` is not strictly positive.
+    """
+    arrays = (np.asarray(y_pred), np.asarray(y_std), np.asarray(y_true))
+    if any(not np.issubdtype(array.dtype, np.number) for array in arrays):
+        raise TypeError("y_pred, y_std, and y_true must be numeric arrays")
+    if any(np.iscomplexobj(array) for array in arrays):
+        raise TypeError("y_pred, y_std, and y_true must be real-valued arrays")
+    if any(array.ndim != 1 for array in arrays):
+        raise ValueError("y_pred, y_std, and y_true must be one-dimensional")
+    if not (arrays[0].shape == arrays[1].shape == arrays[2].shape):
+        raise ValueError("y_pred, y_std, and y_true must have the same shape")
+    if arrays[0].size == 0:
+        raise ValueError("y_pred, y_std, and y_true must not be empty")
+    if any(not np.all(np.isfinite(array)) for array in arrays):
+        raise ValueError("y_pred, y_std, and y_true must contain only finite values")
+    if np.any(arrays[1] <= 0):
+        raise ValueError(
+            "All predicted standard deviations must be strictly positive"
+        )
+    if isinstance(num_bins, bool) or not isinstance(num_bins, (int, np.integer)):
+        raise TypeError("num_bins must be an integer")
+    if not 1 <= num_bins <= arrays[0].size:
+        raise ValueError(
+            "num_bins must be between 1 and the number of observations"
+        )
+
+    # Stable sorting makes the result deterministic when several points have
+    # the same predicted standard deviation.
+    order = np.argsort(arrays[1], kind="stable")
+    bin_indices = np.array_split(order, num_bins)
+    y_pred_float = arrays[0].astype(float, copy=False)
+    y_std_float = arrays[1].astype(float, copy=False)
+    y_true_float = arrays[2].astype(float, copy=False)
+
+    bin_errors = []
+    for indices in bin_indices:
+        rmv = np.sqrt(np.mean(np.square(y_std_float[indices])))
+        rmse = np.sqrt(
+            np.mean(np.square(y_pred_float[indices] - y_true_float[indices]))
+        )
+        bin_errors.append(np.abs(rmv - rmse) / rmv)
+
+    return float(np.mean(bin_errors))

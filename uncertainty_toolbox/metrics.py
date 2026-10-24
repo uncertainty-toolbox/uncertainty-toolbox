@@ -12,6 +12,7 @@ from uncertainty_toolbox.metrics_calibration import (
     miscalibration_area,
     adversarial_group_calibration,
     sharpness,
+    expected_normalized_calibration_error,
 )
 from uncertainty_toolbox.metrics_scoring_rule import (
     nll_gaussian,
@@ -31,6 +32,7 @@ METRIC_NAMES = {
     "rms_cal": "Root-mean-squared Calibration Error",
     "ma_cal": "Mean-absolute Calibration Error",
     "miscal_area": "Miscalibration Area",
+    "ence": "Expected Normalized Calibration Error",
     "sharp": "Sharpness",
     "nll": "Negative-log-likelihood",
     "crps": "CRPS",
@@ -69,6 +71,7 @@ def get_all_average_calibration(
     y_true: np.ndarray,
     num_bins: int,
     verbose: bool = True,
+    ence_num_bins: int = 10,
 ) -> Dict[str, float]:
     """Compute all metrics for average calibration.
 
@@ -78,6 +81,9 @@ def get_all_average_calibration(
         y_true: 1D array of the true labels in the held out dataset.
         num_bins: The number of bins to use for discretization in some metrics.
         verbose: Activate verbose mode.
+        ence_num_bins: The number of equal-frequency standard-deviation bins
+            used by ENCE. It is reduced to the number of observations for
+            small aggregate-metric inputs.
 
     Returns:
         The evaluations for all metrics relating to average calibration.
@@ -94,6 +100,12 @@ def get_all_average_calibration(
     )
     cali_metrics["miscal_area"] = miscalibration_area(
         y_pred, y_std, y_true, num_bins=num_bins
+    )
+    cali_metrics["ence"] = expected_normalized_calibration_error(
+        y_pred,
+        y_std,
+        y_true,
+        num_bins=min(ence_num_bins, y_pred.size),
     )
 
     return cali_metrics
@@ -246,6 +258,7 @@ def get_all_metrics(
     resolution: int = 99,
     scaled: bool = True,
     verbose: bool = True,
+    ence_num_bins: int = 10,
 ) -> Dict[str, Any]:
     """Compute all metrics.
 
@@ -257,6 +270,8 @@ def get_all_metrics(
         resolution: The number of quantiles to use for computation.
         scaled: Whether to scale the score by size of held out set.
         verbose: Activate verbose mode.
+        ence_num_bins: The number of equal-frequency standard-deviation bins
+            used by ENCE.
 
     Returns:
         Dictionary containing all metrics.
@@ -266,7 +281,12 @@ def get_all_metrics(
 
     # Calibration
     calibration_metrics = get_all_average_calibration(
-        y_pred, y_std, y_true, num_bins, verbose
+        y_pred,
+        y_std,
+        y_true,
+        num_bins,
+        verbose=verbose,
+        ence_num_bins=ence_num_bins,
     )
 
     # Adversarial Group Calibration

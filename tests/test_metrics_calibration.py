@@ -8,6 +8,7 @@ from uncertainty_toolbox.metrics_calibration import (
     sharpness,
     root_mean_squared_calibration_error,
     mean_absolute_calibration_error,
+    expected_normalized_calibration_error,
     adversarial_group_calibration,
     miscalibration_area,
     get_proportion_lists_vectorized,
@@ -453,3 +454,66 @@ def test_get_quantile_on_test_set(supply_test_set):
         bound = get_quantile(y_pred, y_std, quantile=test_q, recal_model=None)
 
         assert np.max(np.abs(bound - test_bound)) < 1e-6
+
+
+def test_expected_normalized_calibration_error_is_zero_when_rmv_matches_rmse():
+    """ENCE is zero when each predicted standard-deviation bin is calibrated."""
+    y_pred = np.array([0.0, 0.0, 2.0, 2.0])
+    y_true = np.array([0.5, -0.5, 3.0, 1.0])
+    y_std = np.array([0.5, 0.5, 1.0, 1.0])
+
+    assert expected_normalized_calibration_error(
+        y_pred, y_std, y_true, 2
+    ) == pytest.approx(0.0)
+
+
+def test_expected_normalized_calibration_error_uses_equal_frequency_bins():
+    """Bins are formed after sorting by predicted standard deviation."""
+    y_pred = np.zeros(5)
+    y_std = np.array([3.0, 1.0, 5.0, 2.0, 4.0])
+    y_true = np.array([0.0, 0.0, 0.0, 0.0, 10.0])
+
+    # With two bins, sorted values are [1, 2, 3] and [4, 5].
+    rmv_first = np.sqrt(np.mean(np.square([1.0, 2.0, 3.0])))
+    rmv_second = np.sqrt(np.mean(np.square([4.0, 5.0])))
+    rmse_second = np.sqrt(np.mean(np.square([10.0, 0.0])))
+    expected = np.mean([1.0, abs(rmv_second - rmse_second) / rmv_second])
+    assert expected_normalized_calibration_error(
+        y_pred, y_std, y_true, 2
+    ) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "y_pred, y_std, y_true, num_bins, error",
+    [
+        (
+            np.array([1.0, 2.0]),
+            np.array([0.1]),
+            np.array([1.0, 2.0]),
+            1,
+            ValueError,
+        ),
+        (
+            np.array([[1.0, 2.0]]),
+            np.array([0.1, 0.1]),
+            np.array([1.0, 2.0]),
+            1,
+            ValueError,
+        ),
+        (np.array([1.0]), np.array([0.0]), np.array([1.0]), 1, ValueError),
+        (np.array([1.0]), np.array([np.nan]), np.array([1.0]), 1, ValueError),
+        (
+            np.array([1.0, 2.0]),
+            np.array([0.1, 0.1]),
+            np.array([1.0, 2.0]),
+            3,
+            ValueError,
+        ),
+        (np.array([1.0]), np.array([0.1]), np.array([1.0]), 1.0, TypeError),
+    ],
+)
+def test_expected_normalized_calibration_error_validates_inputs(
+    y_pred, y_std, y_true, num_bins, error
+):
+    with pytest.raises(error):
+        expected_normalized_calibration_error(y_pred, y_std, y_true, num_bins)

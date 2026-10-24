@@ -24,6 +24,7 @@ from .metrics_calibration import (
     miscalibration_area,
     adversarial_group_calibration,
     sharpness,
+    expected_normalized_calibration_error,
     get_proportion_lists_vectorized,
     get_proportion_lists,
     get_proportion_in_interval,

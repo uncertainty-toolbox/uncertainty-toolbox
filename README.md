@@ -86,6 +86,8 @@ Uncertainty Toolbox provides a number of [metrics](uncertainty_toolbox/metrics.p
 quantify and compare predictive uncertainty estimates. For example, the
 [`get_all_metrics`](uncertainty_toolbox/metrics.py#L242) function will return:
 1. __average calibration__: _mean absolute calibration error, root mean squared calibration error, miscalibration area._
+   Expected normalized calibration error (ENCE) is also available for
+   comparing predicted standard deviations with empirical RMSE.
 2. __adversarial group calibration__: _mean absolute adversarial group calibration error, root mean squared adversarial group calibration error._
 3. __sharpness__: _expected standard deviation._
 4. __proper scoring rules__: _negative log-likelihood, continuous ranked probability score, check score, interval score._

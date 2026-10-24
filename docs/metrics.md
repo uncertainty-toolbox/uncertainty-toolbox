@@ -20,6 +20,24 @@ We focus on the regression setting where the output space is continuous.
 
 #### Levels of Calibration
 
+#### Expected Normalized Calibration Error
+
+For regression predictions with a mean and standard deviation, the expected
+normalized calibration error (ENCE) compares the root mean variance (RMV) with
+the root mean squared error (RMSE) in equal-frequency bins of the predicted
+standard deviation:
+
+```text
+ENCE = mean(|RMV_bin - RMSE_bin| / RMV_bin)
+```
+
+ENCE is zero when the predicted uncertainty magnitude agrees with the empirical
+error magnitude in every bin. Lower values indicate better calibration. Use
+`uncertainty_toolbox.expected_normalized_calibration_error` for the standalone
+metric, or read the `"ence"` entry returned by
+`uncertainty_toolbox.get_all_average_calibration` and
+`uncertainty_toolbox.get_all_metrics`.
+
 
 
 #### Calibration for Classification

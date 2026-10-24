@@ -40,9 +40,9 @@ def test_get_all_average_calibration_returns(get_test_set):
     n_bins = 20
     met_dict = get_all_average_calibration(*get_test_set, n_bins)
     met_keys = met_dict.keys()
-    assert len(met_keys) == 3
+    assert len(met_keys) == 4
 
-    met_str_list = ["rms_cal", "ma_cal", "miscal_area"]
+    met_str_list = ["rms_cal", "ma_cal", "miscal_area", "ence"]
     bool_list = [s in met_keys for s in met_str_list]
     assert all(bool_list)
 
